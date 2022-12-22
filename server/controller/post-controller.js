@@ -8,7 +8,7 @@ const postController = {
     * method: GET
     * /posts
     */
-   async getAllPosts ({params}, res){
+   async getAllPosts (req, res){
     
     try {
         const posts = await Post.find()

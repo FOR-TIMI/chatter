@@ -29,10 +29,15 @@ router
     .delete(deleteUser)
 
 /**
- * Expect endpoint : /api/user/:id/friends/:friendId
+ * Expect endpoint : /api/user/:id/friends
+ * Sample body
+ * {
+ *  "friendId": `3469834564zxbzfh`
+ * }
+ * 
  */ 
 router
-    .route('/:userId/following/:followingId')
+    .route('/:userId/following')
     .put(addFollow)
     .delete(removeFollow)
 

@@ -187,50 +187,67 @@ const userController = {
      * Expect : 
      * {
      *  Method: PUT ,
-     *  EndPoint: '/:userId/followings/:followingId'
-     *  Route: '/api/users/:userId/following/:followingId'
+     *  EndPoint: '/:userId/following'
+     *  Route: '/api/users/:userId/following'
+     * 
+     *  Expect body toBe 
+     *  {
+     *      followingId: "245346357zxvbxcg"
+     *  }
      * }
      * 
      * TODO: WHEN A USER IS SIGNED IN USE PUT `/user/following/:followingId`. THE USER ID WILL COME FROM `req.session.user`
      * 
      */
-    async addFollow({params}, res){
-       if( params.userId !== params.followingId){
-            try{
-                //To update the person i'm following's follower list
-                const followedUser = await User.findOneAndUpdate(
-                    { _id: params.followingId},
-                    { $addToSet: { followers: params.userId}},
-                    {new: true}
-                )
+    async addFollow({params, body}, res){
 
-                if(!followedUser){
-                    return res
-                        .status(404)
-                        .json({message: "Could not find the user you're trying to follow" })
-                }
-            
-            //update my following list and userImFollowing's follower list
-            //To update my following list
-            const updatedUser = await User.findOneAndUpdate(
-                { _id: params.userId },
-                { $addToSet: { followings: params.followingId } },
-                { new: true }
-            );
+        //To make sure users and pserson you're following's id's are included in the params and body
+        if(!params.userId || !body.followingId){
+            return res
+            .status(400)
+            .json({ message: "You the userId parameter or the followingId field is missing "})
+        }
+        
+        //To make sure user;s cannot follow themselves
+        if(params.userId === body.followingId){
+            return res
+            .status(400)
+            .json({ message: "User cannot unfollow themselves"})
+        }
+    
+        try{
+            //To update the person i'm following's follower list
+            const followedUser = await User.findOneAndUpdate(
+                { _id: body.followingId},
+                { $addToSet: { followers: params.userId}},
+                {new: true}
+            )
 
-            if(!updatedUser){
+            if(!followedUser){
                 return res
-                        .status(404)
-                        .json({ message: "Couldn't find that user"})
+                    .status(404)
+                    .json({message: "Could not find the user you're trying to follow" })
             }
+        
+        //update my following list and userImFollowing's follower list
+        //To update my following list
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: params.userId },
+            { $addToSet: { followings: body.followingId } },
+            { new: true }
+        );
 
-                res.json(updatedUser)
-            } catch(error){
-            res.status(500).json({ error })
-            }
-       } else{
-            res.status(400).json({ message: "User cannot follow themselves" })
-       }
+        if(!updatedUser){
+            return res
+                    .status(404)
+                    .json({ message: "Couldn't find that user"})
+        }
+
+            res.json(updatedUser)
+        } catch(error){
+        res.status(500).json({ error })
+        }
+      
     },
 
     //To unfollow another user
@@ -243,11 +260,24 @@ const userController = {
      * }
       * TODO: WHEN A USER IS SIGNED IN USE DELETE `/user/following/:followingId`. THE USER ID WILL COME FROM `req.session.user`
      */
-    async removeFollow({params}, res){
+    async removeFollow({params,body}, res){
+
+        if(!params.userId || !body.followingId){
+            return res
+            .status(400)
+            .json({ message: "You the userId parameter or the followingId field is missing "})
+        }
+         
+        if(params.userId === body.followingId){
+            return res
+            .status(400)
+            .json({ message: "User cannot unfollow themselves"})
+        }
+
         try{
            //To update the person i'm unfollowing's follower list
             const unfollowedUser = await User.findOneAndUpdate(
-                { _id: params.followingId},
+                { _id: body.followingId},
                 { $pull: { followers: params.userId}},
                 {new: true}
             )
@@ -262,7 +292,7 @@ const userController = {
             //To update my following list
             const updatedUser = await User.findOneAndUpdate(
                 { _id: params.userId },
-                { $pull: { followings: params.followingId } },
+                { $pull: { followings: body.followingId } },
                 { new: true }
             );
 
