@@ -4,8 +4,14 @@ const commentSchema = require('./Comment')
 
 
 const ImageSchema = new Schema({
-    url: String,
-    filename: String
+    url: {
+        type:String,
+        required:'url re'
+    },
+    filename: {
+        type:String,
+        required:''
+    }
 })
 
 //import comment schema

@@ -1,8 +1,6 @@
 const { User, Post } = require('../model');
 
 
-
-
 const userController = {
      
     //To get All Users
@@ -164,6 +162,12 @@ const userController = {
                 {_id: { $in: deletedUser.followers }},
                 { $pull: { followings: deletedUser._id} },
             )
+
+            //Remove likes from liked posts
+            const likedPosts = await Post.updateMany(
+                {_id: { $in: deletedUser.likedPosts }},
+                {$pull: { likes: deletedUser._id}}
+            )
             
             //Remove all the Posts related to that user
             const deletedPosts = await Post.remove({
@@ -191,38 +195,42 @@ const userController = {
      * 
      */
     async addFollow({params}, res){
-        try{
-            //To update the person i'm following's follower list
-            const followedUser = await User.findOneAndUpdate(
-                { _id: params.followingId},
-                { $addToSet: { followers: params.userId}},
-                {new: true}
-            )
+       if( params.userId !== params.followingId){
+            try{
+                //To update the person i'm following's follower list
+                const followedUser = await User.findOneAndUpdate(
+                    { _id: params.followingId},
+                    { $addToSet: { followers: params.userId}},
+                    {new: true}
+                )
 
-            if(!followedUser){
+                if(!followedUser){
+                    return res
+                        .status(404)
+                        .json({message: "Could not find the user you're trying to follow" })
+                }
+            
+            //update my following list and userImFollowing's follower list
+            //To update my following list
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: params.userId },
+                { $addToSet: { followings: params.followingId } },
+                { new: true }
+            );
+
+            if(!updatedUser){
                 return res
-                      .status(404)
-                      .json({message: "Could not find the user you're trying to follow" })
+                        .status(404)
+                        .json({ message: "Couldn't find that user"})
             }
-           
-           //update my following list and userImFollowing's follower list
-           //To update my following list
-           const updatedUser = await User.findOneAndUpdate(
-               { _id: params.userId },
-               { $addToSet: { followings: params.followingId } },
-               { new: true }
-           );
 
-           if(!updatedUser){
-             return res
-                    .status(404)
-                    .json({ message: "Couldn't find that user"})
-           }
-
-            res.json(updatedUser)
-        } catch(error){
-          res.status(500).json({ error })
-        }
+                res.json(updatedUser)
+            } catch(error){
+            res.status(500).json({ error })
+            }
+       } else{
+            res.status(400).json({ message: "User cannot follow themselves" })
+       }
     },
 
     //To unfollow another user

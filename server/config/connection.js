@@ -6,6 +6,6 @@ mongoose.set('strictQuery', true);
 mongoose.connect(DB_URL);
 
 //To log mongo queries
-mongoose.set('debug', true)
+// mongoose.set('debug', true)
 
 module.exports = mongoose.connection
