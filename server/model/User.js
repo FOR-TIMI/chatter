@@ -22,7 +22,8 @@ const userSchema = new Schema({
         type: String,
         required: "Your password is required",
         minlength: 8,
-        maxlength: 80
+        maxlength: 80,
+        select: false 
     },
     followings: [
         {
@@ -45,7 +46,7 @@ const userSchema = new Schema({
     posts: [
         {
             type: Schema.Types.ObjectId,
-            ref: "Post"
+            ref: "Post",
         }
     ]
 },{
@@ -73,6 +74,7 @@ userSchema.pre("save", async function(next){
     }
     next();
 })
+
 
 //compare the incoming password with the hashed password
 userSchema.methods.isCorrectPassword = async function(password){

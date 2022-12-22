@@ -17,11 +17,11 @@ const userController = {
             const users = await User.find()
                                 .populate({
                                     path: "followers",
-                                    select: "-__v"
+                                    select: "-__v -password"
                                 })
                                 .populate({
                                     path: "followings",
-                                    select: "-__v"
+                                    select: "-__v -password"
                                 })
                                 .populate({
                                     path: "posts",
@@ -31,7 +31,7 @@ const userController = {
                                     path: "likedPosts",
                                     select: "-__v"
                                 })
-                                .select("-__v")      
+                                .select("-__v -password")      
             if(!users.length){
                 return res
                 .status(404)
@@ -61,13 +61,13 @@ const userController = {
                                     })
                                     .populate({
                                         path: "followings",
-                                        select: "-__v"
+                                        select: "-__v -email"
                                     })
                                     .populate({
                                         path: "likedPosts",
-                                        select: "-__v"
+                                        select: {comments: 0}
                                     })
-                                    .select("-__v")  
+                                    .select('-__v') 
             if(!user){
                 return res.status(404).json({
                 message: 'User not found with that id'  
