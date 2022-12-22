@@ -14,11 +14,11 @@ const postController = {
         const posts = await Post.find()
                                 .populate({
                                     path: "author",
-                                    select: "-__v"
+                                    select: "-__v "
                                 })
                                 .populate({
                                     path: "likes",
-                                    select: "-__v"
+                                    select: "-__v "
                                 })
                                 .select("-__v")
                                 .sort('-createdAt');
