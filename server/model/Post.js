@@ -1,18 +1,17 @@
-const { Schema, model} = require('mongoose');
+const { Schema, model } = require("mongoose");
 const dateFormat = require("../utils/dateFormat");
-const commentSchema = require('./Comment')
-
+const commentSchema = require("./Comment");
 
 const ImageSchema = new Schema({
-    url: {
-        type:String,
-        required:'url re'
-    },
-    filename: {
-        type:String,
-        required:''
-    }
-})
+  url: {
+    type: String,
+    required: "url re",
+  },
+  filename: {
+    type: String,
+    required: "",
+  },
+});
 
 //import comment schema
 
@@ -20,51 +19,48 @@ const ImageSchema = new Schema({
 // 	return this.url.replace('/upload','/upload/w_200')
 // })
 
-
-
-const postSchema = new Schema({
-    author:{
-         type: Schema.Types.ObjectId,
-         ref: 'User'
-       },
+const postSchema = new Schema(
+  {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     title: {
-        type: String,
-        required: "You must add a title",
-        minLength: 1,
-        maxLength:128
+      type: String,
+      required: "You must add a title",
+      minLength: 1,
+      maxLength: 128,
     },
     images: [ImageSchema],
     likes: [
-        {
-         type: Schema.Types.ObjectId,
-         ref: 'User'
-       }
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
     ],
     comments: [commentSchema],
     createdAt: {
-        type: Date,
-        default: Date.now,
-        get: timestamp => dateFormat(timestamp)
-    }
-}, {
+      type: Date,
+      default: Date.now,
+      get: (timestamp) => dateFormat(timestamp),
+    },
+  },
+  {
     toJSON: {
-        getters: true,
-        virtuals: true
-    }
-}
-)
+      getters: true,
+      virtuals: true,
+    },
+  }
+);
 
-postSchema.virtual('commentCount').get(function(){
-    return this.comments.length;
-})
+postSchema.virtual("commentCount").get(function () {
+  if (this.comments) return this.comments.length;
+});
 
+postSchema.virtual("likeCount").get(function () {
+  if (this.likes) return this.likes.length;
+});
 
-postSchema
-    .virtual('likeCount')
-    .get(function(){
-        return this.likes.length
-    })
-
-const Post= model('Post', postSchema);
+const Post = model("Post", postSchema);
 
 module.exports = Post;
