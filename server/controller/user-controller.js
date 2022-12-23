@@ -63,10 +63,6 @@ const userController = {
             select: "username",
           },
           {
-            path: "likedPosts",
-            select: "author title images",
-          },
-          {
             path: "posts",
             select: "title images",
           },

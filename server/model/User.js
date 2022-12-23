@@ -54,6 +54,7 @@ const userSchema = new Schema(
     toJSON: {
       virtuals: true,
     },
+    id: false
   }
 );
 
@@ -80,12 +81,12 @@ userSchema.methods.isCorrectPassword = async function (password) {
 
 // Number of followers
 userSchema.virtual("followerCount").get(function () {
-  if (this.followers) return this.followers.length;
+   return this.followers && this.followers.length;
 });
 
 // Number of following
 userSchema.virtual("followingCount").get(function () {
-  if (this.followings) return this.followings.length;
+  return this.followings && this.followings.length;
 });
 
 const User = model("User", userSchema);
