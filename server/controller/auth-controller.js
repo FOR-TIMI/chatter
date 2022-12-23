@@ -1,8 +1,6 @@
 const { User} = require('../model')
 
-const homeController = {
- 
-
+const authController = {
     // Register User 
     async register(req,res){
         const { username, email, password } = req.body;
@@ -14,7 +12,7 @@ const homeController = {
           } catch (error) {
             res
               .status(500)
-              .json({ message: "something went wrong with the server", error });
+              .json({ message: "something went wrong with the server", error: error.message });
           }
         } else {
           res.status(422).json({
@@ -40,7 +38,9 @@ const homeController = {
                 if(!user){
                     return res.status(404).json({ message: "No user found with this email or username"})
                 }
-                          
+                
+    
+                
 
                 //password check
                 const isValidPasword = await user.isCorrectPassword(password);
@@ -71,5 +71,5 @@ const homeController = {
 }
 
 
-module.exports = homeController
+module.exports = authController
 

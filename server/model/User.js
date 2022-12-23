@@ -23,7 +23,6 @@ const userSchema = new Schema(
       required: "Your password is required",
       minlength: 8,
       maxlength: 80,
-      select: false,
     },
     followings: [
       {
@@ -68,16 +67,20 @@ userSchema.pre("save", async function (next) {
       this.password = await bcrypt.hash(this.password, salt);
       return next();
     } catch (error) {
-      return next(err);
+      return next(error.message);
     }
   }
   next();
 });
 
 //compare the incoming password with the hashed password
-userSchema.methods.isCorrectPassword = async function (password) {
-  return bcrypt.compare(password, this.password);
-};
+// userSchema.statics.isCorrectPassword = function(password){
+//   return bcrypt.compare(password, this.password);
+// };
+
+userSchema.methods.isCorrectPassword = async function(password){
+  return bcrypt.compare(password,this.password)
+}
 
 // Number of followers
 userSchema.virtual("followerCount").get(function () {

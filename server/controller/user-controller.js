@@ -13,31 +13,29 @@ const userController = {
   async getAllUsers(req, res) {
     try {
       const users = await User.find()
-        .populate({
+      .populate([
+        {
           path: "followers",
-          select: "-__v -password",
-        })
-        .populate({
+          select: "username",
+        },
+        {
           path: "followings",
-          select: "-__v -password",
-        })
-        .populate({
+          select: "username",
+        },
+        {
           path: "posts",
-          select: "-__v",
-        })
-        .populate({
-          path: "likedPosts",
-          select: "-__v",
-        })
-        .select("-__v -password");
+          select: "title images",
+        },
+      ])
+        .select("-__v");
       if (!users.length) {
         return res.status(404).json({ message: "There are no users yet" });
       }
-      res.json(users);
+      res.json(users)
     } catch (error) {
       res
         .status(500)
-        .json({ message: "something went wrong with the server", error });
+        .json({ message: "something went wrong with the server", error: error.message });
     }
   },
 
@@ -77,7 +75,7 @@ const userController = {
 
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -99,7 +97,7 @@ const userController = {
       } catch (error) {
         res
           .status(500)
-          .json({ message: "something went wrong with the server", error });
+          .json({ message: "something went wrong with the server", error: error.message });
       }
     } else {
       res.status(422).json({
@@ -179,7 +177,7 @@ const userController = {
     } catch (error) {
       res
         .status(404)
-        .json({ message: "No user was found with this id", error });
+        .json({ message: "No user was found with this id", error: error.message });
     }
   },
 
@@ -244,7 +242,7 @@ const userController = {
 
       res.json(updatedUser);
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -300,7 +298,7 @@ const userController = {
 
       res.json(updatedUser);
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.message });
     }
   },
 };
