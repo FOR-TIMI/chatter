@@ -69,9 +69,7 @@ module.exports = {
         }
     },
 
-
-
-    //,addRemoveFollow
+    /**================ to follow and Unfollow ==================== */
     async addRemoveFollow({ params, body},res){
         try{
             const user = await User.findOne({ username: params.username });

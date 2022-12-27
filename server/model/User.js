@@ -31,6 +31,13 @@ const userSchema = new Schema({
         type: Array,
         default: []
     },
+    createdAt: {
+        type : Date,
+        default : Date.now,
+        get: function(createdAtVal){
+          return dateFormat(createdAtVal)
+        }
+    },
     location: String,
     occupation: String,
     viewedProfile: Number,
@@ -38,9 +45,9 @@ const userSchema = new Schema({
 
 },{
     toJSON: {
-        virtuals: true
-    },
-    timestamps: true
+        virtuals: true,
+        getters: true
+    }
 });
 
 //middleware to create password
