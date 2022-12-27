@@ -1,5 +1,5 @@
 const { User } = require('../model');
-const { signToken } = require('../utils/jwt-config')
+const { signToken } = require('../middleware/jwt-config')
 
 
 module.exports = {
@@ -88,4 +88,3 @@ module.exports = {
 }
 
 
- = authController
