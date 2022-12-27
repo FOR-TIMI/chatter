@@ -38,6 +38,7 @@ const userSchema = new Schema({
           return dateFormat(createdAtVal)
         }
     },
+    profilePhotoUrl: String,
     location: String,
     occupation: String,
     viewedProfile: Number,

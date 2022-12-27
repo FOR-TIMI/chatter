@@ -32,5 +32,5 @@ const { authMiddleware } = require('../middleware/jwt-config');
 
 
 
-export default router;
+module.exports= router;
 
