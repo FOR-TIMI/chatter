@@ -7,8 +7,17 @@
 
 html{
     scroll-behavior: smooth;
+    
 }
 
 body{
     font-family: 'Poppins', sans-serif;
+}
+
+html,
+body,
+#root,
+.app {
+  height: 100%;
+  width: 100%;
 }
