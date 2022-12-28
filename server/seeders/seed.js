@@ -31,7 +31,7 @@ db.once('open', async () => {
         const occupation = faker.commerce.department();
         const followings = []
         const followers = []
-        const profilePhotoUrl = `https://i.pravatar.cc/150?u=${Math.floor(Math.random * 10000)}`
+        const profilePhotoUrl = `https://i.pravatar.cc/150?u=${Math.floor(Math.random() * 10000)}`
         
         
         //Database users
@@ -63,9 +63,9 @@ db.once('open', async () => {
      * Make random 10 character titles for posts
      */
     const postImageUrls = [
-        `https://i.pravatar.cc/500?u=${Math.floor(Math.random * 10000)}`
-        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random * 10000)}`
-        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random * 10000)}`
+        `https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
+        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
+        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
     ]
    
 
