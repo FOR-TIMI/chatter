@@ -2,14 +2,17 @@
 /*================== Clobal Imports =================*/
 const express = require('express')
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const morgan = require('morgan')
 
-
 const path = require('path')
+
+
+const db = require('./config/db')
+const PORT = process.env.PORT || 3001
+
 
 
 
@@ -48,23 +51,12 @@ app.use(require('./routes'))
 
 
 
-
-
 /*================== MONGODB =================*/
-const PORT = process.env.PORT || 3001
-const DB_URL = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/chatter';
-
-
-mongoose
-    .set('strictQuery', true)
-    .connect(DB_URL)
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`🌍💥 Server running on port ${PORT}`)
-        })
+db.once("open", () => {
+    app.listen(PORT, () => {
+        console.log(`🌍💥 Server running on port ${PORT}`)
     })
-    .catch(err => console.log(err))
-
+})
 
 
 

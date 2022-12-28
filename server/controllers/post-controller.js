@@ -1,5 +1,5 @@
 const{ Post, User } = require('../model');
-const { post } = require('../model/Comment');
+
  
 module.exports = {
 

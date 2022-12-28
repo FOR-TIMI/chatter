@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed": "node seeders/seed.js",
+    "develop": "nodemon"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -23,5 +25,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "faker": "^5.5.3",
+    "nodemon": "^2.0.20"
+  }
 }
