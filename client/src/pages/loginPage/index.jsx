@@ -67,48 +67,59 @@ const Form = () => {
             headers: { 'Content-Type': 'application/json' }
           });
 
-        const newUser = await newUserData.json();
+        const isRegistered = await newUserData.json();
 
-        navigate('/')
-
+         if(isRegistered){
+          dispatch(
+            setLogin({
+                    user: isRegistered.newUser,
+                    token: isRegistered.token,
+              })
+           )
+         }
 
         onSubmitProps.resetForm();
+        navigate('/')
        } catch(err){
         console.error(err)
        }
   };
 
   const login = async (values, onSubmitProps) => {
-    // const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(values),
-    // });
-    // const loggedIn = await loggedInResponse.json();
-    // onSubmitProps.resetForm();
-    // if (loggedIn) {
-    //   dispatch(
-    //     setLogin({
-    //       user: loggedIn.user,
-    //       token: loggedIn.token,
-    //     })
-    //   );
-    //   navigate("/");
-    // }
+       try{
+        const { email, password } = values
+
+        const loggedInResponse = await fetch("http://localhost:3001/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password}),
+        });
+        const loggedIn = await loggedInResponse.json();
+
+        
+        if (loggedIn) {
+          dispatch(
+            setLogin({
+              user: loggedIn.user,
+              token: loggedIn.token,
+            })
+            );
+       }
+
+       onSubmitProps.resetForm(); 
+       navigate("/");
+    } catch(err){
+      console.error(err)
+     }
+    
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    // if (isLogin) await login(values, onSubmitProps);
-    // if (isRegister) await register(values, onSubmitProps);
       if(isRegister) await register(values, onSubmitProps)
-      if(isLogin) await login(onSubmitProps);
+      if(isLogin) await login(values,onSubmitProps);
   };
 
-  const fileInputRef = useRef(null);
 
-  const handleFileSelection = () => {
-    fileInputRef.current.click();
-  }
 
   return (
    <Container maxWidth="sm">
