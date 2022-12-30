@@ -26,13 +26,11 @@ import { registerSchema, loginSchema } from "../../utils/Schemas";
 
 
 const initialValuesRegister = {
-  firstName: "",
-  lastName: "",
+  username: "",
   email: "",
   password: "",
   location: "",
-  occupation: "",
-  picture: "",
+  occupation: ""
 };
 
 const initialValuesLogin = {
@@ -41,17 +39,16 @@ const initialValuesLogin = {
 };
 
 const Form = () => {
-  const location = useLocation();
-  const [pageType, setPageType] = useState(location.pathname.slice(1)) //To turn '/register' to 'register'
+  const location = useLocation().pathname.slice(1);
+  const [pageType, setPageType] = useState(location) //To turn '/register' to 'register'
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:1000px)");
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
-  
-     
 
+  
   // const register = async (values, onSubmitProps) => {
   //   // this allows us to send form info with image
   //   const formData = new FormData();
@@ -98,7 +95,12 @@ const Form = () => {
     // if (isLogin) await login(values, onSubmitProps);
     // if (isRegister) await register(values, onSubmitProps);
   console.log("hooray")
-    console.log({ values, onSubmitProps})
+      if(isRegister){
+          console.log({ values, onSubmitProps})
+      }
+      else{
+        console.log({ values, onSubmitProps})
+      }
   };
 
   const fileInputRef = useRef(null);
@@ -125,9 +127,9 @@ const Form = () => {
         Chatter
       </Typography>
      <Formik
-      onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
+      onSubmit={handleFormSubmit}
     >
 
         
@@ -153,73 +155,15 @@ const Form = () => {
           >
             {isRegister && (
               <>
-              <Box
-                  gridColumn="span 4"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  align-items="center"
-                >
-                   <Avatar src="/default-avatar.jpg" alt="JS" style={{ width: '5rem', height: '5rem', marginLeft: '2rem' }}  />
-                    <IconButton onClick={handleFileSelection} style={{ position: 'relative', left: '-1.8rem', top: '1.5rem'}}>
-                      <Tooltip title="Add profile photo">
-                        <PhotoCamera sx={{ fontSize: '2rem'}}/>
-                      </Tooltip>
-                    </IconButton>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      style={{ display: 'none' }}
-                      accept=".jpg, .jpeg, .png"
-                    />
-                  {/* <Dropzone
-                    acceptedFiles=".jpg,.jpeg,.png"
-                    multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
-                        p="1rem"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
-                      >
-                        <input  />
-                        {!values.picture ? (
-                          <p>Add Picture Here</p>
-                        ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
-                            <EditOutlinedIcon />
-                          </FlexBetween>
-                        )}
-                      </Box>
-                    )}
-                  </Dropzone> */}
-                </Box>
                 <TextField
-                  label="First Name"
+                  label="Username"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName}
-                  name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
-                  helperText={touched.firstName && errors.firstName}
-                  sx={{ gridColumn: "span 2" }}
-                />
-                <TextField
-                  label="Last Name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.lastName}
-                  name="lastName"
-                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                  helperText={touched.lastName && errors.lastName}
-                  sx={{ gridColumn: "span 2" }}
+                  value={values.username}
+                  name="username"
+                  error={Boolean(touched.username) && Boolean(errors.username)}
+                  helperText={touched.username && errors.username}
+                  sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
                   label="Location"

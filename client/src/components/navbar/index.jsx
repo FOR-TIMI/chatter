@@ -41,6 +41,7 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
+  const isLoggedIn = user ? true : false
   const username = `${user?.username}`;
 
   return (
@@ -88,7 +89,8 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={username}>
+          { isLoggedIn ? (
+            <FormControl variant="standard" value={username}>
             <Select
               value={username}
               sx={{
@@ -112,6 +114,38 @@ const Navbar = () => {
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
+          ) : (
+            <>
+            <Typography
+              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
+              color="dark"
+              onClick={() => navigate("/login")}
+              sx={{
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              login
+            </Typography>
+            <Typography
+              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
+              color="dark"
+              onClick={() => navigate("/register")}
+              sx={{
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              sign up
+            </Typography>
+            </>
+          )
+        
+        }
         </FlexBetween>
       ) : (
         <IconButton
