@@ -70,9 +70,6 @@ module.exports = {
      delete user.password;
 
      res.status(200).json({ token, user})
-          
-
-     return res.status(201).json(token);
 
       } catch(err){
          res

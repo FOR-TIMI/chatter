@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -7,20 +7,14 @@ import {
   Typography,
   useTheme,
   Container,
-  Avatar,
-  IconButton
 } from "@mui/material";
 
 
-import Tooltip from '@mui/material/Tooltip';
-import { ConstructionOutlined, PhotoCamera } from '@mui/icons-material';
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
-import Dropzone from "react-dropzone";
-import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
+
 
 import { registerSchema, loginSchema } from "../../utils/Schemas";
 
@@ -92,7 +86,7 @@ const Form = () => {
         const loggedInResponse = await fetch("http://localhost:3001/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password}),
+          body: JSON.stringify({ email, password})
         });
         const loggedIn = await loggedInResponse.json();
 
