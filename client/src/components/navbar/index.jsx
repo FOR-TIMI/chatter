@@ -198,6 +198,7 @@ const Navbar = () => {
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
+            {isLoggedIn ? ( 
             <FormControl variant="standard" value={username}>
               <Select
                 value={username}
@@ -223,7 +224,37 @@ const Navbar = () => {
                   Log Out
                 </MenuItem>
               </Select>
-            </FormControl>
+            </FormControl>) : (
+            <>
+            <Typography
+              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
+              color="dark"
+              onClick={() => navigate("/login")}
+              sx={{
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              login
+            </Typography>
+            <Typography
+              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
+              color="dark"
+              onClick={() => navigate("/register")}
+              sx={{
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              sign up
+            </Typography>
+            </>
+          )}
+            
           </FlexBetween>
         </Box>
       )}
