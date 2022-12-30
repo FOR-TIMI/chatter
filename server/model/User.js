@@ -31,20 +31,17 @@ const userSchema = new Schema({
         type: Array,
         default: []
     },
-    createdAt: {
-        type : Date,
-        default : Date.now,
-        get: function(createdAtVal){
-          return dateFormat(createdAtVal)
-        }
+    profilePhotoUrl: {
+        type: String,
+        default: 'https://i.stack.imgur.com/l60Hf.png'
     },
-    profilePhotoUrl: String,
     location: String,
     occupation: String,
     viewedProfile: Number,
     impressions: Number
 
 },{
+    timestamps: true,
     toJSON: {
         virtuals: true,
         getters: true

@@ -11,7 +11,7 @@ const upload = multer({ storage });
 
 
 router.post('/login', login)
-router.post('/register', upload.single("image"), register)
+router.post('/register', register)
     
 
 

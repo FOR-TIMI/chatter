@@ -49,58 +49,59 @@ const Form = () => {
   let isRegister = pageType === "register";
 
   
-  // const register = async (values, onSubmitProps) => {
-  //   // this allows us to send form info with image
-  //   const formData = new FormData();
-  //   for (let value in values) {
-  //     formData.append(value, values[value]);
-  //   }
-  //   formData.append("picturePath", values.picture.name);
+  const register = async (values, onSubmitProps) => {
+        const { username, email, location, occupation, password} = values;
 
-  //   const savedUserResponse = await fetch(
-  //     "http://localhost:3001/auth/register",
-  //     {
-  //       method: "POST",
-  //       body: formData,
-  //     }
-  //   );
-  //   const savedUser = await savedUserResponse.json();
-  //   onSubmitProps.resetForm();
+       try{
+        const newUserData = await fetch(
+          "http://localhost:3001/register",
+          {
+            method:"POST",
+            body: JSON.stringify({
+              username
+              ,email
+              ,password
+              ,location
+              ,occupation
+            }),
+            headers: { 'Content-Type': 'application/json' }
+          });
 
-  //   if (savedUser) {
-  //     setPageType("login");
-  //   }
-  // };
+        const newUser = await newUserData.json();
 
-  // const login = async (values, onSubmitProps) => {
-  //   const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(values),
-  //   });
-  //   const loggedIn = await loggedInResponse.json();
-  //   onSubmitProps.resetForm();
-  //   if (loggedIn) {
-  //     dispatch(
-  //       setLogin({
-  //         user: loggedIn.user,
-  //         token: loggedIn.token,
-  //       })
-  //     );
-  //     navigate("/");
-  //   }
-  // };
+        navigate('/')
+
+
+        onSubmitProps.resetForm();
+       } catch(err){
+        console.error(err)
+       }
+  };
+
+  const login = async (values, onSubmitProps) => {
+    // const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(values),
+    // });
+    // const loggedIn = await loggedInResponse.json();
+    // onSubmitProps.resetForm();
+    // if (loggedIn) {
+    //   dispatch(
+    //     setLogin({
+    //       user: loggedIn.user,
+    //       token: loggedIn.token,
+    //     })
+    //   );
+    //   navigate("/");
+    // }
+  };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     // if (isLogin) await login(values, onSubmitProps);
     // if (isRegister) await register(values, onSubmitProps);
-  console.log("hooray")
-      if(isRegister){
-          console.log({ values, onSubmitProps})
-      }
-      else{
-        console.log({ values, onSubmitProps})
-      }
+      if(isRegister) await register(values, onSubmitProps)
+      if(isLogin) await login(onSubmitProps);
   };
 
   const fileInputRef = useRef(null);

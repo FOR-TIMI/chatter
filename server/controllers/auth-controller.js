@@ -11,8 +11,6 @@ module.exports = {
             username
             ,email
             ,password
-            ,followings
-            ,followers
             ,location
             ,occupation
          } = body
@@ -20,8 +18,6 @@ module.exports = {
             username
             ,email
             ,password
-            ,followings
-            ,followers
             ,location
             ,occupation
             ,viewedProfile: Math.floor(Math.random() * 10000)
