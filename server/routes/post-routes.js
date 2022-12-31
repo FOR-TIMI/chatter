@@ -24,7 +24,7 @@ const { authMiddleware } = require('../middleware/jwt-config');
 router
     .route('/')
     .get(authMiddleware, getFeedPosts)
-    .post(authMiddleware, upload.array('images'), createPost)
+    .post(authMiddleware, upload.array('postImageUrls', 5), createPost)
 
 router
     .route('/:id/likes')
