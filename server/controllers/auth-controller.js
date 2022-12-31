@@ -30,6 +30,8 @@ module.exports = {
          //Delete password 
          delete newUser.password;
 
+         console.log(delete newUser.password)
+
          res.status(201).json({ token, newUser })
       } catch(err){
          res
@@ -67,10 +69,9 @@ module.exports = {
      const token = signToken(user);
 
      //Delete password
-     delete user.password;
+     delete user["password"];
 
      res.status(200).json({ token, user})
-
       } catch(err){
          res
          .status(500)

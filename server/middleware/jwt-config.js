@@ -28,8 +28,8 @@ module.exports = {
       
         try {
           // decode and attach user data to request object
-          const { data } = jwt.verify(token, secret, { maxAge: expiration });
-          req.user = data;
+          const verifyToken = jwt.verify(token, secret, { maxAge: expiration });
+          req.user = verifyToken;
           next();
 
         } catch(err) {

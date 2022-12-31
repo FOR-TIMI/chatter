@@ -81,7 +81,7 @@ userSchema
 
 // Number of following
 userSchema
-    .virtual('followerCount')
+    .virtual('followingCount')
     .get(function(){
         return this.followings.length;
     });

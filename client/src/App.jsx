@@ -20,7 +20,11 @@ import {CssBaseline, ThemeProvider} from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./utils/theme";
 
+
 const App = () => { 
+  //Check if a user is loggedIn
+  const isLoggedIn = Boolean(useSelector((state) => state.token))
+
 
   //To get the current mode from the redux store
   const mode = useSelector((state ) =>  state.mode);
@@ -35,13 +39,13 @@ const App = () => {
             <Route path='/' element={<HomePage/> }/>
 
             <Route path='/'>
-                <Route path="login" element={<LoginPage/>} />
-                <Route path="register" element={<LoginPage/>} />
+                <Route path="login" element={!isLoggedIn ? <LoginPage/> : <Navigate to="/" />} />
+                <Route path="register" element={!isLoggedIn ? <LoginPage/> : <Navigate to="/" />} />
             </Route>
 
             <Route path="/profile">
                 <Route path=":username" element={<ProfilePage />} />
-                <Route path="" element={<ProfilePage />} />
+                <Route path="" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/" />} />
             </Route>
 
             <Route

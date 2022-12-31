@@ -83,13 +83,15 @@ const Form = () => {
        try{
         const { email, password } = values
 
-        const loggedInResponse = await fetch("http://localhost:3001/login", {
+        const loggedInResponse = await fetch(
+          "http://localhost:3001/login", 
+          {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password})
+          body: JSON.stringify({ email, password}),
+          headers: { "Content-Type": "application/json" }
         });
-        const loggedIn = await loggedInResponse.json();
 
+        const loggedIn = await loggedInResponse.json();
         
         if (loggedIn) {
           dispatch(
