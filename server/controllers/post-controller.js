@@ -6,7 +6,7 @@ module.exports = {
     /*===============Make a new post====================*/
     async createPost({body, files},res){
         try{
-            const { username , caption, postImageUrls } = body;
+            const { username , caption } = body;
             const { location, profilePhotoUrl: userProfilePhoto, _id } = await User.findOne({ username })
 
             if(!_id){
@@ -18,7 +18,7 @@ module.exports = {
                   location,
                   caption,
                   userProfilePhoto,
-                  postImageUrls 
+                  postImageUrls: files.map(file => file.secure_url)
                 })
 
             const posts = await Post.find();
