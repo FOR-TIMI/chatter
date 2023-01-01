@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import UserWidget from '../widgets/UserWidget';
 import MyPostWidget from '../widgets/MyPostWidget';
 import PostsWidget from '../widgets/PostsWidget';
+import FollowingListWidget from '../widgets/FollowingListWidget';
 import AdWidget from "../widgets/AdWidget";
 
 const HomePage = () => {
@@ -49,6 +50,7 @@ const HomePage = () => {
             <Box flexBasis="26%">
               <AdWidget/>
               <Box m="2rem 0"/>   
+              <FollowingListWidget username={username}/>
             </Box>
           )}
         </Box>
