@@ -24,13 +24,14 @@ module.exports = {
             ,impressions: Math.floor(Math.random() * 10000)
          });
 
+         //Delete password 
+         newUser.password = undefined;
+         
          //Generate JWT
          const token= signToken(newUser);
 
-         //Delete password 
-         delete newUser.password;
+ 
 
-         console.log(delete newUser.password)
 
          res.status(201).json({ token, newUser })
       } catch(err){
@@ -66,10 +67,12 @@ module.exports = {
          .json({ message: "Invalid credentials"})
      }
 
+      //Delete password
+      user.password = undefined;
+
      const token = signToken(user);
 
-     //Delete password
-     delete user["password"];
+
 
      res.status(200).json({ token, user})
       } catch(err){

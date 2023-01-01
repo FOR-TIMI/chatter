@@ -46,7 +46,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(cors());
 
-app.use("/assets", express.static(path.join(__dirname, 'public/assets')))
+app.use(express.static(path.join(__dirname + '/public')))
 
 //Routes
 app.use(require('./routes'))
@@ -59,6 +59,5 @@ db.once("open", () => {
         console.log(`🌍💥 Server running on port ${PORT}`)
     })
 })
-
 
 
