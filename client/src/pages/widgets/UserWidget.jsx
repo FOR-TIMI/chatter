@@ -64,7 +64,6 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
            <FlexBetween
                gap="0.5rem"
                pb="1.1rem"
-               onClick={() => navigate('/profile')}
            >
                <FlexBetween>
                    <UserAvatar image={profilePhotoUrl} />
@@ -79,15 +78,23 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
                                        cursor: "pointer"
                                    }
                                }} 
+                               onClick={() => navigate('/profile')}
+
                            >
                                {username}
                            </Typography>
-                           <Typography paddingBottom="0.3rem" color={medium}>
-                               {followers.length} followers
-                           </Typography>
-                           <Typography color={medium}>
-                               {followings.length} following
-                           </Typography>
+                           <FlexBetween paddingTop="0.4rem" width="11rem">
+                                    <FlexBetween>
+                                        <Typography color={dark} marginRight="0.25rem">{followers.length}</Typography> 
+                                        <Typography color={medium}>{followers.length > 1 ? 'followers' : 'follower'}</Typography>
+                                    </FlexBetween>
+                                
+                                
+                                    <FlexBetween>
+                                        <Typography color={dark} >{followings.length}</Typography>
+                                        <Typography color={medium} marginLeft="0.25rem">following</Typography>                                       
+                                    </FlexBetween>
+                           </FlexBetween>
                        </Box>
                </FlexBetween>
 

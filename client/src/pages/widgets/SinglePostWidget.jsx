@@ -44,6 +44,8 @@ const SinglePostWidget = ({
   const isLiked = Boolean(likes[username]);
   const likeCount = Object.keys(likes).length;
 
+  const isAuthor = postAuthorUsername === username
+
   
   const { palette } = useTheme();
   const {  dark } = palette.primary;
@@ -66,18 +68,24 @@ const SinglePostWidget = ({
 
   return (
     <WidgetWrapper m="2rem 0">
-      <Following 
-          followingId={postUserId} 
-          name={postAuthorUsername} 
-          subtitle={location} 
-          userProfilePhotoUrl={userProfilePhoto}
-      />
+
+     
+        <Following 
+            followingId={postUserId} 
+            name={postAuthorUsername} 
+            subtitle={location} 
+            userProfilePhotoUrl={userProfilePhoto}
+            isAuthor={isAuthor}
+        />
+      
       <Typography color={main} sx={{ mt: "1rem"}}>{caption}</Typography>
       {postImageUrls && (
         <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
           <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
             borderRadius: "0.75rem",
-            marginTop: "0.75rem"
+            marginTop: "0.75rem",
+            height: '100%',
+            width: '100%'
           }}/>
         </div>
       )}

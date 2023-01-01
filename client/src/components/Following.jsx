@@ -14,6 +14,7 @@ const Following = ({
   followingId,
   name,
   subtitle,
+  isAuthor,
   userProfilePhotoUrl}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -30,21 +31,23 @@ const Following = ({
     const isFollowing = followings.find(person => person._id === followingId)
 
     const updateFollowing = async() => {
-        const response = await fetch(
-         `http://localhost:3001/u/${username}/following`,
-         {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({ followingId })
-         }
-        );
-
-        const data = await response.json();
-
-        dispatch(setFollowing({ followings: data }))
+        if(!isAuthor){
+          const response = await fetch(
+            `http://localhost:3001/u/${username}/following`,
+            {
+               method: "PATCH",
+               headers: {
+                   Authorization: `Bearer ${token}`,
+                   "Content-type": "application/json"
+               },
+               body: JSON.stringify({ followingId })
+            }
+           );
+   
+           const data = await response.json();
+   
+           dispatch(setFollowing({ followings: data }))
+        }
     }
 
     return (
@@ -53,7 +56,7 @@ const Following = ({
           <UserAvatar image={userProfilePhotoUrl} size="55px" />
           <Box
             onClick={() => {
-              navigate(`/profile/${followingId}`);
+              navigate(`/profile${name !== username ? '/' + name : ''}`);
               navigate(0);
             }}
           >
@@ -75,7 +78,8 @@ const Following = ({
             </Typography>
           </Box>
         </FlexBetween>
-        <IconButton
+         {!isAuthor && (
+          <IconButton
           onClick={() => updateFollowing()}
           sx={{ backgroundColor: light , p: "0.6rem" }}
         >
@@ -85,6 +89,7 @@ const Following = ({
             <PersonAddOutlined sx={{ color: dark }} />
           )}
         </IconButton>
+        )}
     </FlexBetween>
     )
 
