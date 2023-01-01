@@ -104,7 +104,7 @@ module.exports = {
                 }
             )
             
-            res.status(200).json({ formattedFollowings })
+            res.status(200).json(formattedFollowings)
 
         } catch(err){
             res.status(404).json({ message: err.message })

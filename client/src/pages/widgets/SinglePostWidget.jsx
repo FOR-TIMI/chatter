@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
-import Following from "../../components/CustomStyledComponents/Following";
+import Following from "../../components/Following";
 
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
@@ -46,8 +46,9 @@ const SinglePostWidget = ({
 
   
   const { palette } = useTheme();
-  const { light, dark } = palette.primary;
-  const { main, medium } = palette.neutral;
+  const {  dark } = palette.primary;
+  const { main} = palette.neutral;
+
 
   const addRemoveLike  = async() => {
     const response = await fetch(`http://localhost:3001/p/${postId}/likes`,{
@@ -65,13 +66,20 @@ const SinglePostWidget = ({
 
   return (
     <WidgetWrapper m="2rem 0">
-      <Following  followingId={postUserId} name={postAuthorUsername} subtitle={location} userProfilePhotoUrl={userProfilePhoto}/>
+      <Following 
+          followingId={postUserId} 
+          name={postAuthorUsername} 
+          subtitle={location} 
+          userProfilePhotoUrl={userProfilePhoto}
+      />
       <Typography color={main} sx={{ mt: "1rem"}}>{caption}</Typography>
       {postImageUrls && (
-        <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
-          borderRadius: "0.75rem",
-          marginTop: "0.75rem"
-        }}/>
+        <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
+          <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
+            borderRadius: "0.75rem",
+            marginTop: "0.75rem"
+          }}/>
+        </div>
       )}
 
       <FlexBetween mt="0.25rem">

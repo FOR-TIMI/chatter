@@ -25,6 +25,8 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
 
     //state
     const token = useSelector((state) => state.token);
+
+    const { followers, followings } = useSelector((state) => state.user)
     
     //colors
     const { dark, medium, main } = palette.neutral;
@@ -55,8 +57,6 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
             occupation,
             viewedProfile,
             impressions,
-            followingCount,
-            followerCount 
             } = user
 
     return (
@@ -83,10 +83,10 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
                                {username}
                            </Typography>
                            <Typography paddingBottom="0.3rem" color={medium}>
-                               {followerCount} followers
+                               {followers.length} followers
                            </Typography>
                            <Typography color={medium}>
-                               {followingCount} following
+                               {followings.length} following
                            </Typography>
                        </Box>
                </FlexBetween>
