@@ -23,5 +23,8 @@
   "homepage": "https://github.com/FOR-TIMI/chatter#readme",
   "devDependencies": {
     "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "express-mongo-sanitize": "^2.2.0"
   }
 }

@@ -6,6 +6,8 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const sanitizeMongo = require('express-mongo-sanitize')
+
 
 const path = require('path')
 
@@ -32,7 +34,34 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin"}));
+
+app.use(cors());
+
+
+const imageUrls = [
+    'https://res.cloudinary.com/diskudcr3/',
+    'https://i.stack.imgur.com'
+]
+
+app.use(helmet.contentSecurityPolicy({
+    directives:{
+        defaultSrc: [],
+        connectSrc: ["'self'"],
+        scriptSrc: ["'unsafe-inline'", "'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/','https://fonts.gstatic.com/s/poppins/'],
+        workerSrc: ["'self'", "blob:"],
+        objectSrc: [],
+        imgSrc: [
+            "'self'",
+            "blob:",
+            "data:",
+            "https://res.cloudinary.com/diskudcr3/", 
+            'https://i.stack.imgur.com',
+        ],
+        fontSrc: ["'self'",  'https://fonts.googleapis.com/','https://fonts.gstatic.com/s/poppins/'],
+    }
+}))
+
 
 app.use(bodyParser.json({
     limit: "30mb",
@@ -44,7 +73,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-app.use(cors());
+
+//Sanitize url
+app.use(sanitizeMongo({replaceWith: '_'}))
 
 app.use(express.static(path.join(__dirname + '/public')))
 
