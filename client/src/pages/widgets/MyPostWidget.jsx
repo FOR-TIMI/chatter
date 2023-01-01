@@ -47,40 +47,22 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         setImageUrls(acceptedFiles.map(file => Object.assign(file, {
           preview: URL.createObjectURL(file)
         })));
+
         setImage(acceptedFiles)
-
-        console.log({ imageUrls })
-
-     
     };
 
-    // const onSubmit = (data) => {
-    //     const formData = new FormData();
 
-    //     formData.append('caption', data.caption);
-    
-    //     axios.post('/posts', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //       }
-    //     }).then(res => {
-    //       console.log(res.data);
-    //     }).catch(err => {
-    //       console.error(err);
-    //     });
-    //   };
-
-    const handlePost = async () => {
+    const handlePost = async (e) => {
         const formData = new FormData();
         formData.append("username", username);
         formData.append('caption', post);
         
-        if(imageUrls){
-          imageUrls.forEach(file => {
-            formData.append('postImageUrls', file);
-          });
-        }
-      
+   
+
+        imageUrls.forEach((image) => {
+          formData.append('postImageUrls', image);
+        })
+
         const response = await fetch(`http://localhost:3001/p`,{
           method: "POST",
           headers: { Authorization: `Bearer ${token}`},
@@ -94,11 +76,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         setPost("")
     }
 
-    // <div>
-    //     {imageUrls.map(file => (
-    //       <img src={file.preview} alt={file.name} key={file.name} />
-    //     ))}
-    // </div>
+  
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
@@ -139,11 +117,21 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                   >
                     <input {...getInputProps()}/>
                     {!image ? (
-                        <p>Add Picture Here</p>
+                        <p>Add Images Here</p>
                     ): (
                       <FlexBetween>
-                        <Typography>{image.name}</Typography>
-                        <img src={imageUrls[0].preview} alt={imageUrls[0].name}  />
+                         <FlexBetween>
+                            {imageUrls.map(img => (
+                                  <img  
+                                  width="70rem"
+                                  height="70rem" 
+                                  style={{
+                                    margin: "0 0.25rem",
+                                    border: `0.2rem solid ${palette.primary.dark}`
+                                  }}
+                                  src={img.preview} alt={img.name} key={img.preview} />
+                              ))}
+                         </FlexBetween>   
                         <EditOutlined/>
                       </FlexBetween>
                     )}
@@ -212,7 +200,6 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
          </FlexBetween>
 
     </WidgetWrapper>
-    
   )
 }
 

@@ -17,13 +17,13 @@ db.once('open', async () => {
 
 
 
-
+ 
 
 
     //created user data
     const createdUsers = [];
 
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
         const username = faker.internet.userName();
         const email = faker.internet.email(username);
         const password = faker.internet.password();
@@ -31,7 +31,7 @@ db.once('open', async () => {
         const occupation = faker.commerce.department();
         const followings = []
         const followers = []
-        const profilePhotoUrl = `https://i.pravatar.cc/150?u=${Math.floor(Math.random() * 10000)}`
+        const profilePhotoUrl = `https://res.cloudinary.com/diskudcr3/image/upload/c_thumb,w_200,g_face/v1672524602/chatter/gvvxsfb3v5l76csavwzk.png`
         
         
         //Database users
@@ -57,16 +57,24 @@ db.once('open', async () => {
      // create Posts
     let createdPosts = [];
 
-  for(let i=0; i < 20; i++){
+  for(let i=0; i < 5; i++){
 
     /**
      * Make random 10 character titles for posts
      */
     const postImageUrls = [
-        `https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
-        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
-        ,`https://i.pravatar.cc/500?u=${Math.floor(Math.random() * 10000)}`
+        {
+          url: `https://res.cloudinary.com/diskudcr3/image/upload/c_scale,h_521/v1672524602/chatter/gvvxsfb3v5l76csavwzk.png`,
+          filename: "chatter/gvvxsfb3v5l76csavwzk.png"
+        }
     ]
+
+    if(i % 2 === 0){
+      postImageUrls.unshift({
+        url: 'https://res.cloudinary.com/diskudcr3/image/upload/c_scale,h_521/v1672524603/chatter/ftdouuixfhvefz5vdgom.png',
+        filename: "/chatter/ftdouuixfhvefz5vdgom.png"
+      })
+    }
    
 
     const caption = faker.lorem.words(Math.round(Math.random() * 10) + 1);
@@ -75,30 +83,33 @@ db.once('open', async () => {
      * get a random user from the createdUser array
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.length);
-    const {location, profilePhotoUrl: userProfilePhoto, username} = createdUsers[randomUserIndex];
+    const {location, profilePhotoUrl: userProfilePhoto, username, _id:userId} = createdUsers[randomUserIndex];
     
-
+    
+    
     /**
      * create a post
-     */
+    */
     const createdPost = await Post.create({
         username, 
+        userId,
         location,
         caption,
         userProfilePhoto,
-        postImageUrls 
+        postImageUrls,
+        likes: {}
       })
-   
-
+      
+      
     /**
      * Add to the list of created posts
      */
     createdPosts.push(createdPost);
   }
-
+  
   console.log('\n ----- Added Posts ----- \n');
-
-
+  
+  
 
  process.exit(0);
 

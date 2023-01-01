@@ -9,29 +9,35 @@ module.exports = {
             const { username , caption } = body;
             const { location, profilePhotoUrl: userProfilePhoto, _id } = await User.findOne({ username })
 
+
             if(!_id){
                 return res.status(404).json({ message: "User not found"})
             }
 
-            await Post.create({
-                  username, 
-                  location,
-                  caption,
-                  userProfilePhoto,
-                  postImageUrls: files.map(file => file.secure_url)
-                })
+            
+            const newPost = await Post.create({
+                userId: _id,
+                username, 
+                location,
+                caption,
+                userProfilePhoto,
+                likes: {},
+                comments: [],
+                postImageUrls: files.map(obj => ({ url : obj['path'], filename : obj['filename']}))
+            })
 
-            const posts = await Post.find();
+
+            const posts = await Post.find().sort({ createdAt: -1});
             return res.status(201).json(posts)
         } catch(err){
-            re.status(409).json({message: err.message})
+            res.status(409).json({message: err.message})
         }
     },
 
     /*===============Get ALL posts====================*/
     async getFeedPosts(req,res){
         try{
-            const posts = await Post.find();
+            const posts = await Post.find().sort({ createdAt: -1});
             res.status(200).json(posts);
         } catch(err){
             res.status(404).json({message: err.message})
@@ -41,7 +47,7 @@ module.exports = {
     /*===============Get User posts====================*/
     async getUserPosts(req,res){
         try{
-            const posts = await Post.find({ username: params.username});
+            const posts = await Post.find({ username: params.username}).sort({ createdAt: -1});
             res.status(200).json(posts);
         } catch(err){
             res.status(404).json({message: err.message})

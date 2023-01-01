@@ -2,22 +2,32 @@ const { Schema, model} = require('mongoose');
 
 const commentSchema = require('./Comment');
 
+const ImageSchema = new Schema({
+	url: String,
+	filename: String
+})
+
+ImageSchema.virtual('thumbnail').get(function(){
+	return this.url.replace('/upload','/upload/w_200')
+})
+
+
 const postSchema = new Schema(
     {
         username: {
             type: String,
             required: true
         },
+        userId: {
+            type: String
+        },
         location: String,
         caption: String,
-        postImageUrls: {
-            type: Array,
-            default: []
-        },
+        postImageUrls: [ImageSchema],
         userProfilePhoto: String,
         likes: {
             type: Map,
-            of: Boolean
+            of: Boolean,
         },
         comments:[commentSchema]
     },

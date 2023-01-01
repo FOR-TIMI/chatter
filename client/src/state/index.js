@@ -24,7 +24,7 @@ export const authSlice = createSlice({
             },
             setFollowing: (state, action) => {
                 if(state.user){
-                    state.user.following = action.payload.following
+                    state.user.followings = action.payload.followings
                 } else{
                     console.error("user is following noone")
                 }
@@ -34,11 +34,11 @@ export const authSlice = createSlice({
             },
             setPost: (state, action) => {
                 const updatedPosts = state.posts.map((post) => {
-                    if(post._id === action.payload.post_id) return action.payload.post;
-                    return post;
-                })
+                  if (post._id === action.payload.post._id) return action.payload.post;
+                  return post;
+                });
                 state.posts = updatedPosts;
-            }
+            },
 
         }
 })
