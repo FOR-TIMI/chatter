@@ -3,6 +3,7 @@ import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 import InfoIcon from '@mui/icons-material/Info';
 import { useState, useEffect } from "react";
+import Skeleton from '@mui/material/Skeleton';
 
 const AdWidget = () => {
     const { palette } = useTheme();
@@ -27,11 +28,15 @@ const AdWidget = () => {
     ]
 
     const [ad, setAd] = useState(ads[0]);
+    
+    const getRandomAd = () => {
+        return ads[Math.floor(Math.random() * ads.length)]
+    }
 
     useEffect(() => {
         setInterval(()=> {
-            const nextAd = ads[Math.floor(Math.random() * ads.length)]
-            setAd(nextAd)
+          const nextAd = getRandomAd();         
+          setAd(nextAd)
         },10000)
     },[ad])
 
@@ -41,14 +46,18 @@ const AdWidget = () => {
             <Typography color={dark} variant="h5" fontWeight="500">
               Sponsored
             </Typography>
-            <Typography color={medium}>Create Ad</Typography>
+            <FlexBetween>
+              <Typography color={medium}>Create Ad</Typography>
+              <IconButton>
+                <InfoIcon/>
+              </IconButton>
+            </FlexBetween>
           </FlexBetween>
           <img
             width="100%"
-            height="auto"
             alt="advert"
             src={ad.url}
-            style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
+            style={{ borderRadius: "0.75rem", margin: "0.75rem 0", height: "150px" }}
           />
           <FlexBetween>
             <Typography color={main}>{ad.name}</Typography>

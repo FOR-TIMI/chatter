@@ -4,7 +4,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require('dotenv')
+
 const helmet = require('helmet')
+const csp = require('helmet-csp');
+
+
 const morgan = require('morgan')
 const sanitizeMongo = require('express-mongo-sanitize')
 
@@ -33,51 +37,38 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
+app.use(express.static(path.join(__dirname + '/public')))
+
+
+
+
+/*================== Security ==================*/
+
 app.use(helmet());
 
-app.use(cors());
-
-
-const imageUrls = [
-    'https://res.cloudinary.com/diskudcr3/',
-    'https://i.stack.imgur.com'
-]
-
-app.use(helmet.contentSecurityPolicy({
-    directives:{
-        defaultSrc: [],
-        connectSrc: ["'self'"],
-        scriptSrc: ["'unsafe-inline'", "'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/','https://fonts.gstatic.com/s/poppins/'],
-        workerSrc: ["'self'", "blob:"],
-        objectSrc: [],
-        imgSrc: [
-            "'self'",
-            "blob:",
-            "data:",
-            "https://res.cloudinary.com/diskudcr3/", 
-            'https://i.stack.imgur.com',
-        ],
-        fontSrc: ["'self'",  'https://fonts.googleapis.com/','https://fonts.gstatic.com/s/poppins/'],
+app.use(csp({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ['https://res.cloudinary.com/diskudcr3/image/upload/*', 'https://i.stack.imgur.com']
     }
-}))
+  }));
 
+app.use(cors())
 
-app.use(bodyParser.json({
-    limit: "30mb",
-    extended: true
-}));
+// app.use(cors({
+//     origin: ['https://example.com', 'https://other-site.com']
+//   }));
 
-app.use(bodyParser.urlencoded({
-    limit: "30mb",
-    extended: true
-}))
 
 
 //Sanitize url
 app.use(sanitizeMongo({replaceWith: '_'}))
 
-app.use(express.static(path.join(__dirname + '/public')))
+
+
+
+
+
 
 //Routes
 app.use(require('./routes'))
