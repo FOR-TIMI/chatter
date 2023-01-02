@@ -23,12 +23,12 @@ const ProfilePage = () => {
   const { username:signedInUsername} = useSelector((state) => state.user)
 
   const { username=signedInUsername } = useParams(); 
+  
 
 
   //To check if the signedInuser's name matches the one from the params
-  const isSignedInUserprofile = username === signedInUsername 
+  const isSignedInUserprofile = username === signedInUsername
 
-  console.log(isSignedInUserprofile)
 
   const getUser = async() => {
     const response = await fetch(`http://localhost:3001/u/${username}`, {
@@ -48,7 +48,8 @@ const ProfilePage = () => {
   },[]);
 
 
-  if(!user) return null
+  if(!user) return navigate('/')
+
 
 
 
