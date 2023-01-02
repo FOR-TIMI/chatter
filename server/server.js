@@ -49,10 +49,12 @@ app.use(helmet());
 app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
+      styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com'],
+      fontSrc: ['https://fonts.gstatic.com'],
       imgSrc: ['https://res.cloudinary.com/diskudcr3/image/upload/*', 'https://i.stack.imgur.com']
     }
   }));
-// app.use(cors())
+app.use(cors())
 
 // app.use(cors({
 //     origin: ['https://example.com', 'https://other-site.com']
