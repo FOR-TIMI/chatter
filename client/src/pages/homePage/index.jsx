@@ -7,8 +7,6 @@ import PostsWidget from '../widgets/PostsWidget';
 import FollowingListWidget from '../widgets/FollowingListWidget';
 import AdWidget from "../widgets/AdWidget";
 
-import { useLocation } from 'react-router-dom';
-
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -18,14 +16,6 @@ const HomePage = () => {
   const username = data?.username
   const profilePhotoUrl = data?.profilePhotoUrl
  
-  if(!username || !profilePhotoUrl){
-     return (
-      <Box>
-        <Navbar/>
-      </Box>
-     )
-  }
-
 
   return (
     <Box>
