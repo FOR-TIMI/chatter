@@ -31,6 +31,7 @@ const FollowingListWidget = ({ username }) => {
         getFollowings();
     },[])
 
+  if(followings.length){
     return (
         <WidgetWrapper>
             <Typography
@@ -61,8 +62,10 @@ const FollowingListWidget = ({ username }) => {
             </Box>
         </WidgetWrapper>
     )
-    
+  }
 
+  return;
+    
 }
 
 export default FollowingListWidget
