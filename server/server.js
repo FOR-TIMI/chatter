@@ -37,14 +37,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname + '/public')))
-
-
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname + '/public'));
-  });
-}
 
 
 
@@ -72,14 +64,24 @@ app.use(cors())
 //Sanitize url
 app.use(sanitizeMongo({replaceWith: '_'}))
 
-
-
-
-
-
-
 //Routes
 app.use(require('./routes'))
+
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname + '/public')))
+
+
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname + '/public'));
+  });
+}
+
+
+
+
+
+
 
 
 
