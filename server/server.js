@@ -53,7 +53,7 @@ app.use(csp({
     }
   }));
 
-app.use(cors())
+// app.use(cors())
 
 // app.use(cors({
 //     origin: ['https://example.com', 'https://other-site.com']
@@ -68,13 +68,15 @@ app.use(sanitizeMongo({replaceWith: '_'}))
 app.use(require('./routes'))
 
 
+
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static(path.join(__dirname, 'public')));
 
   app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/build/index.html"));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
   });
 }
+
 
 
 
