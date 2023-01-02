@@ -4,7 +4,7 @@ import {
 } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button , Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { setFollowing } from "../state";
 import FlexBetween from './CustomStyledComponents/FlexBetween';
@@ -13,6 +13,7 @@ import UserAvatar from './CustomStyledComponents/UserAvatar';
 const Following = ({
   followingId,
   name,
+  isFollowingList = false,
   subtitle,
   isAuthor,
   userProfilePhotoUrl}) => {
@@ -79,16 +80,18 @@ const Following = ({
           </Box>
         </FlexBetween>
          {!isAuthor && (
-          <IconButton
+          <Button
           onClick={() => updateFollowing()}
           sx={{ backgroundColor: light , p: "0.6rem" }}
-        >
-          {isFollowing ? (
+          startIcon={ !isFollowingList ? 
+            isFollowing ? 
             <PersonRemoveOutlined sx={{ color: dark }} />
-          ) : (
-            <PersonAddOutlined sx={{ color: dark }} />
-          )}
-        </IconButton>
+          : <PersonAddOutlined sx={{ color: dark }} />
+          : '' 
+        }
+        >
+          { isFollowing ? 'unfollow' : 'follow' }
+        </Button>
         )}
     </FlexBetween>
     )

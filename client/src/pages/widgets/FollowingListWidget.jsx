@@ -55,6 +55,7 @@ const FollowingListWidget = ({ username }) => {
                       name={username}
                       subtitle={occupation}
                       userProfilePhotoUrl={profilePhotoUrl}
+                      isFollowingList={true}
                     />
                 ))}
 
