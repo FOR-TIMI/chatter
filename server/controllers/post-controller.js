@@ -45,7 +45,7 @@ module.exports = {
     },
 
     /*===============Get User posts====================*/
-    async getUserPosts(req,res){
+    async getUserPosts({params},res){
         try{
             const posts = await Post.find({ username: params.username}).sort({ createdAt: -1});
             res.status(200).json(posts);

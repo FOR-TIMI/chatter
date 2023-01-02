@@ -49,9 +49,13 @@ app.use(helmet());
 app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com'],
-      fontSrc: ['https://fonts.gstatic.com'],
-      imgSrc: ['https://res.cloudinary.com/diskudcr3/image/upload/*', 'https://i.stack.imgur.com']
+      styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
+      fontSrc: ['https://fonts.gstatic.com','http://localhost:3001'],
+      imgSrc: ["'self'",
+                "blob:",
+                "data:",
+                'https://i.stack.imgur.com/l60Hf.png', 
+                'https://res.cloudinary.com/diskudcr3/*']
     }
   }));
 app.use(cors())
@@ -67,15 +71,15 @@ app.use(sanitizeMongo({replaceWith: '_'}))
 
 //Routes
 app.use(require('./routes'))
+app.use(express.static(path.join(__dirname + '/public')))
 
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, 'public')));
-
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-  });
+ 
 }
 
 

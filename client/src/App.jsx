@@ -36,7 +36,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <CssBaseline/>
           <Routes>
-            <Route path='/' element={<HomePage/> }/>
+            <Route path='/' element={isLoggedIn ? <HomePage/> : <Navigate to="/login" />}/>
 
             <Route path='/'>
                 <Route path="login" element={!isLoggedIn ? <LoginPage/> : <Navigate to="/" />} />
@@ -44,13 +44,13 @@ const App = () => {
             </Route>
 
             <Route path="/profile">
-                <Route path=":username" element={<ProfilePage />} />
-                <Route path="" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/" />} />
+                <Route path=":username" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
+                <Route path="" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
             </Route>
 
             <Route
                 path="*"
-                element={<NoMatch />}
+                element={isLoggedIn ? <HomePage/> : <Navigate to="/login" />}
               />
           </Routes>
         </ThemeProvider>

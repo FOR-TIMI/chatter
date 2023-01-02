@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar from '../../components/navbar';
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from 'react-redux';
@@ -8,10 +7,13 @@ import PostsWidget from '../widgets/PostsWidget';
 import FollowingListWidget from '../widgets/FollowingListWidget';
 import AdWidget from "../widgets/AdWidget";
 
+import { useLocation } from 'react-router-dom';
+
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const data = useSelector((state) => state.user)
+
 
   const username = data?.username
   const profilePhotoUrl = data?.profilePhotoUrl

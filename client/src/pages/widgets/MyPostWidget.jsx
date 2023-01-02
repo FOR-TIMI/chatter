@@ -78,7 +78,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
 
   
   return (
-    <WidgetWrapper>
+    <WidgetWrapper m="0 0 2rem 0">
       <FlexBetween gap="1.5rem">
         <UserAvatar image={profilePhotoUrl}/>
         <InputBase 

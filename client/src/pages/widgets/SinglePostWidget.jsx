@@ -67,7 +67,7 @@ const SinglePostWidget = ({
   }
 
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper m="0 0 2rem 0">
 
      
         <Following 
