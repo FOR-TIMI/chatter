@@ -52,7 +52,6 @@ app.use(csp({
       imgSrc: ['https://res.cloudinary.com/diskudcr3/image/upload/*', 'https://i.stack.imgur.com']
     }
   }));
-
 // app.use(cors())
 
 // app.use(cors({
