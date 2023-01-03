@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 
 
 import Navbar from "../../components/navbar";
@@ -31,7 +31,7 @@ const ProfilePage = () => {
 
 
   const getUser = async() => {
-    const response = await fetch(`http://localhost:3001/u/${username}`, {
+    const response = await fetch(`https://nameless-basin-36851.herokuapp.com/u/${username}`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`
@@ -45,10 +45,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getUser();
+    if(!user) return navigate('/')
   },[]);
 
 
-  if(!user) return navigate('/')
 
 
 

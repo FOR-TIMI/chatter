@@ -32,7 +32,7 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
     const { dark, medium, main } = palette.neutral;
 
     const getUser = async() => {
-        const response = await fetch(`http://localhost:3001/u/${username}`, {
+        const response = await fetch(`https://nameless-basin-36851.herokuapp.com/u/${username}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`

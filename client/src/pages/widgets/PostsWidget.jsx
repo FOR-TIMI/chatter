@@ -9,7 +9,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
     const token = useSelector((state) => state.token);
 
     const getPosts = async () => {
-        const response = await fetch("http://localhost:3001/p", {
+        const response = await fetch("https://nameless-basin-36851.herokuapp.com/p", {
             method: "GET",
             headers: { Authorization: `Bearer ${token}`}
         });
@@ -20,7 +20,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
 
 
     const getUserPosts = async() => {
-        const response = await fetch(`http://localhost:3001/u/${username}/posts`, {
+        const response = await fetch(`https://nameless-basin-36851.herokuapp.com/u/${username}/posts`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}`}
        });

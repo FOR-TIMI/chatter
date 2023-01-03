@@ -35,6 +35,9 @@ const initialValuesLogin = {
 const Form = () => {
   const location = useLocation().pathname.slice(1);
   const [pageType, setPageType] = useState(location) //To turn '/register' to 'register'
+  const [loginError, setLoginErr] = useState(null)
+
+
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,7 +51,7 @@ const Form = () => {
 
        try{
         const newUserData = await fetch(
-          "http://localhost:3001/register",
+          "https://nameless-basin-36851.herokuapp.com/register",
           {
             method:"POST",
             body: JSON.stringify({
@@ -84,7 +87,7 @@ const Form = () => {
         const { email, password } = values
 
         const loggedInResponse = await fetch(
-          "http://localhost:3001/login", 
+          "https://nameless-basin-36851.herokuapp.com/login", 
           {
           method: "POST",
           body: JSON.stringify({ email, password}),
@@ -100,14 +103,17 @@ const Form = () => {
               token: loggedIn.token,
             })
             );
+       } else{
+        setLoginErr("Incorret Credentials")
+        console.log(loginError)
        }
 
        onSubmitProps.resetForm(); 
        navigate("/");
     } catch(err){
-      console.error(err)
-     }
-    
+      onSubmitProps.resetForm(); 
+      console.error(err);  
+     }  
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
@@ -115,7 +121,7 @@ const Form = () => {
       if(isLogin) await login(values,onSubmitProps);
   };
 
-
+  
 
   return (
    <Container maxWidth="sm">
@@ -134,6 +140,7 @@ const Form = () => {
       }}>
         Chatter
       </Typography>
+
      <Formik
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
@@ -148,7 +155,6 @@ const Form = () => {
         handleBlur,
         handleChange,
         handleSubmit,
-        setFieldValue,
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
@@ -160,7 +166,12 @@ const Form = () => {
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
-          >
+          >          
+            {loginError && <Typography fontWeight="bold" sx={{
+              color: "red"
+            }}>{loginError}</Typography>}
+
+
             {isRegister && (
               <>
                 <TextField

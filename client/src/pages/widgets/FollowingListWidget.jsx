@@ -17,7 +17,7 @@ const FollowingListWidget = ({ username }) => {
 
     const getFollowings = async () => {
         const response = await fetch(
-            `http://localhost:3001/u/${username}/following`,
+            `https://nameless-basin-36851.herokuapp.com/u/${username}/following`,
             {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}`}

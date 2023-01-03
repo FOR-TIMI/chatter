@@ -53,7 +53,7 @@ const SinglePostWidget = ({
 
 
   const addRemoveLike  = async() => {
-    const response = await fetch(`http://localhost:3001/p/${postId}/likes`,{
+    const response = await fetch(`https://nameless-basin-36851.herokuapp.com/p/${postId}/likes`,{
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -33,7 +33,7 @@ const Following = ({
     const updateFollowing = async() => {
         if(!isAuthor){
           const response = await fetch(
-            `http://localhost:3001/u/${username}/following`,
+            `https://nameless-basin-36851.herokuapp.com/u/${username}/following`,
             {
                method: "PATCH",
                headers: {

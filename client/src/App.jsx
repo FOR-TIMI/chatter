@@ -8,7 +8,7 @@ import {
 import HomePage from './pages/homePage'
 import LoginPage from './pages/loginPage'
 import ProfilePage from './pages/profilePage'
-import NoMatch from './pages/NoMatch'
+// import NoMatch from './pages/NoMatch'
 
 
 
