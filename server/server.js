@@ -44,13 +44,19 @@ app.use(express.urlencoded({ extended: true }))
 
 /*================== Security ==================*/
 
-app.use(helmet());
+// Use the helmet middleware to set the default CSP
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    imgSrc: ["'self'", 'https://i.stack.imgur.com/l60Hf.png', 'https://res.cloudinary.com/diskudcr3']
+  }
+}));
 
 app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
-      fontSrc: ['https://fonts.gstatic.com','http://localhost:3001'],
+      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/'],
       imgSrc: ["'self'",
                 "blob:",
                 "data:",
