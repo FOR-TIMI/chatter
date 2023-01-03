@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  const { username: signedInUsername } = useSelector((state) => state.user);
+  const { username:signedInUsername } = useSelector((state) => state.user)
   const { username } = useParams();
   
 
