@@ -38,6 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 
+app.use(express.static(path.join(__dirname + '/public')))
 
 
 
@@ -48,7 +49,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    imgSrc: ["'self'", 'https://i.stack.imgur.com/l60Hf.png', 'https://res.cloudinary.com/diskudcr3']
+    imgSrc: ["'self'",  
+    "blob:",
+    "data:",
+    'https://i.stack.imgur.com/l60Hf.png', 
+    'https://res.cloudinary.com/diskudcr3']
   }
 }));
 
@@ -64,35 +69,21 @@ app.use(csp({
                 'https://res.cloudinary.com/diskudcr3/*']
     }
   }));
+
+// Enable CORS for all routes
 app.use(cors())
 
-// app.use(cors({
-//     origin: ['https://example.com', 'https://other-site.com']
-//   }));
 
-
-
-//Sanitize url
+// sanitize-mongo middleware to protect against MongoDB injection attacks
 app.use(sanitizeMongo({replaceWith: '_'}))
 
 //Routes
 app.use(require('./routes'))
-app.use(express.static(path.join(__dirname + '/public')))
 
+// Serve the index.html file from the public folder
 app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-
-if (process.env.NODE_ENV === "production") {
- 
-}
-
-
-
-
-
-
 
 
 
