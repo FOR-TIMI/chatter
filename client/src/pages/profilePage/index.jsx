@@ -22,7 +22,11 @@ const ProfilePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { username:signedInUsername} = useSelector((state) => state.user)
 
-  const { username=signedInUsername } = useParams(); 
+  let { username } = useParams(); 
+
+  if(!username){
+    username = signedInUsername
+  }
   
 
 

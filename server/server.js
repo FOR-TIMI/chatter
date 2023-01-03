@@ -46,16 +46,16 @@ app.use(express.static(path.join(__dirname + '/public')))
 /*================== Security ==================*/
 
 // Use the helmet middleware to set the default CSP
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    imgSrc: ["'self'",  
-    "blob:",
-    "data:",
-    'https://i.stack.imgur.com/l60Hf.png', 
-    'https://res.cloudinary.com/diskudcr3']
-  }
-}));
+// app.use(helmet.contentSecurityPolicy({
+//   directives: {
+//     defaultSrc: ["'self'"],
+//     imgSrc: ["'self'",  
+//     "blob:",
+//     "data:",
+//     'https://i.stack.imgur.com/l60Hf.png', 
+//     'https://res.cloudinary.com/diskudcr3']
+//   }
+// }));
 
 app.use(csp({
     directives: {
