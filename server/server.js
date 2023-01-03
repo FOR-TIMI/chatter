@@ -1,15 +1,11 @@
 
 /*================== Clobal Imports =================*/
 const express = require('express')
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require('dotenv')
 
-const helmet = require('helmet')
+
 const csp = require('helmet-csp');
-
-
-const morgan = require('morgan')
 const sanitizeMongo = require('express-mongo-sanitize')
 
 
@@ -46,17 +42,6 @@ app.use(express.static(path.join(__dirname + '/public')))
 /*================== Security ==================*/
 
 // Use the helmet middleware to set the default CSP
-// app.use(helmet.contentSecurityPolicy({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     imgSrc: ["'self'",  
-//     "blob:",
-//     "data:",
-//     'https://i.stack.imgur.com/l60Hf.png', 
-//     'https://res.cloudinary.com/diskudcr3']
-//   }
-// }));
-
 app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
