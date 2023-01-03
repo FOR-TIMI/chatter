@@ -20,9 +20,9 @@ const ProfilePage = () => {
 
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const { username:signedInUsername} = useSelector((state) => state.user)
 
-  const { username } = useParams(); 
+  const { username: signedInUsername } = useSelector((state) => state.user);
+  const { username } = useParams();
   
 
 
@@ -30,24 +30,25 @@ const ProfilePage = () => {
   const isSignedInUserprofile = username === signedInUsername
 
 
-  const getUser = async() => {
-    const response = await fetch(`https://nameless-basin-36851.herokuapp.com/u/${username || signedInUsername }`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+const getUser = async () => {
+  const targetUsername = username || signedInUsername;
+  const response = await fetch(
+    `https://nameless-basin-36851.herokuapp.com/u/${targetUsername}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const userData = await response.json();
+  setUser(userData);
+};
 
-    const userData = await response.json();
-
-    setUser(userData);
-  }
-
-  useEffect(() => {
-    getUser();
-    if(!user) return navigate('/')
-  },[]);
-
+useEffect(() => {
+  getUser();
+  if (!user) return navigate("/");
+}, []);
 
 
 
