@@ -48,12 +48,12 @@ app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
-      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*'],
+      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*','https://nameless-basin-36851.herokuapp.com/profile/*'],
       imgSrc: ["'self'",
                 "blob:",
                 "data:",
                 'https://i.stack.imgur.com/l60Hf.png', 
-                'https://res.cloudinary.com/diskudcr3/*','https://nameless-basin-36851.herokuapp.com/*']
+                'https://res.cloudinary.com/diskudcr3/*','https://nameless-basin-36851.herokuapp.com/*','https://nameless-basin-36851.herokuapp.com/profile/*']
     }
   }));
 
