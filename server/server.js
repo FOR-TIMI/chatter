@@ -4,6 +4,8 @@ const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
 
+const morgan = require('morgan');
+
 
 const csp = require('helmet-csp');
 const sanitizeMongo = require('express-mongo-sanitize')
@@ -57,6 +59,8 @@ app.use(csp({
 
 // Enable CORS for all routes
 app.use(cors())
+
+app.use(morgan("common"));
 
 
 // sanitize-mongo middleware to protect against MongoDB injection attacks
