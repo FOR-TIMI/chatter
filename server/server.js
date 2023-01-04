@@ -36,6 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 
+app.use(express.static(path.join(__dirname + '/public')))
+
+
 
 
 /*================== Security ==================*/
@@ -45,8 +48,12 @@ app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
-      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/'],
-      imgSrc: ["'self'", 'blob:', 'data:', 'https://i.stack.imgur.com/l60Hf.png', 'https://res.cloudinary.com/diskudcr3/*']
+      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*'],
+      imgSrc: ["'self'",
+                "blob:",
+                "data:",
+                'https://i.stack.imgur.com/l60Hf.png', 
+                'https://res.cloudinary.com/diskudcr3/*','https://nameless-basin-36851.herokuapp.com/*']
     }
   }));
 
@@ -61,10 +68,6 @@ app.use(sanitizeMongo({replaceWith: '_'}))
 
 //Routes
 app.use(require('./routes'))
-
-//Static files
-app.use(express.static(path.join(__dirname + '/public')))
-
 
 // Serve the index.html file from the public folder
 app.get("/*", (req, res) => {
