@@ -1,6 +1,7 @@
 import { Box, Typography, useTheme, Skeleton } from "@mui/material";
 import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
+import { useState } from "react";
 
 
 import { useEffect } from 'react';
@@ -12,6 +13,7 @@ const FollowingListWidget = ({ username }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
 
+    const [isLoading, setIsLoading] = useState(true);
 
     const token = useSelector((state) => state.token);
     const followings = useSelector((state) => state.user.followings);
@@ -28,6 +30,7 @@ const FollowingListWidget = ({ username }) => {
             }
         );
         const data = await response.json();
+        setIsLoading(false)
         dispatch(setFollowing({ followings: data }));
     }
 
@@ -41,7 +44,20 @@ const FollowingListWidget = ({ username }) => {
                 <Skeleton width="100%" height={25} style={{ marginBottom: "1.5rem" }} />
                 <Box display="flex" flexDirection="column" gap="1.5rem">
                     {Array.from(new Array(3)).map((p,index) => (
-                        <Following isLoading={true}/>
+                        <FlexBetween key={index}>
+                            <FlexBetween gap="1rem">
+                                <UserAvatar isLoading={true} size="55px" />
+        
+                                <Box>
+                                    <Skeleton width="150px" height={25} style={{ marginBottom: "0.25rem" }} />
+                                    <Skeleton width="75px" height={20} />
+                                </Box>
+                            </FlexBetween>
+                        
+                            <FlexBetween>
+                                <Skeleton variant="circle" width={30} height={30} style={{ padding: "0.6rem", borderRadius: "50%" }} />
+                            </FlexBetween>     
+                     </FlexBetween>
                     ))}
                 </Box>
             </WidgetWrapper>
