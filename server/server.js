@@ -48,17 +48,15 @@ app.use(csp({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
-      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*','https://nameless-basin-36851.herokuapp.com/profile/*'],
-      imgSrc: ["'self'",
-                "blob:",
-                "data:",
-                'https://i.stack.imgur.com/l60Hf.png', 
-                'https://res.cloudinary.com/diskudcr3/*','https://nameless-basin-36851.herokuapp.com/*','https://nameless-basin-36851.herokuapp.com/profile/*']
+      fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*'],
+      imgSrc: ["'self'", "*", "blob:", "data:"]
     }
   }));
 
 // Enable CORS for all routes
-app.use(cors())
+app.use(cors({
+  origin: 'https://nameless-basin-36851.herokuapp.com'
+}));
 
 app.use(morgan("common"));
 
