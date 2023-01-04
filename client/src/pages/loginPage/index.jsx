@@ -96,22 +96,22 @@ const Form = () => {
           headers: { "Content-Type": "application/json" }
         });
 
-        const loggedIn = await loggedInResponse.json();
-        
-        if (loggedIn) {
+        if(loggedInResponse.ok){
+          const loggedIn = await loggedInResponse.json();
+
           dispatch(
             setLogin({
               user: loggedIn.user,
               token: loggedIn.token,
-            })
-            );
-       } else{
+            }));
+
+            navigate("/")
+        }else{
         setLoginErr("Incorret Credentials")
-        console.log(loginError)
        }
 
        onSubmitProps.resetForm(); 
-       navigate("/");
+      
     } catch(err){
       onSubmitProps.resetForm(); 
       console.error(err);  
@@ -143,6 +143,10 @@ const Form = () => {
         Chatter
       </Typography>
 
+      {loginError && <Typography fontWeight="bold" sx={{
+              color: "red"
+        }}>{loginError}</Typography>}
+
      <Formik
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
@@ -169,9 +173,6 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >          
-            {loginError && <Typography fontWeight="bold" sx={{
-              color: "red"
-            }}>{loginError}</Typography>}
 
 
             {isRegister && (

@@ -1,8 +1,9 @@
-import { Box, Typography, useTheme, Skeleton } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
-import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
-import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
+
+
+import FollowingListSkeleton from "../../components/Skeletons/FollowingListSkeleton";
 import { useState } from "react";
 
 
@@ -42,27 +43,7 @@ const FollowingListWidget = ({ username }) => {
 
     if(isLoading){
         return (
-            <WidgetWrapper>
-                <Skeleton width="60%" height={25} style={{ marginBottom: "1.5rem" }} />
-                <Box display="flex" flexDirection="column" gap="1.5rem">
-                    {Array.from(new Array(3)).map((p,index) => (
-                        <FlexBetween key={index}>
-                            <FlexBetween gap="1rem">
-                                <UserAvatar isLoading={true} size="55px" />
-        
-                                <Box>
-                                    <Skeleton width="150px" height={25} style={{ marginBottom: "0.25rem" }} />
-                                    <Skeleton width="75px" height={20} />
-                                </Box>
-                            </FlexBetween>
-                        
-                            <FlexBetween>
-                                <Skeleton variant="circle" width={30} height={30} style={{ padding: "0.6rem", borderRadius: "50%" }} />
-                            </FlexBetween>     
-                     </FlexBetween>
-                    ))}
-                </Box>
-            </WidgetWrapper>
+          <FollowingListSkeleton/>
         )
     }
 
