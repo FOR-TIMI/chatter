@@ -43,7 +43,7 @@ const FollowingListWidget = ({ username }) => {
     if(isLoading){
         return (
             <WidgetWrapper>
-                <Skeleton width="100%" height={25} style={{ marginBottom: "1.5rem" }} />
+                <Skeleton width="60%" height={25} style={{ marginBottom: "1.5rem" }} />
                 <Box display="flex" flexDirection="column" gap="1.5rem">
                     {Array.from(new Array(3)).map((p,index) => (
                         <FlexBetween key={index}>
