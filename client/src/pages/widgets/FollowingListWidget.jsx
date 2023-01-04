@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setFollowing } from "../../state";
 
-const FollowingListWidget = ({ username, isLoading }) => {
+const FollowingListWidget = ({ username }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
 
@@ -16,7 +16,7 @@ const FollowingListWidget = ({ username, isLoading }) => {
     const token = useSelector((state) => state.token);
     const followings = useSelector((state) => state.user.followings);
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
 
     const getFollowings = async () => {

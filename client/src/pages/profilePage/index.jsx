@@ -30,7 +30,7 @@ const ProfilePage = () => {
 
   
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
   //To check if the signedInuser's name matches the one from the params
 

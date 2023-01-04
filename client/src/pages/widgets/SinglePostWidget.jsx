@@ -53,7 +53,7 @@ const SinglePostWidget = ({
   const {  dark } = palette.primary;
   const { main} = palette.neutral;
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
  
   console.log(process.env.REACT_APP_SERVER_URL)

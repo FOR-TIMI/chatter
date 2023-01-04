@@ -57,7 +57,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         formData.append("username", username);
         formData.append('caption', post);
         
-        const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+        const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
    
 
         imageUrls.forEach((image) => {

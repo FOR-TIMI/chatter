@@ -45,7 +45,7 @@ const Form = () => {
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
   
   const register = async (values, onSubmitProps) => {

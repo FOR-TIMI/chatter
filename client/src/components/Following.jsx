@@ -31,7 +31,7 @@ const Following = ({
 
     const isFollowing = followings.find(person => person._id === followingId)
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
 
     const updateFollowing = async() => {

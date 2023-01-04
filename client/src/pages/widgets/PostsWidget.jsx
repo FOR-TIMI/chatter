@@ -15,7 +15,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
     const posts = useSelector((state) => state.posts);
     const token = useSelector((state) => state.token);
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
 
     const getPosts = async () => {
         const response = await fetch( serverUrl + "p", {
