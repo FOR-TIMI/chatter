@@ -1,6 +1,8 @@
 import { Box, Typography, useTheme, Skeleton } from "@mui/material";
 import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
+import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
+import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import { useState } from "react";
 
 
