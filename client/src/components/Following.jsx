@@ -3,6 +3,7 @@ import {
     PersonRemoveOutlined
 } from "@mui/icons-material";
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography, useTheme, Skeleton } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +12,6 @@ import FlexBetween from './CustomStyledComponents/FlexBetween';
 import UserAvatar from './CustomStyledComponents/UserAvatar';
 
 const Following = ({
-  isLoading,
   followingId,
   name,
   subtitle,
@@ -54,26 +54,6 @@ const Following = ({
         }
     }
 
-    if(isLoading){
-      return (
-        <FlexBetween>
-          <FlexBetween gap="1rem">
-              <UserAvatar isLoading={true} size="55px" />
-
-              <Box>
-                <Skeleton width="100%" height={25} style={{ marginBottom: "0.25rem" }} />
-                <Skeleton width="100%" height={20} />
-              </Box>
-          </FlexBetween>
-          
-         <FlexBetween>
-           <Skeleton variant="circle" width={24} height={24} style={{ backgroundColor: light, padding: "0.6rem" }} />
-         </FlexBetween>
-          
-        </FlexBetween>
-
-      )
-    }
 
     return (
       <FlexBetween>

@@ -16,7 +16,6 @@ import MyPostWidget from "../widgets/MyPostWidget";
 
 const ProfilePage = () => {
   const [user, setUser ] = useState();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSignedInUserprofile, setIsSignedInUserprofile] = useState(false)
 
 
@@ -54,7 +53,6 @@ const getUser = async () => {
       if(response.ok){
         const userData = await response.json();
       
-        setIsLoading(false);
         setIsSignedInUserprofile(userData.username === signedInUsername)
         setUser(userData);
       } else{

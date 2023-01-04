@@ -55,7 +55,8 @@ const SinglePostWidget = ({
 
   const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
 
-
+ 
+  console.log(process.env.REACT_APP_SERVER_URL)
 
   const addRemoveLike  = async() => {
     const response = await fetch( serverUrl + `p/${postId}/likes`,{
@@ -120,7 +121,7 @@ const SinglePostWidget = ({
               <IconButton>
                 <ShareOutlined />
               </IconButton>
-            </FlexBetween>
+      </FlexBetween>
             {isComments && (
               <Box mt="0.5rem">
                 {comments.map((comment, i) => (
