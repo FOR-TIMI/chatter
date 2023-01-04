@@ -45,13 +45,15 @@ const Form = () => {
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+
   
   const register = async (values, onSubmitProps) => {
         const { username, email, location, occupation, password} = values;
 
        try{
         const newUserData = await fetch(
-          "https://nameless-basin-36851.herokuapp.com/register",
+          serverUrl + 'register',
           {
             method:"POST",
             body: JSON.stringify({
@@ -87,7 +89,7 @@ const Form = () => {
         const { email, password } = values
 
         const loggedInResponse = await fetch(
-          "https://nameless-basin-36851.herokuapp.com/login", 
+          serverUrl + "login", 
           {
           method: "POST",
           body: JSON.stringify({ email, password}),

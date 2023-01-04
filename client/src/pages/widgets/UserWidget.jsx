@@ -7,7 +7,7 @@ import {
     LinkedIn
 } from '@mui/icons-material';
 
-import { Box, Typography, Divider, useTheme} from "@mui/material";
+import { Box, Typography, Divider, useTheme, Skeleton} from "@mui/material";
 
 //Custom components
 import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const UserWidget = ({ username, profilePhotoUrl}) => {
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true)
     const { palette } = useTheme();
     const navigate = useNavigate();
 
@@ -31,8 +32,11 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
     //colors
     const { dark, medium, main } = palette.neutral;
 
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+
+
     const getUser = async() => {
-        const response = await fetch(`https://nameless-basin-36851.herokuapp.com/u/${username}`, {
+        const response = await fetch( serverUrl + `u/${username}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -40,8 +44,8 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
         })
 
         const userData = await response.json();
-
         setUser(userData);
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -58,6 +62,81 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
             viewedProfile,
             impressions,
             } = user
+
+    if(isLoading){
+        return (
+            <WidgetWrapper>
+            <FlexBetween gap="0.5rem" pb="1.1rem">
+                <FlexBetween>
+                    <UserAvatar isLoading={true} />
+                    <Box marginLeft="1rem">
+                    <Skeleton variant='h4' width="11rem" />
+                    <FlexBetween paddingTop="0.4rem" width="11rem">
+                        <FlexBetween>
+                             <Skeleton width="5rem" />
+                        </FlexBetween>
+                        <FlexBetween>
+                     
+                        <Skeleton width="5rem" />
+                        </FlexBetween>
+                    </FlexBetween>
+                    </Box>
+                </FlexBetween>
+                <Skeleton width="2rem" height="3rem" sx={{ borderRadius: "50%"}}/>
+                </FlexBetween>
+
+                <Divider />
+
+                <Box p="1rem 0">
+                <Box display="flex" alignItems="center" gap="1rem" mb="0.1rem">
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
+                    <Skeleton width="10rem" />
+                </Box>
+                <Box display="flex" alignItems="center" gap="1rem">
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}} />
+                    <Skeleton width="10rem" />
+                </Box>
+                </Box>
+
+                <Box p="1rem 0">
+                <FlexBetween mb="0.5rem">
+                    <Skeleton width="10rem" />
+                    <Skeleton width="4rem" />
+                </FlexBetween>
+
+                <FlexBetween>
+                    <Skeleton width="10rem" />
+                    <Skeleton width="3rem" />
+                </FlexBetween>
+                </Box>
+
+                <Box p="1rem 0">
+                <Skeleton width="10rem" marginBottom="0.7rem" />
+                <FlexBetween gap="1rem" mb="0.5rem">
+                    <FlexBetween gap="1rem">
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
+                    <Box>
+                        <Skeleton width="10rem" />
+                        <Skeleton width="6rem" />
+                    </Box>
+                    </FlexBetween>
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
+                </FlexBetween>
+
+                <FlexBetween gap="1rem">
+                    <FlexBetween gap="1rem">
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
+                    <Box>
+                        <Skeleton width="10rem" />
+                        <Skeleton width="4rem" />
+                    </Box>
+                    </FlexBetween>
+                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
+                </FlexBetween>
+                </Box>
+            </WidgetWrapper>
+        )
+    }
 
     return (
         <WidgetWrapper>

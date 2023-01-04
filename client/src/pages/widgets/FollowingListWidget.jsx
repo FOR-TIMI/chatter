@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Skeleton } from "@mui/material";
 import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
@@ -8,16 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setFollowing } from "../../state";
 
-const FollowingListWidget = ({ username }) => {
+const FollowingListWidget = ({ username, isLoading }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
+
 
     const token = useSelector((state) => state.token);
     const followings = useSelector((state) => state.user.followings);
 
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+
+
     const getFollowings = async () => {
         const response = await fetch(
-            `https://nameless-basin-36851.herokuapp.com/u/${username}/following`,
+             serverUrl + `u/${username}/following`,
             {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}`}
@@ -30,6 +34,20 @@ const FollowingListWidget = ({ username }) => {
     useEffect(() => {
         getFollowings();
     },[])
+
+    if(isLoading){
+        return (
+            <WidgetWrapper>
+                <Skeleton width="100%" height={25} style={{ marginBottom: "1.5rem" }} />
+                <Box display="flex" flexDirection="column" gap="1.5rem">
+                    {Array.from(new Array(3)).map((p,index) => (
+                        <Following isLoading={true}/>
+                    ))}
+                </Box>
+            </WidgetWrapper>
+        )
+    }
+
 
   if(followings.length){
     return (
@@ -51,7 +69,7 @@ const FollowingListWidget = ({ username }) => {
                  profilePhotoUrl,
                 }) => (
                     <Following
-                      key={_id}
+                      key={_id + username}
                       followingId={_id}
                       name={username}
                       subtitle={occupation}

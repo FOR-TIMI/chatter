@@ -4,13 +4,14 @@ import {
 } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme, Skeleton } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { setFollowing } from "../state";
 import FlexBetween from './CustomStyledComponents/FlexBetween';
 import UserAvatar from './CustomStyledComponents/UserAvatar';
 
 const Following = ({
+  isLoading,
   followingId,
   name,
   subtitle,
@@ -30,10 +31,13 @@ const Following = ({
 
     const isFollowing = followings.find(person => person._id === followingId)
 
+    const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+
+
     const updateFollowing = async() => {
         if(!isAuthor){
           const response = await fetch(
-            `https://nameless-basin-36851.herokuapp.com/u/${username}/following`,
+             serverUrl + `u/${username}/following`,
             {
                method: "PATCH",
                headers: {
@@ -48,6 +52,27 @@ const Following = ({
    
            dispatch(setFollowing({ followings: data }))
         }
+    }
+
+    if(isLoading){
+      return (
+        <FlexBetween>
+          <FlexBetween gap="1rem">
+              <UserAvatar isLoading={true} size="55px" />
+
+              <Box>
+                <Skeleton width="100%" height={25} style={{ marginBottom: "0.25rem" }} />
+                <Skeleton width="100%" height={20} />
+              </Box>
+          </FlexBetween>
+          
+         <FlexBetween>
+           <Skeleton variant="circle" width={24} height={24} style={{ backgroundColor: light, padding: "0.6rem" }} />
+         </FlexBetween>
+          
+        </FlexBetween>
+
+      )
     }
 
     return (

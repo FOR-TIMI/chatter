@@ -57,13 +57,14 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         formData.append("username", username);
         formData.append('caption', post);
         
+        const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
    
 
         imageUrls.forEach((image) => {
           formData.append('postImageUrls', image);
         })
 
-        const response = await fetch(`https://nameless-basin-36851.herokuapp.com/p`,{
+        const response = await fetch( serverUrl + `p`,{
           method: "POST",
           headers: { Authorization: `Bearer ${token}`},
           body:formData

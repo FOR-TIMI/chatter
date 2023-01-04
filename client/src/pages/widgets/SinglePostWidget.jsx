@@ -24,6 +24,7 @@ import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
 
+
 const SinglePostWidget = ({
   postId,
   postUserId,
@@ -33,7 +34,8 @@ const SinglePostWidget = ({
   postImageUrls,
   userProfilePhoto,
   likes,
-  comments
+  comments,
+  isLoading
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch();
@@ -51,9 +53,12 @@ const SinglePostWidget = ({
   const {  dark } = palette.primary;
   const { main} = palette.neutral;
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL || "http://localhost:3001/"
+
+
 
   const addRemoveLike  = async() => {
-    const response = await fetch(`https://nameless-basin-36851.herokuapp.com/p/${postId}/likes`,{
+    const response = await fetch( serverUrl + `p/${postId}/likes`,{
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -65,6 +70,7 @@ const SinglePostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost}));
   }
+
 
   return (
     <WidgetWrapper m="0 0 2rem 0">
