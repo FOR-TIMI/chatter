@@ -21,6 +21,7 @@ import {
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import Following from "../../components/Following";
 
+
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
 
@@ -53,7 +54,7 @@ const SinglePostWidget = ({
   const {  dark } = palette.primary;
   const { main} = palette.neutral;
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+  const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
 
  
 

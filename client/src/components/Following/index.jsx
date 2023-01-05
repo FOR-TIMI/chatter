@@ -3,13 +3,13 @@ import {
     PersonRemoveOutlined
 } from "@mui/icons-material";
 
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Typography, useTheme, Skeleton } from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
-import { setFollowing } from "../state";
-import FlexBetween from './CustomStyledComponents/FlexBetween';
-import UserAvatar from './CustomStyledComponents/UserAvatar';
+import { setFollowing } from "../../state";
+import FlexBetween from '../CustomStyledComponents/FlexBetween';
+import UserAvatar from '../CustomStyledComponents/UserAvatar';
 
 const Following = ({
   followingId,
@@ -31,7 +31,8 @@ const Following = ({
 
     const isFollowing = followings.find(person => person._id === followingId)
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+    const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
+
 
 
     const updateFollowing = async() => {

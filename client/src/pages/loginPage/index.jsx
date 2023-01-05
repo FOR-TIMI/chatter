@@ -45,7 +45,8 @@ const Form = () => {
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+  const serverUrl = process.env.REACT_APP_SERVER_URL  || "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/"
+
 
   
   const register = async (values, onSubmitProps) => {
@@ -89,7 +90,7 @@ const Form = () => {
         const { email, password } = values
 
         const loggedInResponse = await fetch(
-          serverUrl + "login", 
+          "http://localhost:3001/login", 
           {
           method: "POST",
           body: JSON.stringify({ email, password}),
@@ -113,7 +114,6 @@ const Form = () => {
        onSubmitProps.resetForm(); 
       
     } catch(err){
-      onSubmitProps.resetForm(); 
       console.error(err);  
      }  
   };

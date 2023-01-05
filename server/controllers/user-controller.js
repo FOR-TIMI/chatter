@@ -1,15 +1,16 @@
 const { User } = require('../model');
 
-module.exports = {
+module.exports  = {
+    // ...
 
     /**================ GET ONE USER ==================== */
-     async getUser({params},res){
+     async  getUser({params},res){
         try{
             const { username } = params;
             const user = await User.findOne({ username });
 
             //hide users password from frontend
-            delete user.password
+            user.password = undefined
 
             res.status(200).json(user)
         } catch(err){
@@ -18,7 +19,7 @@ module.exports = {
      },
 
     /**================ GET User Followers ==================== */
-     async getUserFollowers({params}, res){
+     async  getUserFollowers({params}, res){
         try{
             const { username } = params;
             const user = await User.findOne({ username });
@@ -44,7 +45,7 @@ module.exports = {
      },
     
     /**================ GET User Followings ==================== */
-    async getUserFollowings({params}, res){
+    async  getUserFollowings({params}, res){
         try{
             const { username } = params;
             const user = await User.findOne({ username });
@@ -69,47 +70,61 @@ module.exports = {
         }
     },
 
-    /**================ to follow and Unfollow ==================== */
-    async addRemoveFollow({ params, body},res){
-        try{
-            const user = await User.findOne({ username: params.username });
-            const following = await User.findById({ _id : body.followingId})
 
-            //Check if the user is currently following this person
-            if(user.followings.includes(body.followingId)){
-                user.followings = user.followings.filter((id) => id !== body.followingId)
+   /**================ to follow and Unfollow ==================== */
+   async  addRemoveFollow({ params, body }, res) {
+        try {
+        const user = await User.findOne({ username: params.username });
+        const following = await User.findById({ _id: body.followingId });
 
-                //update the person you're followings follower list
-                following.followers = following.followers.filter((id) => id !== user.id)
-            } else{
-                //Add friend to friend list
-                user.followings.push(body.followingId)
+        // Check if the user is currently following this person
+        if (user.followings.includes(body.followingId)) {
+            // Remove following from user's following list
+            await User.updateOne(
+            { _id: user.id },
+            { $pull: { followings: body.followingId } }
+            );
 
-                //Update the person you're following's follower list
-                following.followers.push(user.id)
-             }
-            
-             //Save new version of the followings and followers
-             await user.save();
-             await following.save();
+            // Remove user from following's followers list
+            await User.updateOne(
+            { _id: following.id },
+            { $pull: { followers: user.id } }
+            );
+        } else {
+            // Add following to user's following list
+            await User.updateOne(
+            { _id: user.id },
+            { $push: { followings: body.followingId } }
+            );
 
-             //To return new updated list of friends
-             const followings = await Promise.all(
-                user.followings.map((id) => User.findById(id))
-            )
+            // Add user to following's followers list
+            await User.updateOne(
+            { _id: following.id },
+            { $push: { followers: user.id } }
+            );
 
-            const formattedFollowings = followings.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-            
-            res.status(200).json(formattedFollowings)
+            // Create a new notification for the user
+            // const newNotification = {
+            // sender: user.id,
+            // recipient: following.id,
+            // type: "follow",
+            // read: false,
+            // };
 
-        } catch(err){
-            res.status(404).json({ message: err.message })
+            // const notification = new Notification(newNotification);
+            // await notification.save();
         }
-    }
 
+        // Send real-time update to all connected clients
+        io.emit("ADD_FOLLOWER", {
+            user: user.username,
+            following: following.username,
+        });
+
+        res.status(200).json({ message: "Success" });
+        } catch (err) {
+        res.status(404).json({ message: err.message });
+        }
+   }
 
 }

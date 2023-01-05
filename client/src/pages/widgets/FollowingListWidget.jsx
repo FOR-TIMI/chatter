@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import Following from "../../components/Following";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
+import Following from "../../components/Following";
 
 import FollowingListSkeleton from "../../components/Skeletons/FollowingListSkeleton";
 import { useState } from "react";
@@ -21,7 +21,8 @@ const FollowingListWidget = ({ username }) => {
     const token = useSelector((state) => state.token);
     const followings = useSelector((state) => state.user.followings);
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+    const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
+
 
 
     const getFollowings = async () => {
