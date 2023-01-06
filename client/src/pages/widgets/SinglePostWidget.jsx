@@ -86,7 +86,7 @@ const SinglePostWidget = ({
         />
       
       <Typography color={main} sx={{ mt: "1rem"}}>{caption}</Typography>
-      {postImageUrls && (
+      {postImageUrls.length ? (
         <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
           <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
             borderRadius: "0.75rem",
@@ -95,7 +95,7 @@ const SinglePostWidget = ({
             width: '100%'
           }}/>
         </div>
-      )}
+      ) : null}
 
       <FlexBetween mt="0.25rem">
               <FlexBetween gap="1rem">
