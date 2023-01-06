@@ -6,7 +6,7 @@ import { Skeleton,Box } from "@mui/material";
 
 const SinglePostSkeleton = () => {
   return (
-    <WidgetWrapper marginBottom="2rem">
+    <WidgetWrapper >
 
     {/* Following skeleton  */}
         <FlexBetween>

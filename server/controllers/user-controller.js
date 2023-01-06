@@ -17,114 +17,97 @@ module.exports  = {
             res.status(404).json({ message: err.message })
         }
      },
-
+     
     /**================ GET User Followers ==================== */
      async  getUserFollowers({params}, res){
         try{
             const { username } = params;
+
             const user = await User.findOne({ username });
-            
-            const followers = await Promise.all(
-                user.followers.map((id) => User.findById(id))
-            )
-
-
+            if (!user) {
+              return res
+              .status(404)
+              .json({ message: "user not found"});
+            }
+        
+            const followers = await User.find({ _id: { $in: user.followers } });
+        
             const formattedFollowers = followers.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-
-
-            
-            res.status(200).json(formattedFollowers)
-
-        } catch(err){
-            res.status(404).json({ message: err.message })
-        }
+              ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+                return { _id, username, email, occupation, location, profilePhotoUrl }
+              }
+            );
+        
+            res.status(200).json(formattedFollowers);
+          } catch(err){
+            res.status(404).json({ message: err.message });
+          }
      },
     
     /**================ GET User Followings ==================== */
     async  getUserFollowings({params}, res){
         try{
-            const { username } = params;
-            const user = await User.findOne({ username });
-            
-
-            const followings = await Promise.all(
-                user.followings.map((id) => User.findById(id))
-            )
-
-
-
-            const formattedFollowings = followings.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-            
-            res.status(200).json(formattedFollowings)
-
+          const { username } = params;
+          const user = await User.findOne({ username });
+          if (!user) {
+            return res
+            .status(404)
+            .json({ message: "user not found"});
+          }
+      
+          const followings = await User.find({ _id: { $in: user.followings } });
+      
+          const formattedFollowings = followings.map(
+            ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+              return { _id, username, email, occupation, location, profilePhotoUrl }
+            }
+          );
+      
+          res.status(200).json(formattedFollowings);
         } catch(err){
-            res.status(404).json({ message: err.message })
+          res.status(404).json({ message: err.message });
         }
     },
 
 
    /**================ to follow and Unfollow ==================== */
-   async  addRemoveFollow({ params, body }, res) {
-        try {
+   async addRemoveFollow(req, res) {
+    try {
+        const { params, body } = req;
         const user = await User.findOne({ username: params.username });
-        const following = await User.findById({ _id: body.followingId });
-
+  
         // Check if the user is currently following this person
-        if (user.followings.includes(body.followingId)) {
-            // Remove following from user's following list
-            await User.updateOne(
-            { _id: user.id },
-            { $pull: { followings: body.followingId } }
-            );
-
-            // Remove user from following's followers list
-            await User.updateOne(
-            { _id: following.id },
-            { $pull: { followers: user.id } }
-            );
+        const followingIndex = user.followings.indexOf(body.followingId);
+        if (followingIndex !== -1) {
+        user.followings.splice(followingIndex, 1);
         } else {
-            // Add following to user's following list
-            await User.updateOne(
-            { _id: user.id },
-            { $push: { followings: body.followingId } }
-            );
-
-            // Add user to following's followers list
-            await User.updateOne(
-            { _id: following.id },
-            { $push: { followers: user.id } }
-            );
-
-            // Create a new notification for the user
-            // const newNotification = {
-            // sender: user.id,
-            // recipient: following.id,
-            // type: "follow",
-            // read: false,
-            // };
-
-            // const notification = new Notification(newNotification);
-            // await notification.save();
+        // Add person to followings list
+        user.followings.push(body.followingId);
         }
 
-        // Send real-time update to all connected clients
-        io.emit("ADD_FOLLOWER", {
-            user: user.username,
-            following: following.username,
-        });
+        // Save new version of the followings
+        await user.save();
 
-        res.status(200).json({ message: "Success" });
-        } catch (err) {
-        res.status(404).json({ message: err.message });
+        // To return new updated list of followings
+        const followings = await User.find({ _id: { $in: user.followings } });
+
+        const formattedFollowings = followings.map(
+        ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+            return { _id, username, email, occupation, location, profilePhotoUrl };
         }
-   }
+        );
+
+  
+      // Send real-time update to all connected clients
+      req.io.emit("ADD_REMOVE_FOLLOWER", {
+        followerId: user._id,
+        followingId: body.followingId,
+      });
+  
+      res.status(200).json(formattedFollowings);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
 
 }

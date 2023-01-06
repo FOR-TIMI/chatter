@@ -129,7 +129,7 @@ useEffect(() => {
                 </Box>
 
                 <Box p="1rem 0">
-                <Skeleton width="10rem" marginBottom="0.7rem" />
+                <Skeleton width="10rem" mb="0.7rem" />
                 <FlexBetween gap="1rem" mb="0.5rem">
                     <FlexBetween gap="1rem">
                     <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
