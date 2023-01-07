@@ -36,7 +36,6 @@ const SinglePostWidget = ({
   userProfilePhoto,
   likes,
   comments,
-  isLoading
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch();
@@ -55,8 +54,6 @@ const SinglePostWidget = ({
   const { main} = palette.neutral;
 
   const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
-
- 
 
   const addRemoveLike  = async() => {
     const response = await fetch( serverUrl + `p/${postId}/likes`,{
@@ -86,7 +83,7 @@ const SinglePostWidget = ({
         />
       
       <Typography color={main} sx={{ mt: "1rem"}}>{caption}</Typography>
-      {postImageUrls && (
+      {postImageUrls.length ? (
         <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
           <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
             borderRadius: "0.75rem",
@@ -95,7 +92,7 @@ const SinglePostWidget = ({
             width: '100%'
           }}/>
         </div>
-      )}
+      ) : null}
 
       <FlexBetween mt="0.25rem">
               <FlexBetween gap="1rem">

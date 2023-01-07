@@ -9,6 +9,8 @@ import {
 
 import { Box, Typography, Divider, useTheme} from "@mui/material";
 
+import io from 'socket.io-client'
+
 //Custom components
 import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
@@ -16,11 +18,17 @@ import WidgetWrapper from '../../components/CustomStyledComponents/WidgetWrapper
 
 import UserWidgetSkeleton from '../../components/Skeletons/UserWidgetSkeleton';
 
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
+import { setFollowers } from '../../state';
+
 const UserWidget = ({ username, profilePhotoUrl}) => {
+
+
+    const dispatch = useDispatch();
+
     const [user, setUser] = useState(null);
     const { palette } = useTheme();
     const navigate = useNavigate();
@@ -34,6 +42,29 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
     const { dark, medium, main } = palette.neutral;
 
     const serverUrl = "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" 
+
+
+
+
+    const getFollowers = async () => {
+        // Create a socket connection
+        const socket = io(serverUrl);
+        // Set up a listener for the ADD_REMOVE_FOLLOWER event
+        socket.on('ADD_REMOVE_FOLLOWER', async () => {
+          // Retrieve the updated followers list from the server
+          const response = await fetch(
+            serverUrl + `u/${username}/followers`,
+            {
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` }
+            }
+          );
+          const data = await response.json();
+          // Update the followers list in the redux store
+          dispatch(setFollowers({ followers: data }));
+        });
+    }
+
 
 
     const getUser = async() => {
@@ -50,6 +81,7 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
 
     useEffect(() => {
         getUser();
+        getFollowers();
     },[])
 
 

@@ -10,9 +10,9 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-import { setFollowing } from "../../state";
+import { setFollowing, setFollowers } from "../../state";
 
-const FollowingListWidget = ({ username }) => {
+const FollowingListWidget = ({ username , isProfile=false }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
 
@@ -38,8 +38,22 @@ const FollowingListWidget = ({ username }) => {
         dispatch(setFollowing({ followings: data }));
     }
 
+    const getFollowers = async () => {
+            const response = await fetch(
+              serverUrl + `u/${username}/followers`,
+            {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}`}
+            }
+        );
+        const data = await response.json();
+        setIsLoading(false)
+        dispatch(setFollowers({ followers: data }));
+    }
+
     useEffect(() => {
         getFollowings();
+        getFollowers();
     },[])
 
     if(isLoading){
@@ -58,7 +72,7 @@ const FollowingListWidget = ({ username }) => {
               fontWeight="500"
               sx={{ mb: "1.5rem" }}
             >
-                People you follow
+                {!isProfile ? 'People you follow' : `People ${username} follows`}
             </Typography>
 
             <Box display="flex" flexDirection="column" gap="1.5rem">

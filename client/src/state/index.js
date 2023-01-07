@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     mode: "light",
     user: null,
+    person: null,
     token: null,
     posts: []
 }
@@ -18,6 +19,23 @@ export const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.token = action.payload.token;
             },
+            setPerson: (state, action) => {
+                state.person = action.payload.person
+            },
+            setPersonFollowing: (state,action) => {
+                if (state.person) {
+                    state.person.followings = action.payload.followings;
+                  } else {
+                    console.error("user followings non-existent :(");
+                }
+            },
+            setPersonFollowers: (state, action) => {
+                if(state.person){
+                    state.person.followers = action.payload.followers;
+                } else{
+                  console.error("user followers non-existent :(");
+                }
+            },
             setLogout: (state) =>{
                 state.user = null
                 state.token = null
@@ -29,6 +47,13 @@ export const authSlice = createSlice({
                   console.error("user followings non-existent :(");
                 }
               },
+            setFollowers: (state, action) => {
+                if(state.user){
+                    state.user.followers = action.payload.followers;
+                } else{
+                  console.error("user followers non-existent :(");
+                }
+            },
             setPosts: (state,action) => {
                 state.posts = action.payload.posts;
             },
@@ -46,8 +71,12 @@ export const authSlice = createSlice({
 export const { 
     setMode,
     setLogin,
+    setPerson,
+    setPersonFollowing,
+    setPersonFollowers,
     setLogout,
     setFollowing,
+    setFollowers,
     setPosts,
     setPost 
 } = authSlice.actions;

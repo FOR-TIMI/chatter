@@ -8,7 +8,13 @@ const postRoutes = require('./post-routes');
 module.exports = (app) => {
     // Set up Socket.IO
     const server = require('http').createServer(app);
-    const io = require('socket.io')(server);
+    const { Server } = require('socket.io');
+    const io = new Server(server,{
+        cors:{
+            origin: "http://localhost:3000",
+            methods: ["GET","POST","PATCH", "DELETE"]
+        }
+    })
 
     // Import the Socket.IO events file
     const socketEvents = require('../middleware/socket-events');
