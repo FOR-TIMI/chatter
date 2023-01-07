@@ -7,7 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
-import { setFollowing, setFollowers } from "../../state";
+import { setFollowing } from "../../state";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
 import UserAvatar from '../CustomStyledComponents/UserAvatar';
 
@@ -38,13 +38,6 @@ const Following = ({
     const socket = io(serverUrl);
 
 
-  //   const getFollowers = async () => {
-
-  //     socket.on('ADD_REMOVE_FOLLOWER', (data) => {
-  //         // Update the frontend state with the new follower/following list
-  //         dispatch(setFollowers(data.followers)); // Assuming setFollowers is an action that updates the followers list in the frontend state
-  //     });
-  // }
 
     const updateFollowing = async() => {
         if(!isAuthor){
@@ -95,10 +88,10 @@ const Following = ({
                 },
               }}
             >
-              {name}
+              {name.length > 17 ?`${name.substring(0, 17)}...` : name}
             </Typography>
             <Typography color={medium} fontSize="0.75rem">
-              {subtitle}
+              {subtitle.length > 17 ?`${subtitle.substring(0, 17)}...` : subtitle}
             </Typography>
           </Box>
         </FlexBetween>
