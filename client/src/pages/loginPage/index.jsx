@@ -45,7 +45,8 @@ const Form = () => {
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL  || "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/"
+  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
+
 
 
   
@@ -90,7 +91,7 @@ const Form = () => {
         const { email, password } = values
 
         const loggedInResponse = await fetch(
-          "http://localhost:3001/login", 
+          serverUrl + 'login', 
           {
           method: "POST",
           body: JSON.stringify({ email, password}),

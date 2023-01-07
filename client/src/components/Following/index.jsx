@@ -33,7 +33,8 @@ const Following = ({
 
     const isFollowing = followings.find(person => person._id === followingId)
 
-    const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
+
+    const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
     
     const socket = io(serverUrl);
 

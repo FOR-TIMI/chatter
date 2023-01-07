@@ -53,7 +53,8 @@ const SinglePostWidget = ({
   const {  dark } = palette.primary;
   const { main} = palette.neutral;
 
-  const serverUrl =  "http://localhost:3001/" || "https://nameless-basin-36851.herokuapp.com/" || process.env.REACT_APP_SERVER_URL 
+  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
+
 
   const addRemoveLike  = async() => {
     const response = await fetch( serverUrl + `p/${postId}/likes`,{
