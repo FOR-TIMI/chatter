@@ -116,7 +116,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
                 fontWeight="500"
                 sx={{ mb: "1.5rem" }}
               >
-                  {!signedInUsername === username ? 'People you follow' : `People ${username.substring(0, 17)} follows`}
+                  People you follow
               </Typography>
 
               <Box display="flex" flexDirection="column" gap="1.5rem">
