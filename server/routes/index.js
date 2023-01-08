@@ -11,7 +11,7 @@ module.exports = (app) => {
     const { Server } = require('socket.io');
     const io = new Server(server,{
         cors:{
-            origin: "http://localhost:3000",
+            origin: process.env.NODE_ENV === "production" ? "https://nameless-basin-36851.herokuapp.com" : "http://localhost:3000",
             methods: ["GET","POST","PATCH", "DELETE"]
         }
     })

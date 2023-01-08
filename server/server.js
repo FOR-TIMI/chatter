@@ -41,33 +41,33 @@ app.use(express.static(path.join(__dirname + '/public')))
 
 
 /*================== Security ==================*/
-// if(process.env.NODE_ENV === "production"){
+if(process.env.NODE_ENV === "production"){
 
-//     // Use the helmet middleware to set the default CSP
-//     app.use(csp({
-//         directives: {
-//           defaultSrc: ["'self'"],
-//           styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
-//           fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*'],
-//           imgSrc: ["'self'", "*", "blob:", "data:"]
-//         }
-//       }));
+    // Use the helmet middleware to set the default CSP
+    app.use(csp({
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com',"'unsafe-inline'"],
+          fontSrc: ['https://fonts.gstatic.com','https://nameless-basin-36851.herokuapp.com/*'],
+          imgSrc: ["'self'", "*", "blob:", "data:"]
+        }
+      }));
     
-//     // Enable CORS for all routes
-//     app.use(cors({
-//       origin: ['https://nameless-basin-36851.herokuapp.com']
-//     })); 
+    // Enable CORS for all routes
+    app.use(cors({
+      origin: ['https://nameless-basin-36851.herokuapp.com']
+    })); 
 
-// } else{      
-//   app.use(cors({
-//     origin: 'http://localhost:3000'
-//   }));  
-// }
+} else{      
+  app.use(cors({
+    origin: 'http://localhost:3000'
+  }));  
+}
 
-app.use(cors())
+
     
 
-// app.use(morgan("common"));
+app.use(morgan("common"));
 
 
 // sanitize-mongo middleware to protect against MongoDB injection attacks

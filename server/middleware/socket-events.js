@@ -16,27 +16,25 @@ const handleAddRemoveFollower = async (io, followerId, followingId) => {
   if (!user) {
     return console.log({ status: 404, message: 'The User you are trying to follow does not exist' });
   }
-  
+
+
+
+
   // Check if the user is currently following this person
   if (user.followers.includes(followerId)) {
     // Remove following from user's following list
-   const unfollow = await User.updateOne(
+    await User.findByIdAndUpdate(
       { _id: followingId},
-      { $pull: { followers: followerId } }
+      { $pull: { followers: followerId} }
     );
-
 
   } else {
     // Add following to user's following list
-    await User.updateOne(
+    await User.findByIdAndUpdate(
       { _id: followingId },
       { $push: { followers: followerId } }
-    );
-
+    );   
   }
-
-  // Emit the 'followersUpdated' event to all connected clients
-  io.emit('followersUpdated', { message: 'Followers list updated' });
 
   console.log({ status: 200, message: 'Success' });
   } catch (err) {
@@ -49,13 +47,9 @@ module.exports = (io) => {
 
   io.on('connection', (socket) => {
 
-    socket.on('ADD_REMOVE_FOLLOWER', ({ followerId, followingId }) => {
-      handleAddRemoveFollower(io, followerId, followingId,);
+    socket.on('ADD_REMOVE_FOLLOWER',async ({ followerId, followingId }) => {
+      return await handleAddRemoveFollower(io, followerId, followingId,);
     });
     
-
-    socket.on('disconnect', () => {
-      console.log('A user has disconnected');
-    });
   });
 };
