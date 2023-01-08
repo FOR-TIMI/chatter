@@ -46,27 +46,27 @@ module.exports  = {
     
     /**================ GET User Followings ==================== */
     async  getUserFollowings({params}, res){
-        try{
-          const { username } = params;
-          const user = await User.findOne({ username });
-          if (!user) {
-            return res
-            .status(404)
-            .json({ message: "user not found"});
-          }
-      
-          const followings = await User.find({ _id: { $in: user.followings } });
-      
-          const formattedFollowings = followings.map(
-            ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
-              return { _id, username, email, occupation, location, profilePhotoUrl }
-            }
-          );
-      
-          res.status(200).json(formattedFollowings);
-        } catch(err){
-          res.status(404).json({ message: err.message });
+      try{
+        const { username } = params;
+        const user = await User.findOne({ username });
+        if (!user) {
+          return res
+          .status(404)
+          .json({ message: "user not found"});
         }
+
+        const followings = await User.find({ _id: { $in: user.followings } });
+
+        const formattedFollowings = followings
+          .slice(-5) // limit to the latest 5 followers
+          .map(({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+            return { _id, username, email, occupation, location, profilePhotoUrl }
+          });
+
+        res.status(200).json(formattedFollowings);
+      } catch(err){
+        res.status(404).json({ message: err.message });
+      }
     },
 
 
