@@ -14,7 +14,6 @@ function useTokenExpiration() {
   }
   const currentTime = Date.now() / 1000; // Convert current time to Unix time
 
-  console.log({ decodedToken, currentTime})
 
   return decodedToken.exp > currentTime; // Check if token has expired
 }
