@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-import { setFollowing, setFollowers } from "../../state";
+import { setFollowing, setFollowers, setPersonFollowing, setPersonFollowers } from "../../state";
 
 const FollowingListWidget = ({ username , isProfile=false }) => {
     const dispatch = useDispatch();
@@ -19,11 +19,13 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const token = useSelector((state) => state.token);
+    const signedInUsername = useSelector((state) => state.user.username)
     const followings = useSelector((state) => state.user.followings);
+    const personFollowings = useSelector((state) => state.person.followings)
 
     const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
-
+  const isSignedInUserProfile = signedInUsername === username
 
     const getFollowings = async () => {
         const response = await fetch(
@@ -35,7 +37,11 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
         );
         const data = await response.json();
         setIsLoading(false)
-        dispatch(setFollowing({ followings: data }));
+        if(isSignedInUserProfile){
+          dispatch(setFollowing({ followings: data }));
+        } else{
+          dispatch(setPersonFollowing({ followings: data }));
+        }
     }
 
     const getFollowers = async () => {
@@ -48,7 +54,12 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
         );
         const data = await response.json();
         setIsLoading(false)
-        dispatch(setFollowers({ followers: data }));
+
+        if(isSignedInUserProfile){
+          dispatch(setFollowers({ followers: data }));
+        } else{
+          dispatch(setPersonFollowers({ followers: data}));
+        }
     }
 
     useEffect(() => {
@@ -62,7 +73,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
         )
     }
 
-
+ if(isSignedInUserProfile){
   if(followings.length){
     return (
         <WidgetWrapper>
@@ -72,7 +83,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
               fontWeight="500"
               sx={{ mb: "1.5rem" }}
             >
-                {!isProfile ? 'People you follow' : `People ${username} follows`}
+               People you follow
             </Typography>
 
             <Box display="flex" flexDirection="column" gap="1.5rem">
@@ -95,6 +106,41 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
         </WidgetWrapper>
     )
   }
+ } else{
+      if(personFollowings.length){
+        return (
+          <WidgetWrapper>
+              <Typography
+                color={palette.neutral.dark}
+                variant="h5"
+                fontWeight="500"
+                sx={{ mb: "1.5rem" }}
+              >
+                  {!signedInUsername === username ? 'People you follow' : `People ${username.substring(0, 17)} follows`}
+              </Typography>
+
+              <Box display="flex" flexDirection="column" gap="1.5rem">
+                  {followings.map(({ 
+                  _id, 
+                  username,
+                  occupation,
+                  profilePhotoUrl,
+                  }) => (
+                      <Following
+                        key={_id + username}
+                        followingId={_id}
+                        name={username}
+                        subtitle={occupation}
+                        userProfilePhotoUrl={profilePhotoUrl}
+                      />
+                  ))}
+
+              </Box>
+          </WidgetWrapper>
+      )
+      }
+ }
+
 
   return;
     

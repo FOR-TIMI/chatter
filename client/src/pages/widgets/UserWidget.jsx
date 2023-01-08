@@ -22,12 +22,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { setFollowers } from '../../state';
+import { setFollowers, setPerson, setPersonFollowers } from '../../state';
 
 const UserWidget = ({ username, profilePhotoUrl}) => {
 
 
     const dispatch = useDispatch();
+
 
     const [user, setUser] = useState(null);
     const { palette } = useTheme();
@@ -36,7 +37,9 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
     //state
     const token = useSelector((state) => state.token);
 
-    const { followers, followings } = useSelector((state) => state.user)
+    const { followers, followings, username:signedInUsername } = useSelector((state) => state.user)
+
+    const { followers:personFollowers, followings:personFollowings} = useSelector((state) => state.person)
     
     //colors
     const { dark, medium, main } = palette.neutral;
@@ -44,26 +47,36 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
     const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
 
+ //Check if we're currently viewing the signedInuser's username
 
-
+    const isSignedInUserProfile = username === signedInUsername
+ // If so, we can manipulate the state of the followings
+ //else we cannot
 
     const getFollowers = async () => {
+        // Retrieve the updated followers list from the server
+        const response = await fetch(
+        serverUrl + `u/${username}/followers`,
+        {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        );
+        const data = await response.json();
+        
+        if(isSignedInUserProfile){
+        // Update the followers list in the redux store
+        dispatch(setFollowers({ followers: data }));
+        } else{
+        dispatch(setPersonFollowers({ followers: data}))
+        }
+  }
+
+    const updateFollowers = async () => {
         // Create a socket connection
         const socket = io(serverUrl);
         // Set up a listener for the ADD_REMOVE_FOLLOWER event
-        socket.on('ADD_REMOVE_FOLLOWER', async () => {
-          // Retrieve the updated followers list from the server
-          const response = await fetch(
-            serverUrl + `u/${username}/followers`,
-            {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` }
-            }
-          );
-          const data = await response.json();
-          // Update the followers list in the redux store
-          dispatch(setFollowers({ followers: data }));
-        });
+        socket.on('ADD_REMOVE_FOLLOWER', getFollowers);
     }
 
 
@@ -77,10 +90,14 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
         })
 
         const userData = await response.json();
+
         setUser(userData);
+        setPerson(userData)
+        return;
     }
 
     useEffect(() => {
+        updateFollowers();
         getUser();
         getFollowers();
     },[])
@@ -129,13 +146,13 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
                            </Typography>
                            <FlexBetween paddingTop="0.4rem" width="11rem">
                                     <FlexBetween>
-                                        <Typography color={dark} marginRight="0.25rem">{followers.length}</Typography> 
-                                        <Typography color={medium}>{followers.length > 1 ? 'followers' : 'follower'}</Typography>
+                                        <Typography color={dark} marginRight="0.25rem">{isSignedInUserProfile ? followers.length : personFollowers.length}</Typography> 
+                                        <Typography color={medium}>{isSignedInUserProfile ? followers.length > 1 ? 'followers' : 'follower' : personFollowers.length > 1 ? 'followers' : 'follower'}</Typography>
                                     </FlexBetween>
                                 
                                 
                                     <FlexBetween>
-                                        <Typography color={dark} >{followings.length}</Typography>
+                                        <Typography color={dark} >{isSignedInUserProfile ? followings.length : personFollowings.length}</Typography>
                                         <Typography color={medium} marginLeft="0.25rem">following</Typography>                                       
                                     </FlexBetween>
                            </FlexBetween>

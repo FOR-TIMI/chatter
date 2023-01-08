@@ -13,7 +13,7 @@ import {
 import { Formik } from "formik";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../state";
+import { setLogin, setPerson } from "../../state";
 
 
 import { registerSchema, loginSchema } from "../../utils/Schemas";
@@ -77,6 +77,9 @@ const Form = () => {
                     token: isRegistered.token,
               })
            )
+           dispatch(
+            setPerson({ person: isRegistered.newUser})
+           )
          }
 
         onSubmitProps.resetForm();
@@ -106,6 +109,10 @@ const Form = () => {
               user: loggedIn.user,
               token: loggedIn.token,
             }));
+
+            dispatch(
+              setPerson({ person: loggedIn.user})
+             )
 
             navigate("/")
         }else{
