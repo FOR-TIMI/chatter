@@ -53,30 +53,26 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
  // If so, we can manipulate the state of the followings
  //else we cannot
 
+
     const getFollowers = async () => {
         // Retrieve the updated followers list from the server
         const response = await fetch(
-        serverUrl + `u/${username}/followers`,
-        {
+          serverUrl + `u/${username}/followers`,
+          {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` }
-        }
+          }
         );
         const data = await response.json();
+
+        console.log(data)
         
         if(isSignedInUserProfile){
-        // Update the followers list in the redux store
-        dispatch(setFollowers({ followers: data }));
+          // Update the followers list in the redux store
+          dispatch(setFollowers({ followers: data }));
         } else{
-        dispatch(setPersonFollowers({ followers: data}))
+          dispatch(setPersonFollowers({ followers: data}))
         }
-  }
-
-    const updateFollowers = async () => {
-        // Create a socket connection
-        const socket = io(serverUrl);
-        // Set up a listener for the ADD_REMOVE_FOLLOWER event
-        socket.on('ADD_REMOVE_FOLLOWER', getFollowers);
     }
 
 
@@ -93,11 +89,33 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
 
         setUser(userData);
         setPerson(userData)
-        return;
     }
 
     useEffect(() => {
-        updateFollowers();
+         // Create a socket connection
+         const socket = io(serverUrl);
+         // Set up a listener for the ADD_REMOVE_FOLLOWER event
+         socket.on('ADD_REMOVE_FOLLOWER', async () => {
+           // Retrieve the updated followers list from the server
+           const response = await fetch(
+             serverUrl + `u/${username}/followers`,
+             {
+               method: "GET",
+               headers: { Authorization: `Bearer ${token}` }
+             }
+           );
+           const data = await response.json();
+ 
+           console.log(data)
+           
+           if(isSignedInUserProfile){
+             // Update the followers list in the redux store
+             dispatch(setFollowers({ followers: data }));
+           } else{
+             dispatch(setPersonFollowers({ followers: data}))
+           }
+         });
+
         getUser();
         getFollowers();
     },[])
