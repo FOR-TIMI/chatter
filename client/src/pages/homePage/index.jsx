@@ -10,11 +10,7 @@ import AdWidget from "../widgets/AdWidget";
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
-  const data = useSelector((state) => state.user)
-
-
-  const username = data?.username
-  const profilePhotoUrl = data?.profilePhotoUrl
+  const { username, profilePhotoUrl} = useSelector((state) => state.user)
  
 
   return (

@@ -77,9 +77,7 @@ const Form = () => {
                     token: isRegistered.token,
               })
            )
-           dispatch(
-            setPerson({ person: isRegistered.newUser})
-           )
+           dispatch( setPerson({ person: isRegistered.newUser}))
          }
 
         onSubmitProps.resetForm();
@@ -108,11 +106,10 @@ const Form = () => {
             setLogin({
               user: loggedIn.user,
               token: loggedIn.token,
-            }));
+            })
+          );
 
-            dispatch(
-              setPerson({ person: loggedIn.user})
-             )
+            dispatch(setPerson({ person: loggedIn.user}))
 
             navigate("/")
         }else{

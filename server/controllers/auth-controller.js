@@ -44,12 +44,9 @@ module.exports = {
    /**==========Login USER============ */ 
    async login(req,res){
       try{
-         const { username = '', email = '', password} = req.body;
+         const {  email , password} = req.body;
          
-         const user = await User.findOne({ $or: [
-            {email},
-            {username}
-        ]})
+         const user = await User.findOne({ email })
 
         if(!user){
          return res
@@ -71,8 +68,6 @@ module.exports = {
       user.password = undefined;
 
      const token = signToken(user);
-
-
 
      res.status(200).json({ token, user})
       } catch(err){
