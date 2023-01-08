@@ -105,9 +105,7 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
              }
            );
            const data = await response.json();
- 
-           console.log(data)
-           
+            
            if(isSignedInUserProfile){
              // Update the followers list in the redux store
              dispatch(setFollowers({ followers: data }));
