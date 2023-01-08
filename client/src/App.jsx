@@ -8,7 +8,6 @@ import {
 import HomePage from './pages/homePage'
 import LoginPage from './pages/loginPage'
 import ProfilePage from './pages/profilePage'
-// import NoMatch from './pages/NoMatch'
 
 
 
@@ -20,12 +19,18 @@ import {CssBaseline, ThemeProvider} from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./utils/theme";
 
+import { setLogout } from './state'
+
 import useTokenExpiration from './utils/checkToken'
 
 
 const App = () => { 
   //Check if a user is loggedIn
   const isLoggedIn = useTokenExpiration();
+
+  if(!isLoggedIn){
+    setLogout(); //To clear all tokens if they have expired
+  }
 
   //To get the current mode from the redux store
   const mode = useSelector((state ) =>  state.mode);
