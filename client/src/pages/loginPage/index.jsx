@@ -13,7 +13,7 @@ import {
 import { Formik } from "formik";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../state";
+import { setLogin, setPerson } from "../../state";
 
 
 import { registerSchema, loginSchema } from "../../utils/Schemas";
@@ -45,7 +45,9 @@ const Form = () => {
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
+
+
 
   
   const register = async (values, onSubmitProps) => {
@@ -75,6 +77,9 @@ const Form = () => {
                     token: isRegistered.token,
               })
            )
+           dispatch(
+            setPerson({ person: isRegistered.newUser})
+           )
          }
 
         onSubmitProps.resetForm();
@@ -89,31 +94,34 @@ const Form = () => {
         const { email, password } = values
 
         const loggedInResponse = await fetch(
-          serverUrl + "login", 
+          serverUrl + 'login', 
           {
           method: "POST",
           body: JSON.stringify({ email, password}),
           headers: { "Content-Type": "application/json" }
         });
 
-        const loggedIn = await loggedInResponse.json();
-        
-        if (loggedIn) {
+        if(loggedInResponse.ok){
+          const loggedIn = await loggedInResponse.json();
+
           dispatch(
             setLogin({
               user: loggedIn.user,
               token: loggedIn.token,
-            })
-            );
-       } else{
+            }));
+
+            dispatch(
+              setPerson({ person: loggedIn.user})
+             )
+
+            navigate("/")
+        }else{
         setLoginErr("Incorret Credentials")
-        console.log(loginError)
        }
 
        onSubmitProps.resetForm(); 
-       navigate("/");
+      
     } catch(err){
-      onSubmitProps.resetForm(); 
       console.error(err);  
      }  
   };
@@ -143,6 +151,10 @@ const Form = () => {
         Chatter
       </Typography>
 
+      {loginError && <Typography fontWeight="bold" sx={{
+              color: "red"
+        }}>{loginError}</Typography>}
+
      <Formik
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
@@ -169,9 +181,6 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >          
-            {loginError && <Typography fontWeight="bold" sx={{
-              color: "red"
-            }}>{loginError}</Typography>}
 
 
             {isRegister && (

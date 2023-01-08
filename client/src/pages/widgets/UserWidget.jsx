@@ -7,32 +7,74 @@ import {
     LinkedIn
 } from '@mui/icons-material';
 
-import { Box, Typography, Divider, useTheme, Skeleton} from "@mui/material";
+import { Box, Typography, Divider, useTheme} from "@mui/material";
+
+import io from 'socket.io-client'
 
 //Custom components
 import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import WidgetWrapper from '../../components/CustomStyledComponents/WidgetWrapper';
 
-import { useSelector } from "react-redux"
+import UserWidgetSkeleton from '../../components/Skeletons/UserWidgetSkeleton';
+
+import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
+import { setFollowers, setPerson, setPersonFollowers } from '../../state';
+
 const UserWidget = ({ username, profilePhotoUrl}) => {
+
+
+    const dispatch = useDispatch();
+
+
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
     const { palette } = useTheme();
     const navigate = useNavigate();
 
     //state
     const token = useSelector((state) => state.token);
 
-    const { followers, followings } = useSelector((state) => state.user)
+    const { followers, followings, username:signedInUsername } = useSelector((state) => state.user)
+
+    const { followers:personFollowers, followings:personFollowings} = useSelector((state) => state.person)
     
     //colors
     const { dark, medium, main } = palette.neutral;
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+    const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
+
+
+ //Check if we're currently viewing the signedInuser's username
+
+    const isSignedInUserProfile = username === signedInUsername
+ // If so, we can manipulate the state of the followings
+ //else we cannot
+
+
+    const getFollowers = async () => {
+        // Retrieve the updated followers list from the server
+        const response = await fetch(
+          serverUrl + `u/${username}/followers`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        const data = await response.json();
+
+        console.log(data)
+        
+        if(isSignedInUserProfile){
+          // Update the followers list in the redux store
+          dispatch(setFollowers({ followers: data }));
+        } else{
+          dispatch(setPersonFollowers({ followers: data}))
+        }
+    }
+
 
 
     const getUser = async() => {
@@ -44,17 +86,48 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
         })
 
         const userData = await response.json();
+
         setUser(userData);
-        setIsLoading(false);
+        setPerson(userData)
     }
 
     useEffect(() => {
+         // Create a socket connection
+         const socket = io(serverUrl);
+         // Set up a listener for the ADD_REMOVE_FOLLOWER event
+         socket.on('ADD_REMOVE_FOLLOWER', async () => {
+           // Retrieve the updated followers list from the server
+           const response = await fetch(
+             serverUrl + `u/${username}/followers`,
+             {
+               method: "GET",
+               headers: { Authorization: `Bearer ${token}` }
+             }
+           );
+           const data = await response.json();
+ 
+           console.log(data)
+           
+           if(isSignedInUserProfile){
+             // Update the followers list in the redux store
+             dispatch(setFollowers({ followers: data }));
+           } else{
+             dispatch(setPersonFollowers({ followers: data}))
+           }
+         });
+
         getUser();
+        getFollowers();
     },[])
 
+
     if(!user){
-        return null;
+        return (
+           <UserWidgetSkeleton/>
+        )
     }
+
+
 
     const { 
             location,
@@ -63,80 +136,7 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
             impressions,
             } = user
 
-    if(isLoading){
-        return (
-            <WidgetWrapper>
-            <FlexBetween gap="0.5rem" pb="1.1rem">
-                <FlexBetween>
-                    <UserAvatar isLoading={true} />
-                    <Box marginLeft="1rem">
-                    <Skeleton variant='h4' width="11rem" />
-                    <FlexBetween paddingTop="0.4rem" width="11rem">
-                        <FlexBetween>
-                             <Skeleton width="5rem" />
-                        </FlexBetween>
-                        <FlexBetween>
-                     
-                        <Skeleton width="5rem" />
-                        </FlexBetween>
-                    </FlexBetween>
-                    </Box>
-                </FlexBetween>
-                <Skeleton width="2rem" height="3rem" sx={{ borderRadius: "50%"}}/>
-                </FlexBetween>
-
-                <Divider />
-
-                <Box p="1rem 0">
-                <Box display="flex" alignItems="center" gap="1rem" mb="0.1rem">
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
-                    <Skeleton width="10rem" />
-                </Box>
-                <Box display="flex" alignItems="center" gap="1rem">
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}} />
-                    <Skeleton width="10rem" />
-                </Box>
-                </Box>
-
-                <Box p="1rem 0">
-                <FlexBetween mb="0.5rem">
-                    <Skeleton width="10rem" />
-                    <Skeleton width="4rem" />
-                </FlexBetween>
-
-                <FlexBetween>
-                    <Skeleton width="10rem" />
-                    <Skeleton width="3rem" />
-                </FlexBetween>
-                </Box>
-
-                <Box p="1rem 0">
-                <Skeleton width="10rem" marginBottom="0.7rem" />
-                <FlexBetween gap="1rem" mb="0.5rem">
-                    <FlexBetween gap="1rem">
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
-                    <Box>
-                        <Skeleton width="10rem" />
-                        <Skeleton width="6rem" />
-                    </Box>
-                    </FlexBetween>
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
-                </FlexBetween>
-
-                <FlexBetween gap="1rem">
-                    <FlexBetween gap="1rem">
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
-                    <Box>
-                        <Skeleton width="10rem" />
-                        <Skeleton width="4rem" />
-                    </Box>
-                    </FlexBetween>
-                    <Skeleton width="2rem" height="3.2rem" sx={{ borderRadius: "50%"}}/>
-                </FlexBetween>
-                </Box>
-            </WidgetWrapper>
-        )
-    }
+   
 
     return (
         <WidgetWrapper>
@@ -164,13 +164,13 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
                            </Typography>
                            <FlexBetween paddingTop="0.4rem" width="11rem">
                                     <FlexBetween>
-                                        <Typography color={dark} marginRight="0.25rem">{followers.length}</Typography> 
-                                        <Typography color={medium}>{followers.length > 1 ? 'followers' : 'follower'}</Typography>
+                                        <Typography color={dark} marginRight="0.25rem">{isSignedInUserProfile ? followers.length : personFollowers.length}</Typography> 
+                                        <Typography color={medium}>{isSignedInUserProfile ? followers.length > 1 ? 'followers' : 'follower' : personFollowers.length > 1 ? 'followers' : 'follower'}</Typography>
                                     </FlexBetween>
                                 
                                 
                                     <FlexBetween>
-                                        <Typography color={dark} >{followings.length}</Typography>
+                                        <Typography color={dark} >{isSignedInUserProfile ? followings.length : personFollowings.length}</Typography>
                                         <Typography color={medium} marginLeft="0.25rem">following</Typography>                                       
                                     </FlexBetween>
                            </FlexBetween>

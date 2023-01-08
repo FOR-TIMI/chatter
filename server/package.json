@@ -21,7 +21,8 @@
     "mongoose": "^6.8.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0"
+    "multer-storage-cloudinary": "^4.0.0",
+    "socket.io": "^4.5.4"
   },
   "keywords": [],
   "author": "",

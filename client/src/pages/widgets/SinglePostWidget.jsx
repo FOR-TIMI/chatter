@@ -21,6 +21,7 @@ import {
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import Following from "../../components/Following";
 
+
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
 
@@ -35,7 +36,6 @@ const SinglePostWidget = ({
   userProfilePhoto,
   likes,
   comments,
-  isLoading
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch();
@@ -53,10 +53,8 @@ const SinglePostWidget = ({
   const {  dark } = palette.primary;
   const { main} = palette.neutral;
 
-  const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
- 
-  console.log(process.env.REACT_APP_SERVER_URL)
 
   const addRemoveLike  = async() => {
     const response = await fetch( serverUrl + `p/${postId}/likes`,{

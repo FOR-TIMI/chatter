@@ -20,11 +20,12 @@ import {CssBaseline, ThemeProvider} from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./utils/theme";
 
+import useTokenExpiration from './utils/checkToken'
+
 
 const App = () => { 
   //Check if a user is loggedIn
-  const isLoggedIn = Boolean(useSelector((state) => state.token))
-
+  const isLoggedIn = useTokenExpiration();
 
   //To get the current mode from the redux store
   const mode = useSelector((state ) =>  state.mode);

@@ -1,27 +1,31 @@
-import { Box, Typography, useTheme, Skeleton } from "@mui/material";
-import Following from "../../components/Following";
+import { Box, Typography, useTheme } from "@mui/material";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
-import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
-import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
+
+import Following from "../../components/Following";
+
+import FollowingListSkeleton from "../../components/Skeletons/FollowingListSkeleton";
 import { useState } from "react";
 
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-import { setFollowing } from "../../state";
+import { setFollowing, setFollowers, setPersonFollowing, setPersonFollowers } from "../../state";
 
-const FollowingListWidget = ({ username }) => {
+const FollowingListWidget = ({ username , isProfile=false }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
 
     const [isLoading, setIsLoading] = useState(true);
 
     const token = useSelector((state) => state.token);
+    const signedInUsername = useSelector((state) => state.user.username)
     const followings = useSelector((state) => state.user.followings);
+    const personFollowings = useSelector((state) => state.person.followings)
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL || "https://nameless-basin-36851.herokuapp.com/" || "http://localhost:3001/"
+    const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
+  const isSignedInUserProfile = signedInUsername === username
 
     const getFollowings = async () => {
         const response = await fetch(
@@ -33,40 +37,43 @@ const FollowingListWidget = ({ username }) => {
         );
         const data = await response.json();
         setIsLoading(false)
-        dispatch(setFollowing({ followings: data }));
+        if(isSignedInUserProfile){
+          dispatch(setFollowing({ followings: data }));
+        } else{
+          dispatch(setPersonFollowing({ followings: data }));
+        }
+    }
+
+    const getFollowers = async () => {
+            const response = await fetch(
+              serverUrl + `u/${username}/followers`,
+            {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}`}
+            }
+        );
+        const data = await response.json();
+        setIsLoading(false)
+
+        if(isSignedInUserProfile){
+          dispatch(setFollowers({ followers: data }));
+        } else{
+          dispatch(setPersonFollowers({ followers: data}));
+        }
     }
 
     useEffect(() => {
         getFollowings();
+        getFollowers();
     },[])
 
     if(isLoading){
         return (
-            <WidgetWrapper>
-                <Skeleton width="60%" height={25} style={{ marginBottom: "1.5rem" }} />
-                <Box display="flex" flexDirection="column" gap="1.5rem">
-                    {Array.from(new Array(3)).map((p,index) => (
-                        <FlexBetween key={index}>
-                            <FlexBetween gap="1rem">
-                                <UserAvatar isLoading={true} size="55px" />
-        
-                                <Box>
-                                    <Skeleton width="150px" height={25} style={{ marginBottom: "0.25rem" }} />
-                                    <Skeleton width="75px" height={20} />
-                                </Box>
-                            </FlexBetween>
-                        
-                            <FlexBetween>
-                                <Skeleton variant="circle" width={30} height={30} style={{ padding: "0.6rem", borderRadius: "50%" }} />
-                            </FlexBetween>     
-                     </FlexBetween>
-                    ))}
-                </Box>
-            </WidgetWrapper>
+          <FollowingListSkeleton/>
         )
     }
 
-
+ if(isSignedInUserProfile){
   if(followings.length){
     return (
         <WidgetWrapper>
@@ -76,7 +83,7 @@ const FollowingListWidget = ({ username }) => {
               fontWeight="500"
               sx={{ mb: "1.5rem" }}
             >
-                People you follow
+               People you follow
             </Typography>
 
             <Box display="flex" flexDirection="column" gap="1.5rem">
@@ -99,6 +106,41 @@ const FollowingListWidget = ({ username }) => {
         </WidgetWrapper>
     )
   }
+ } else{
+      if(personFollowings.length){
+        return (
+          <WidgetWrapper>
+              <Typography
+                color={palette.neutral.dark}
+                variant="h5"
+                fontWeight="500"
+                sx={{ mb: "1.5rem" }}
+              >
+                  {!signedInUsername === username ? 'People you follow' : `People ${username.substring(0, 17)} follows`}
+              </Typography>
+
+              <Box display="flex" flexDirection="column" gap="1.5rem">
+                  {followings.map(({ 
+                  _id, 
+                  username,
+                  occupation,
+                  profilePhotoUrl,
+                  }) => (
+                      <Following
+                        key={_id + username}
+                        followingId={_id}
+                        name={username}
+                        subtitle={occupation}
+                        userProfilePhotoUrl={profilePhotoUrl}
+                      />
+                  ))}
+
+              </Box>
+          </WidgetWrapper>
+      )
+      }
+ }
+
 
   return;
     

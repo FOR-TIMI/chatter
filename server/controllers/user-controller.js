@@ -1,115 +1,113 @@
 const { User } = require('../model');
 
-module.exports = {
+module.exports  = {
+    // ...
 
     /**================ GET ONE USER ==================== */
-     async getUser({params},res){
+     async  getUser({params},res){
         try{
             const { username } = params;
             const user = await User.findOne({ username });
 
             //hide users password from frontend
-            delete user.password
+            user.password = undefined
 
             res.status(200).json(user)
         } catch(err){
             res.status(404).json({ message: err.message })
         }
      },
-
+     
     /**================ GET User Followers ==================== */
-     async getUserFollowers({params}, res){
+     async  getUserFollowers({params}, res){
         try{
             const { username } = params;
+
             const user = await User.findOne({ username });
-            
-            const followers = await Promise.all(
-                user.followers.map((id) => User.findById(id))
-            )
-
-
+            if (!user) {
+              return res
+              .status(404)
+              .json({ message: "user not found"});
+            }
+        
+            const followers = await User.find({ _id: { $in: user.followers } });
+        
             const formattedFollowers = followers.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-
-
-            
-            res.status(200).json(formattedFollowers)
-
-        } catch(err){
-            res.status(404).json({ message: err.message })
-        }
+              ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+                return { _id, username, email, occupation, location, profilePhotoUrl }
+              }
+            );
+        
+            res.status(200).json(formattedFollowers);
+          } catch(err){
+            res.status(404).json({ message: err.message });
+          }
      },
     
     /**================ GET User Followings ==================== */
-    async getUserFollowings({params}, res){
+    async  getUserFollowings({params}, res){
         try{
-            const { username } = params;
-            const user = await User.findOne({ username });
-            
-
-            const followings = await Promise.all(
-                user.followings.map((id) => User.findById(id))
-            )
-
-
-
-            const formattedFollowings = followings.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-            
-            res.status(200).json(formattedFollowings)
-
+          const { username } = params;
+          const user = await User.findOne({ username });
+          if (!user) {
+            return res
+            .status(404)
+            .json({ message: "user not found"});
+          }
+      
+          const followings = await User.find({ _id: { $in: user.followings } });
+      
+          const formattedFollowings = followings.map(
+            ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+              return { _id, username, email, occupation, location, profilePhotoUrl }
+            }
+          );
+      
+          res.status(200).json(formattedFollowings);
         } catch(err){
-            res.status(404).json({ message: err.message })
+          res.status(404).json({ message: err.message });
         }
     },
 
-    /**================ to follow and Unfollow ==================== */
-    async addRemoveFollow({ params, body},res){
-        try{
-            const user = await User.findOne({ username: params.username });
-            const following = await User.findById({ _id : body.followingId})
 
-            //Check if the user is currently following this person
-            if(user.followings.includes(body.followingId)){
-                user.followings = user.followings.filter((id) => id !== body.followingId)
-
-                //update the person you're followings follower list
-                following.followers = following.followers.filter((id) => id !== user.id)
-            } else{
-                //Add friend to friend list
-                user.followings.push(body.followingId)
-
-                //Update the person you're following's follower list
-                following.followers.push(user.id)
-             }
-            
-             //Save new version of the followings and followers
-             await user.save();
-             await following.save();
-
-             //To return new updated list of friends
-             const followings = await Promise.all(
-                user.followings.map((id) => User.findById(id))
-            )
-
-            const formattedFollowings = followings.map(
-                ({ _id, username, email, occupation, location, profilePhotoUrl}) => {
-                     return { _id, username, email, occupation, location, profilePhotoUrl}
-                }
-            )
-            
-            res.status(200).json(formattedFollowings)
-
-        } catch(err){
-            res.status(404).json({ message: err.message })
+   /**================ to follow and Unfollow ==================== */
+   async addRemoveFollow(req, res) {
+    try {
+        const { params, body } = req;
+        const user = await User.findOne({ username: params.username });
+  
+        // Check if the user is currently following this person
+        const followingIndex = user.followings.indexOf(body.followingId);
+        if (followingIndex !== -1) {
+        user.followings.splice(followingIndex, 1);
+        } else {
+        // Add person to followings list
+        user.followings.push(body.followingId);
         }
-    }
 
+        // Save new version of the followings
+        await user.save();
+
+        // To return new updated list of followings
+        const followings = await User.find({ _id: { $in: user.followings } });
+
+        const formattedFollowings = followings.map(
+        ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+            return { _id, username, email, occupation, location, profilePhotoUrl };
+        }
+        );
+
+  
+      // Send real-time update to all connected clients
+      req.io.emit("ADD_REMOVE_FOLLOWER", {
+        followerId: user._id,
+        followingId: body.followingId,
+      });
+  
+      res.status(200).json(formattedFollowings);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
 
 }
