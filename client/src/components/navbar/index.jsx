@@ -27,11 +27,13 @@ import { setMode, setLogout } from "../../state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
 
+import AccountMenu from '../AccountMenu';
+
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const {username, profilePhotoUrl} = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -41,8 +43,6 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
-  const isLoggedIn = user ? true : false
-  const username = `${user?.username}`;
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -89,63 +89,8 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          { isLoggedIn ? (
-            <FormControl variant="standard" value={username}>
-            <Select
-              value={username}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={username}>
-                <Typography>{username}</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
-          ) : (
-            <>
-            <Typography
-              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
-              color="dark"
-              onClick={() => navigate("/login")}
-              sx={{
-                "&:hover": {
-                  color: primaryLight,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              login
-            </Typography>
-            <Typography
-              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
-              color="dark"
-              onClick={() => navigate("/register")}
-              sx={{
-                "&:hover": {
-                  color: primaryLight,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              sign up
-            </Typography>
-            </>
-          )
+          <AccountMenu username={username} profilePhotoUrl={profilePhotoUrl}/>
         
-        }
         </FlexBetween>
       ) : (
         <IconButton
@@ -183,8 +128,9 @@ const Navbar = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            gap="3rem"
+            gap="2rem"
           >
+            <AccountMenu  username={username} profilePhotoUrl={profilePhotoUrl}/>
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
@@ -198,62 +144,6 @@ const Navbar = () => {
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
-            {isLoggedIn ? ( 
-            <FormControl variant="standard" value={username}>
-              <Select
-                value={username}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem value={username}>
-                  <Typography>{username}</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>) : (
-            <>
-            <Typography
-              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
-              color="dark"
-              onClick={() => navigate("/login")}
-              sx={{
-                "&:hover": {
-                  color: primaryLight,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              login
-            </Typography>
-            <Typography
-              fontSize="clamp(0.8rem, 1rem, 1.5rem)"
-              color="dark"
-              onClick={() => navigate("/register")}
-              sx={{
-                "&:hover": {
-                  color: primaryLight,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              sign up
-            </Typography>
-            </>
-          )}
             
           </FlexBetween>
         </Box>
