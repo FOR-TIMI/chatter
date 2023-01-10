@@ -1,5 +1,7 @@
 const { User } = require('../model');
 
+
+
 module.exports  = {
     // ...
 
@@ -75,6 +77,8 @@ module.exports  = {
     try {
         const { params, body } = req;
         const user = await User.findOne({ username: params.username });
+
+        
   
         // Check if the user is currently following this person
         const followingIndex = user.followings.indexOf(body.followingId);
@@ -88,6 +92,7 @@ module.exports  = {
         // Save new version of the followings
         await user.save();
 
+        console.log(user)
         // To return new updated list of followings
         const followings = await User.find({ _id: { $in: user.followings } });
 
@@ -96,6 +101,7 @@ module.exports  = {
             return { _id, username, email, occupation, location, profilePhotoUrl };
         }
         );
+ 
 
   
       // Send real-time update to all connected clients
@@ -108,6 +114,27 @@ module.exports  = {
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
-  }
+  },
+  
+   /**================ searchUser ==================== */
+   async getUsers({query}, res) {
+    try { 
+      const searchInput = query.searchInput
+      const searchRegex = new RegExp(`^${searchInput}$|^${searchInput}|${searchInput}$|${searchInput}`, 'i');
+      const users = await User.find({username: searchRegex})
+                              .select('username occupation profilePhotoUrl')
+                              .limit(5)
+                              .exec();
 
+
+      if (users.length > 0) {
+        res.status(200).json(users)
+      } else {
+        res.status(404).json({ message: "No users found with the specified search term."})
+      }
+    } catch(err){
+      console.log({error : err.message, err , serverError: "Something went wrong"})
+      res.status(500).json({ message: err.message})
+    }
+  }
 }

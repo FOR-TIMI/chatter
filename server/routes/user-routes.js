@@ -5,6 +5,7 @@ const {
     ,getUserFollowers
     ,getUserFollowings
     ,addRemoveFollow
+    ,getUsers
 } = require('../controllers/user-controller');
 
 /**=========== post controller to get a user's posts ============== */
@@ -15,6 +16,7 @@ const { authMiddleware } = require('../middleware/jwt-config');
 
 
 /**=========== READ ============== */
+    router.get('/', authMiddleware, getUsers)
     router.get('/:username',authMiddleware, getUser); //get a single user
     router.get('/:username/posts', authMiddleware, getUserPosts) // get a user's posts
 

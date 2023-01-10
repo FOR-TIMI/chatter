@@ -4,9 +4,6 @@ import {
   IconButton,
   InputBase,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
   useTheme,
   useMediaQuery
 } from "@mui/material";
@@ -22,8 +19,9 @@ import {
   Close
 } from "@mui/icons-material";
 
+import SearchBar from "../SearchBar"
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "../../state";
+import { setMode } from "../../state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
 
@@ -62,17 +60,18 @@ const Navbar = () => {
           Chatter
         </Typography>
         {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+          // <FlexBetween
+          //   backgroundColor={neutralLight}
+          //   borderRadius="9px"
+          //   gap="3rem"
+          //   padding="0.1rem 1.5rem"
+          // >
+          //   <InputBase placeholder="Search..." />
+          //   <IconButton>
+          //     <Search />
+          //   </IconButton>
+          // </FlexBetween>
+          <SearchBar/>
         )}
       </FlexBetween>
 

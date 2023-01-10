@@ -16,15 +16,49 @@ const postSchema = new Schema(
     {
         username: {
             type: String,
-            required: true
-        },
+            required: 'Username is required',
+            trim: true,
+            maxLength: 50,
+            minlength: [8, 'Username must be at least 8 characters long'],
+            match: [
+              /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\=]+$/,
+              'Username can only contain letters, numbers, and the following special characters: !()-.[]_`~;:!@#$%^&*+='
+            ]
+          },
         userId: {
-            type: String
+            type: String,
+            match: [
+                /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\=]+$/,
+                'userId can only contain letters, numbers, and the following special characters: !()-.[]_`~;:!@#$%^&*+='
+            ]
         },
-        location: String,
-        caption: String,
+        location: {
+            type: String,
+            trim: true,
+            match: [
+              /^[a-zA-Z0-9, ]+$/,
+              'Location can only contain letters, numbers, commas, and spaces'
+            ]
+        },
+        caption: {
+            type: String,
+            required: 'Caption is required',
+            trim: true,
+            maxLength: 250,
+            minlength: 4,
+            match: [
+              /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\= ]+$/,
+              'Caption can only contain letters, numbers,spaces and the following special characters: !()-.[]_`~;:!@#$%^&*+='
+            ]
+        },
         postImageUrls: [ImageSchema],
-        userProfilePhoto: String,
+        userProfilePhoto:{
+            type: String,
+            match: [
+                /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(\/[\w, \.-]*)*\/?(?:\.png)?$/,
+                'Link is invalid'
+            ],
+        },
         likes: {
             type: Map,
             of: Boolean,
