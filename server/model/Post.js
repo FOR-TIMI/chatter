@@ -36,8 +36,8 @@ const postSchema = new Schema(
             type: String,
             trim: true,
             match: [
-              /^[a-zA-Z0-9, ]+$/,
-              'Location can only contain letters, numbers, commas, and spaces'
+              /^[a-zA-Z0-9,\- ]+$/,
+              'Location can only contain letters, numbers, commas, spaces and -'
             ]
         },
         caption: {

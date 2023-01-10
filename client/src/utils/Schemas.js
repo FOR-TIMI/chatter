@@ -37,3 +37,18 @@ export const loginSchema = yup.object().shape({
     ),
 });
 
+export  const postSchema = yup.object().shape({
+  caption: yup.string()
+      .required('Caption is required')
+      .trim()
+      .max(250, 'Caption must be less than 250 characters')
+      .min(4, 'Caption must be at least 4 characters')
+      .matches(
+          /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\= ]+$/,
+          'Caption can only contain letters, numbers, spaces, and the following special characters: !()-.[]_`~;:!@#$%^&*+='
+      ),
+  images: yup
+  .array()
+  .of(yup.mixed())
+  .max(5, 'Not more than 5 images are accepted'),
+});
