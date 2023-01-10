@@ -32,9 +32,13 @@ const SearchBar = () => {
     setSearchInput('')
   }
 
-  const handleSubmit = async() => {
-    navigate(`/profile/${searchInput}`)
-  }
+
+  const handleClick = async(username,e) => {
+    e.preventDefault();
+
+    navigate(`/profile/${username}`);
+    navigate(0);
+}
 
   const getSuggestions =async() => {
     
@@ -50,11 +54,11 @@ const SearchBar = () => {
       );
       if(responseData.ok){
         const data = await responseData.json();
+        setLoading(false);
         setSuggestions(data);
-        setLoading(false);
       } else{
-        setSuggestions([])
         setLoading(false);
+        setSuggestions([])
       }
   }
   
@@ -69,9 +73,12 @@ const SearchBar = () => {
     }
   },[searchInput])
 
+
   const { palette } = useTheme();
   const { main, medium, light:neutralLight } = palette.neutral;
  const bg = palette.background.alt
+
+
 
   return (
     <Box sx={{ position: 'relative', display: 'flex', justifyContent: "center"}}>
@@ -83,17 +90,15 @@ const SearchBar = () => {
     >
       <InputBase value={searchInput} 
         onChange={handleChange}
-        onSubmit={handleSubmit} 
-        onBlur={handleBlur}
-        autoFocus 
+        onBlur={handleBlur} 
         placeholder="Search..."
          />
-      <IconButton onClick={handleSubmit}>
+      <IconButton>
         <Search />
       </IconButton>
     </FlexBetween>
 
-       { searchInput.length >= 4 && (
+       { suggestions.length ? (
             <List
             sx={{
               overflow: 'visible',
@@ -125,11 +130,8 @@ const SearchBar = () => {
           >
               {
                 suggestions.length ? suggestions.map(({ username, profilePhotoUrl, occupation},i) => (
-                  <ListItem key={i}
-                    onClick={() => {
-                      navigate(`/profile/${username}`);
-                      navigate(0);
-                    }}
+                  <ListItem key={i + username}
+                    onClick={(e) => handleClick(username,e)}
                     sx={{
                       cursor: 'pointer',
                       '&:hover':{
@@ -167,7 +169,9 @@ const SearchBar = () => {
                 )
               }
           </List>
-       )}
+           
+       ): null
+      }
     </Box>
   );
 };

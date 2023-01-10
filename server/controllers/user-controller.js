@@ -92,7 +92,6 @@ module.exports  = {
         // Save new version of the followings
         await user.save();
 
-        console.log(user)
         // To return new updated list of followings
         const followings = await User.find({ _id: { $in: user.followings } });
 
@@ -133,7 +132,6 @@ module.exports  = {
         res.status(404).json({ message: "No users found with the specified search term."})
       }
     } catch(err){
-      console.log({error : err.message, err , serverError: "Something went wrong"})
       res.status(500).json({ message: err.message})
     }
   }
