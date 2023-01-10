@@ -1,61 +1,63 @@
-const faker = require('faker');
 const db = require('../config/db');
+const users = require('./users');
 
 
 //Models
 const  { Post, User } = require('../model');
 
+
+
+
+function getRandomCaption() {
+  // create a copy of the captions array
+  const captions = [
+    "Making memories that will last a lifetime!",
+    "Feeling grateful for this beautiful day!",
+    "Life is too short to not chase your dreams!",
+    "Trying out this new restaurant and loving it!",
+    "Hiking through the mountains with my besties!",
+    "Feeling inspired by the sights and sounds of the city!",
+    "Enjoying some much-needed relaxation at the beach!",
+    "Making the most of every moment with my loved ones!"
+  ]
+  // select a random index from the copy
+  const randomIndex = Math.floor(Math.random() * captions.length);
+  // remove the selected caption from the copy
+  const selectedCaption = captions.splice(randomIndex, 1)[0];
+  // return the selected caption
+  return selectedCaption;
+}
+
+
+
 db.once('open', async () => {
 
     //Delete all current users and posts in the database
 
-    await User.deleteMany({});
-    console.log('\n ----- Deleted all current Users ----- \n ');
+    const oldUsers = db.collection('users')
+    await oldUsers.drop();
 
-    await Post.deleteMany({});
-    console.log('\n ----- Deleted all current Posts ----- \n ');
+    console.log('\n=============DELETED ALL CURRENT USERS=================\n')
 
-
-
- 
+   const oldPosts = db.collection('posts')
+   await oldPosts.drop()
 
 
-    //created user data
-    const createdUsers = [];
+ console.log('\n=============DELETED ALL CURRENT POSTS=================\n')
 
-    for (let i = 0; i < 5; i += 1) {
-        const username = faker.internet.userName();
-        const email = faker.internet.email(username);
-        const password = faker.internet.password();
-        const location = faker.address.city();
-        const occupation = faker.commerce.department();
-        const followings = []
-        const followers = []
-        const profilePhotoUrl = `https://res.cloudinary.com/diskudcr3/image/upload/c_thumb,w_200,g_face/v1672524602/chatter/gvvxsfb3v5l76csavwzk.png`
-        
-        
-        //Database users
-        const user  = await User.create({ 
-            username
-            ,email
-            ,password
-            ,followings
-            ,followers 
-            ,location
-            ,profilePhotoUrl
-            ,occupation
-            ,viewedProfile: Math.floor(Math.random() * 10000)
-            ,impressions: Math.floor(Math.random() * 10000)
-        });
-        //Local array
-        createdUsers.push(user);
+
+    const createdUsers = []
+
+
+    //Create users
+    for(let user of users){
+      const newUser = await User.create(user)
+      createdUsers.push(newUser)
     }
-    console.log('\n ----- Added Users ----- \n ');
-    
 
 
-     // create Posts
-    let createdPosts = [];
+    console.log('\n===================CREATED USERS=======================\n')
+
 
   for(let i=0; i < 5; i++){
 
@@ -77,7 +79,7 @@ db.once('open', async () => {
     }
    
 
-    const caption = faker.lorem.words(Math.round(Math.random() * 10) + 1);
+    const caption = getRandomCaption();
   
     /**
      * get a random user from the createdUser array
@@ -90,7 +92,7 @@ db.once('open', async () => {
     /**
      * create a post
     */
-    const createdPost = await Post.create({
+    await Post.create({
         username, 
         userId,
         location,
@@ -98,16 +100,11 @@ db.once('open', async () => {
         userProfilePhoto,
         postImageUrls,
         likes: {}
-      })
-      
-      
-    /**
-     * Add to the list of created posts
-     */
-    createdPosts.push(createdPost);
+      })   
   }
   
-  console.log('\n ----- Added Posts ----- \n');
+  console.log('\n====================CREATED POSTS=======================\n')
+
   
   
 

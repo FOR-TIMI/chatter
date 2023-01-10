@@ -3,26 +3,36 @@ const bcrypt = require('bcrypt');
 
 
 const userSchema = new Schema({
-    username:{
+    username: {
         type: String,
-        required: "Your username is required",
-        unique: true,
+        required: 'Username is required',
         trim: true,
-        maxlength: 50,
-        minlength: 2
-    },
+        unique: true,
+        maxLength: 50,
+        minlength: [8, 'Username must be at least 8 characters long'],
+        match: [
+          /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\=]+$/,
+          'Username can only contain letters, numbers, and the following special characters: !()-.[]_`~;:!@#$%^&*+='
+        ]
+      }
+    ,
     email: {
         type:String,
         unique:true,
         required: "Your email is required",
-        match: [/.+@.+\..+/, "Must match an email address!"],
+        match: [/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        'Email is invalid'],
         trim:true,
     },
-    password:{
+    password: {
         type: String,
-        required: "Your password is required",
-        minlength: 8,
-    },
+        required: 'Password is required',
+        minlength: [8, 'Password must be at least 8 characters long'],
+        match: [
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\=])[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\=]{8,}$/,
+          'Password must contain at least one lowercase letter, one uppercase letter, one number, and one of the following special characters: !()-.[]_`~;:!@#$%^&*+='
+        ]
+      },
     followings: {
         type: Array,
         default: []
@@ -33,12 +43,42 @@ const userSchema = new Schema({
     },
     profilePhotoUrl: {
         type: String,
+        match: [
+            /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(\/[\w, \.-]*)*\/?(?:\.png)?$/,
+            'Link is invalid'
+        ],
         default: 'https://i.stack.imgur.com/l60Hf.png'
     },
-    location: String,
-    occupation: String,
-    viewedProfile: Number,
-    impressions: Number
+    location: {
+        type: String,
+        trim: true,
+        match: [
+          /^[a-zA-Z0-9,\- ]+$/,
+          'Location can only contain letters, numbers, commas, spaces and -'
+        ]
+    },
+    occupation: {
+        type: String,
+        trim: true,
+        match: [
+          /^[a-zA-Z0-9,\- ]+$/,
+          'Occupation can only contain letters,numbers and characters -,'
+        ]
+      },
+    viewedProfile: {
+        type: Number,
+        match: [ 
+            /^[0-9]+$/,
+            'viewdProfile can only contain numbers'
+        ]
+    },
+    impressions: {
+        type: Number,
+        match: [ 
+            /^[0-9]+$/,
+            'impressions can only contain numbers'
+        ]
+    }
 
 },{
     timestamps: true,
@@ -71,20 +111,6 @@ userSchema.methods.isCorrectPassword = async function(password){
 }
 
 
-// Number of followers
-userSchema
-    .virtual('followerCount')
-    .get(function(){
-        return this.followers.length
-    })
-
-
-// Number of following
-userSchema
-    .virtual('followingCount')
-    .get(function(){
-        return this.followings.length;
-    });
 
 const User = model('User',userSchema);
 

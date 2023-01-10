@@ -28,10 +28,12 @@ import { setPosts } from "../../state"
 import { useDispatch, useSelector } from 'react-redux';
 import WidgetWrapper from '../../components/CustomStyledComponents/WidgetWrapper';
 
+import { postSchema } from '../../utils/Schemas';
 
 const MyPostWidget = ({ profilePhotoUrl }) => {
     const dispatch = useDispatch()
     const [imageUrls, setImageUrls] = useState([]);
+    const [errors, setErrors] = useState({});
     const [isImage, setIsImage] = useState(false);
     const [image, setImage] =useState(null);
     const [post, setPost] = useState("");
@@ -44,15 +46,20 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
     const { mediumMain, medium} = palette.neutral;
 
     const handleDrop = (acceptedFiles) => {
+        acceptedFiles = acceptedFiles.slice(0,isNonMobileScreens ? 5 : 4)
+
         setImageUrls(acceptedFiles.map(file => Object.assign(file, {
           preview: URL.createObjectURL(file)
         })));
 
         setImage(acceptedFiles)
+        
     };
-
+   
 
     const handlePost = async (e) => {
+
+      
         const formData = new FormData();
         formData.append("username", username);
         formData.append('caption', post);
@@ -80,15 +87,52 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         setImage(null);
         setPost("")
     }
+    
+    const handleSubmit = async(e) => {
+      e.preventDefault();
+      try {
+        await postSchema.validate({ caption: post, images: imageUrls }, { abortEarly: false });
+        setErrors({});
+        handlePost();
+        } catch (err) {
+        const validationErrors = {};
+        err.inner.forEach(error => {
+        validationErrors[error.path] = error.message;
+        });
+        setErrors(validationErrors);
+        }
+        
+    }
 
+    const handleBlur = async() => {
+      setErrors({});
+    }
+
+    const handleChange = async(e) => {
+      setPost(e.target.value)
+      if(post.length > 2){
+        try {
+          await postSchema.validate({ caption: post, images: imageUrls }, { abortEarly: false });
+          setErrors({});
+          } catch (err) {
+          const validationErrors = {};
+          err.inner.forEach(error => {
+          validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+          }
+        return;
+      }
+    }
   
   return (
-    <WidgetWrapper m="0 0 2rem 0">
+    <WidgetWrapper m="0 0 2rem 0" sx={{ textAlign: "center"}}>
       <FlexBetween gap="1.5rem">
         <UserAvatar image={profilePhotoUrl}/>
         <InputBase 
           placeholder="What's on your mind?....."
-          onChange={(e) => setPost(e.target.value)}
+          onChange={handleChange}
+          onBlur={handleBlur}
           value={post}
           sx={{
             width: "100%",
@@ -98,6 +142,9 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
           }}
         />
       </FlexBetween>
+      {errors.caption && (
+        <Typography sx={{fontSize: "0.69rem" }} variant='small' color="error">{errors.caption}</Typography>
+      )}
         {isImage && (
           <Box
             border={`1px solid ${medium}`}
@@ -115,12 +162,12 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
 
                   <Box
                   {...getRootProps()}
-                  border={`2px dashed ${palette.primary.main}`}
+                  border={errors.images ? `2px dashed red` : `2px dashed ${palette.primary.main}`}
                   p="1rem"
                   width="100%"
                   sx={{ "&:hover": { cursor: "pointer"}}}
                   >
-                    <input {...getInputProps()}/>
+                    <input onBlur={handleBlur} {...getInputProps()}/>
                     {!image ? (
                         <p>Add Images Here</p>
                     ): (
@@ -136,15 +183,17 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                                   }}
                                   src={img.preview} alt={img.name} key={img.preview} />
                               ))}
-                         </FlexBetween>   
-                        <EditOutlined/>
+                         </FlexBetween> 
+                         
+                         <IconButton> 
+                           <EditOutlined/>
+                        </IconButton>
                       </FlexBetween>
                     )}
                   </Box>
                   {image && (
                     <IconButton
                     onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
                     >
                       <DeleteOutlined/>   
                     </IconButton>
@@ -152,6 +201,9 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                 </FlexBetween>
               )}
             </Dropzone>
+            {errors.images && (
+            <Typography sx={{fontSize: "0.69rem" }} color="error">{errors.images}</Typography>
+            )}
           </Box>
         )}
 
@@ -193,7 +245,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
 
               <Button
                 disabled={!post}
-                onClick={handlePost}
+                onClick={handleSubmit}
                 sx={{
                   color: palette.background.alt,
                   backgroundColor: palette.primary.main,
