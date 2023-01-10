@@ -71,7 +71,7 @@ const SearchBar = () => {
 
   const { palette } = useTheme();
   const { main, medium, light:neutralLight } = palette.neutral;
-
+ const bg = palette.background.alt
 
   return (
     <Box sx={{ position: 'relative', display: 'flex', justifyContent: "center"}}>
@@ -99,7 +99,7 @@ const SearchBar = () => {
               overflow: 'visible',
               position: 'absolute',
               filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-              bgcolor: 'background.paper',
+              bgcolor: bg,
               mt: 5.8,
               width: "250px",
               '& .MuiAvatar-root': {
@@ -117,7 +117,7 @@ const SearchBar = () => {
                 left:'50%',
                 width: 10,
                 height: 10,
-                bgcolor: 'background.paper',
+                bgcolor: bg,
                 transform: 'translateY(-50%) rotate(45deg)',
                 zIndex: 0,
               }
