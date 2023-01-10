@@ -30,6 +30,7 @@ const SearchBar = () => {
  
   const handleBlur = async ()=> {
     setSearchInput('')
+    setSuggestions([]);
   }
 
 
