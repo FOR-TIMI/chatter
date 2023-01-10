@@ -75,11 +75,11 @@ Chatter is currently deployed on Heroku and can be accessed at the following lin
 
 ## Screenshots
   - ### Login Page: 
-   ![image](https://user-images.githubusercontent.com/104241247/211663856-4e29214e-9d86-4217-bfd6-b809c0763987.png)
+   ![image](https://user-images.githubusercontent.com/104241247/211673290-b26544d6-38a7-4645-a8ab-865ab791bfd6.png)
    The login page allows users to enter their username and password to access the application.
 
   - ### Signup Page:
-  ![image](https://user-images.githubusercontent.com/104241247/211663954-7c5e5de8-43c9-4276-9b5a-a377cbfdcdcb.png)
+  ![image](https://user-images.githubusercontent.com/104241247/211673425-f61f7591-b805-4df2-9612-a27838fd6a66.png)
    The signup page allows users to create an account that they can use to interact with other users.
 
   - ### HomePage
