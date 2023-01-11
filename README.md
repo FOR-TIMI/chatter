@@ -37,7 +37,7 @@ Welcome to Chatter, a social media application that allows users to connect and 
 - [Security Measures](#security-measures)
 - [Deployment](#deployment)
 - [Screenshots](#screenshots)
-- [Support the project](#support-the-project)
+- [Support the project](#support-the-project-)
 - [Questions](#questions)
 
 ## Introduction
