@@ -71,7 +71,7 @@ Chatter has implemented a number of security measures to ensure that users' data
 
 
 ## Deployment
-Chatter is currently deployed on Heroku and can be accessed at the following link: https://nameless-basin-36851.herokuapp.com/
+Chatter is currently deployed on Heroku and can be accessed at the following link: <br> https://nameless-basin-36851.herokuapp.com/
 
 ## Screenshots
   - ### Login Page: 
