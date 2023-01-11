@@ -30,7 +30,6 @@ const SearchBar = () => {
  
   const handleBlur = async ()=> {
     setSearchInput('')
-    setSuggestions([]);
   }
 
 
@@ -99,7 +98,7 @@ const SearchBar = () => {
       </IconButton>
     </FlexBetween>
 
-       { suggestions.length ? (
+       { searchInput.length ? (
             <List
             sx={{
               overflow: 'visible',
