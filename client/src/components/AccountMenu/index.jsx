@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -22,6 +23,10 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  const { palette } = useTheme();
+
+  const grey = palette.grey
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -34,7 +39,7 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
 
   return (
     <>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', width: "3rem" }}>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -43,7 +48,7 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar alt={username} src={profilePhotoUrl} sx={{ width: 32, height: 32 }}></Avatar>
+            <Avatar alt={username} src={profilePhotoUrl} sx={{ width: 40, height: 40 }}></Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -53,6 +58,9 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        sx={{
+          width: "100%"
+        }}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -82,21 +90,35 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={() => navigate('/profile')}>
-          <PersonOutlineIcon fontSize="small" sx={{  marginRight: "1rem" }}/> Profile
+        <MenuItem 
+           sx={{width: "13rem", fontSize: "0.9rem" ,padding: "0.6rem 1rem"}}
+           onClick={() => navigate('/profile')}> 
+           <ListItemIcon>        
+             <PersonOutlineIcon sx={{  marginRight: "1rem", color : grey, fontSize: "1.3rem"}}/>
+          </ListItemIcon>
+           Profile
         </MenuItem>
-        <MenuItem>
-          <BookmarkBorderIcon fontSize="small" sx={{ marginRight: "1rem"}}/> Saved
+        <MenuItem
+           sx={{width: "13rem", fontSize: "0.9rem" ,padding: "0.6rem 1rem"}}
+        > 
+        <ListItemIcon>
+          <BookmarkBorderIcon fontSize="medium" sx={{ marginRight: "1rem", color : grey }}/> 
+        </ListItemIcon>
+        Saved
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+           sx={{width: "13rem", fontSize: "0.9rem" ,padding: "0.6rem 1rem"}}
+        >
           <ListItemIcon>
-            <SettingsIcon fontSize="small" />
+            <SettingsIcon fontSize="medium" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+           sx={{width: "13rem", fontSize: "0.9rem" ,padding: "0.6rem 1rem"}}
+        >
           <ListItemIcon>
-            <FlagIcon fontSize="small" />
+            <FlagIcon fontSize="medium" />
           </ListItemIcon>
             Report Problem
         </MenuItem>
