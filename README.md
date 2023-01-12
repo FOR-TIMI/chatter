@@ -29,6 +29,9 @@ Welcome to Chatter, a social media application that allows users to connect and 
  <img src="https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white"/>
 </p>
 
+## Support the project ⭐
+If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo! This helps us getting known and grow the community. 🙏
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [User Story](#user-story)
@@ -37,7 +40,6 @@ Welcome to Chatter, a social media application that allows users to connect and 
 - [Security Measures](#security-measures)
 - [Deployment](#deployment)
 - [Screenshots](#screenshots)
-- [Support the project](#support-the-project-)
 - [Questions](#questions)
 
 ## Introduction
@@ -90,8 +92,6 @@ Chatter is currently deployed on Heroku and can be accessed at the following lin
   The profile page allows users to see another user's profile. This includes their posts, follower count and many more.
 
 
-## Support the project ⭐
-If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo! This helps us getting known and grow the community. 🙏
 
 
 ## questions
