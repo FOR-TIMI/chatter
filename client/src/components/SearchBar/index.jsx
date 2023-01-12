@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InputBase, 
          IconButton, 
          useTheme, 
+         CircularProgress,
           Box, 
           Typography } from '@mui/material';
 import List from '@mui/material/List';
@@ -18,6 +19,8 @@ const SearchBar = () => {
   const [loading, setLoading] = useState(true)
   const [searchInput, setSearchInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [isListOpen, setIsListOpen] = useState(false)
+
 
   const token = useSelector((state) => state.token);
 
@@ -25,20 +28,18 @@ const SearchBar = () => {
 
   
 
-  const navigate = useNavigate();
-
+  const navigate = useNavigate(); 
  
-  const handleBlur = async ()=> {
-    setSearchInput('')
-  }
+  const handleBlur = async(e) => {
+      setTimeout(() => setIsListOpen(false),200)
+  };
 
 
   const handleClick = async(username,e) => {
-    e.preventDefault();
-
+    e.preventDefault();  
     navigate(`/profile/${username}`);
-    navigate(0);
-}
+    navigate(0);    
+  }
 
   const getSuggestions =async() => {
     
@@ -61,46 +62,68 @@ const SearchBar = () => {
         setSuggestions([])
       }
   }
+
+  const handleSearchClick = () => {
+    if(searchInput.length){
+      setIsListOpen(true);
+    }
+  }
   
 
   const handleChange = (event) => {
+    setLoading(true);
     setSearchInput(event.target.value)
+    if(searchInput.trim().length > 0){
+     setIsListOpen(true)
+    } else{
+      setIsListOpen(false)
+    }
   };
 
-  useEffect(() => {
-    if(searchInput.length >= 4){
-      getSuggestions()
+  
+
+
+  useEffect(() => { 
+    if(isListOpen){
+      if(searchInput.trim().length > 0){
+        getSuggestions()
+      }
     }
   },[searchInput])
 
 
   const { palette } = useTheme();
   const { main, medium, light:neutralLight } = palette.neutral;
- const bg = palette.background.alt
+  const bg = palette.background.alt
 
 
 
   return (
-    <Box sx={{ position: 'relative', display: 'flex', justifyContent: "center"}}>
+    <Box 
+      sx={{
+         position: 'relative', 
+         display: 'flex', 
+         justifyContent: "center"}}>
     <FlexBetween
       backgroundColor={neutralLight}
       borderRadius="9px"
       gap="3rem"
       padding="0.1rem 1.5rem"
     >
-      <InputBase value={searchInput} 
+     
+      <InputBase onBlur={handleBlur} value={searchInput} 
         onChange={handleChange}
-        onBlur={handleBlur} 
         placeholder="Search..."
          />
-      <IconButton>
+      <IconButton onClick={handleSearchClick}>
         <Search />
       </IconButton>
     </FlexBetween>
 
-       { searchInput.length ? (
+       { isListOpen ? (
             <List
-            sx={{
+            id="search-list"
+              sx={{
               overflow: 'visible',
               position: 'absolute',
               filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
@@ -159,16 +182,18 @@ const SearchBar = () => {
                 )) : (
                   <ListItem sx={{
                     cursor: 'default',
-                    textAlign : "center",
-                    '&:hover':{
-                      backgroundColor: neutralLight,
-                      borderRadius: '0.8rem'
-                    }
+                    display : "flex",
+                    justifyContent: 'center',
+                    height: '200px',
                   }} 
-                  >{loading ? '...' : 'cannot find that user'}</ListItem>
+                    >{loading ? <CircularProgress/> : 
+                    <Typography variant="body2" color="textSecondary">
+                    No Results
+                  </Typography>}
+                </ListItem>
                 )
               }
-          </List>
+            </List>
            
        ): null
       }
