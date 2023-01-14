@@ -1,6 +1,5 @@
 const { Schema, model} = require('mongoose');
 
-const commentSchema = require('./Comment');
 
 const ImageSchema = new Schema({
 	url: String,
@@ -62,8 +61,7 @@ const postSchema = new Schema(
         likes: {
             type: Map,
             of: Boolean,
-        },
-        comments:[commentSchema]
+        }
     },
     {
         timestamps: true

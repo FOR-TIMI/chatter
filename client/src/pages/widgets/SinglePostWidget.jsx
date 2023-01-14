@@ -23,6 +23,7 @@ import Following from "../../components/Following";
 
 
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
+import CommentBox from "../../components/Comment/Comment";
 
 
 
@@ -120,7 +121,13 @@ const SinglePostWidget = ({
                 <ShareOutlined />
               </IconButton>
       </FlexBetween>
-            {isComments && (
+
+      { isComments && (
+        <>
+        <CommentBox/>
+        </>
+      )}
+            {/* {isComments && (
               <Box mt="0.5rem">
                 {comments.map((comment, i) => (
                   <Box key={`${comment}`}>
@@ -132,7 +139,8 @@ const SinglePostWidget = ({
                 ))}
                 <Divider />
               </Box>
-            )}
+            )} */}
+        
     </WidgetWrapper>
   )
 }

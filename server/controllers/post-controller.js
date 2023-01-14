@@ -14,13 +14,9 @@ module.exports = {
                 return res.status(404).json({ message: "User not found"})
             }
             
-            let fileArr = files.map(obj => ({ url : obj['path'], filename : obj['filename']})) || undefined
-        
-
+            const fileArr = files.map(obj => ({ url : obj['path'], filename : obj['filename']})) || undefined
             
-
-            
-            const newPost = await Post.create({
+            await Post.create({
                 userId: _id,
                 username, 
                 location,
