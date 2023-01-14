@@ -47,7 +47,7 @@ module.exports = {
     async getComments({params},res){
         const { postId } = params;
         try{
-            const comments = await Comment.find(postId);
+            const comments = await Comment.find({ postId });
             res.status(200).json(comments);
         } catch(err){
             res.status(500).json({ err: err.message})
