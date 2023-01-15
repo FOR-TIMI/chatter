@@ -11,8 +11,6 @@ import {
 } from "@mui/icons-material"
 
 import {
-    Box,
-    Divider,
     IconButton,
     Typography,
     useTheme
@@ -36,7 +34,7 @@ const SinglePostWidget = ({
   postImageUrls,
   userProfilePhoto,
   likes,
-  comments,
+  commentCount,
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch();
@@ -113,7 +111,7 @@ const SinglePostWidget = ({
                   <IconButton onClick={() => setIsComments(!isComments)}>
                     <ChatBubbleOutlineOutlined />
                   </IconButton>
-                  <Typography>{comments.length}</Typography>
+                  <Typography>{commentCount}</Typography>
                 </FlexBetween>
               </FlexBetween>
 

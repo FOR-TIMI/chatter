@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react"
+import { v4 as uuidv4 } from 'uuid';
 
 
 /**======MUI============= */
@@ -9,7 +10,9 @@ import {
     Box,
     useTheme,
     Tooltip,
-    CircularProgress
+    CircularProgress,
+    Typography,
+    Divider
 } from "@mui/material"
 
 
@@ -23,7 +26,9 @@ import SingleComment from "./SingleComment";
 
 
 
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+
+import { setPost } from "../../state"
 
 const CommentBox = ({ postId }) => {
 
@@ -33,6 +38,8 @@ const CommentBox = ({ postId }) => {
  const [commentBody, setCommentBody] = useState('');
  const [loading, setLoading] = useState(false);
 
+ const dispatch = useDispatch();
+
  const { profilePhotoUrl, username, _id} = useSelector((state) => state.user)
  const token = useSelector((state) => state.token)
 
@@ -41,6 +48,31 @@ const CommentBox = ({ postId }) => {
 
  const handleChange = (e) => {
     setCommentBody(e.target.value)
+ }
+ 
+ const handleLikeClick = async(commentId) => {
+    try{
+        //Make API call to update the like state of the comment
+        const response = await fetch( serverUrl + `p/${postId}/comments/${commentId}/likes`,{
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username  })
+          })
+      
+          const updatedComment = await response.json();
+          //update the state of the comment 
+          setComments(prevComments => {
+            const newComments = [...prevComments];
+            const index = newComments.findIndex(c => c._id === updatedComment._id);
+            newComments[index] = updatedComment;
+            return newComments;
+          })
+    } catch(err){
+        console.error(err)
+    }
  }
 
  const handleClick = async() => {
@@ -62,9 +94,12 @@ const CommentBox = ({ postId }) => {
         })
     
         if(response.ok){
-            const comments = await response.json();
+            const { comments, post} = await response.json();
+
             setComments(comments);
-        }  
+            dispatch(setPost({ post })); //To update the state of the comment count on the post itselfßß
+        } 
+        
     } catch(err){
         console.error(err)
     }
@@ -110,7 +145,8 @@ const CommentBox = ({ postId }) => {
 
     <Box
         sx={{
-            display: "flex"
+            display: "flex",
+            paddingBottom: "0.5rem"
         }}
     >
             <UserAvatar image={profilePhotoUrl} size="32px"/>
@@ -145,6 +181,7 @@ const CommentBox = ({ postId }) => {
             </FlexBetween>
     </Box>
 
+
     { loading && (
     <Box sx={{
         display: "flex",
@@ -158,9 +195,9 @@ const CommentBox = ({ postId }) => {
    )}
 
     { comments?.length ? comments.map((c,i) => (
-      <SingleComment comment={c} key={c + i}/>
-    )) : null}
-    
+      <SingleComment comment={c} onLikeClick={handleLikeClick} key={uuidv4()}/>
+    )) : null
+    }
 </Box>
   )
 }

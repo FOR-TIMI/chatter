@@ -15,7 +15,8 @@ const {
     addComment
     ,getComments
     ,removeComment
-    ,updateComment
+    ,updateComment,
+    addRemoveCommentLike
 } = require('../controllers/comment-controller')
 
 
@@ -41,11 +42,14 @@ router
     .get(authMiddleware, getFeedPosts)
     .post(authMiddleware, upload.array('postImageUrls', 5), createPost)
 
+
+
 /**============Likes=============== */
 router
     .route('/:id/likes')
     .get(authMiddleware, getPostLikes)
     .patch(authMiddleware, addRemoveLike)
+
 
 
 /**=========Comment============ */
@@ -56,9 +60,13 @@ router
     .post(authMiddleware, addComment)
 
 router
-    .route('/:postId/comments/commentId')
+    .route('/:postId/comments/:commentId')
     .put(authMiddleware, isCommentAuthor, updateComment)
     .delete(authMiddleware, isCommentAuthor, removeComment)
+
+/**========COMMENT LIKES============ */
+router.patch('/:postId/comments/:commentId/likes',authMiddleware, addRemoveCommentLike)
+
 
 
 module.exports = router

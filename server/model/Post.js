@@ -61,6 +61,10 @@ const postSchema = new Schema(
         likes: {
             type: Map,
             of: Boolean,
+        },
+        commentCount:{ 
+            type: Number,
+            default: 0
         }
     },
     {

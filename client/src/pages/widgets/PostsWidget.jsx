@@ -65,7 +65,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
             postImageUrls,
             userProfilePhoto,
             likes,
-            comments
+            commentCount
         }) => (
             <SinglePostWidget
             key={_id}
@@ -77,7 +77,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
             postImageUrls={postImageUrls}
             userProfilePhoto={userProfilePhoto}
             likes={likes}
-            comments={comments}
+            commentCount={commentCount}
             />
         )
         

@@ -1,55 +1,131 @@
+import { useNavigate } from "react-router-dom";
+// utils
+import { formatTime } from '../../utils/formatDate'
+import { fShortenNumber } from '../../utils/formatNumber';
+
 import {
     Box,
+    Checkbox,
     Divider,
     Typography,
-    useTheme
-} from "@mui/material"
+    useTheme,
+    IconButton
+} from "@mui/material";
 
-import IconButton from '@mui/material/IconButton';
+import {
+ Favorite,
+ FavoriteBorder
+} from '@mui/icons-material';
+
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
-import { width } from "@mui/system";
+import { useSelector } from "react-redux";
 
-const SingleComment = ({ comment }) => {
+const SingleComment = ({ comment, onLikeClick}) => {
+
 
     const {
+        _id,
         userId,
+        createdAt,
         username,
         postId,
+        likes={},
         userProfilePhoto,
         commentBody
     } = comment
 
+    const { username:signedInUsername } = useSelector((state) => state.user);
+
+
+    const isLiked = Boolean(likes[username]);
+    const likeCount = Object.keys(likes).length;
+
+
+
     const { palette } = useTheme();
+    const { main, medium } = palette.neutral;
+
+
+
+    const navigate = useNavigate();
+
+ 
+
   return (
       <FlexBetween sx={{
-        mt: "1.5rem"
+        mt: "0.7rem",
       }}>
-         <UserAvatar image={userProfilePhoto} size="32px"/>
-         
+         <UserAvatar image={userProfilePhoto} size="30px"/>
+        
          <Box
             sx={{
-                ml: '1rem',
+                ml: '0.3rem',
                 borderRadius: "1rem",
-                backgroundColor: palette.neutral.light,
+                // backgroundColor: palette.neutral.light,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flexGrow: 1,
-                padding: "0.5rem 0.5rem 0.5rem 1rem"
+                padding: "0.3rem 0.3rem 0.5rem 1rem"
             }}
          >
-           <Typography>
-                {commentBody}
-           </Typography>
-           <IconButton>
-                <MoreVertIcon />
-            </IconButton>
+           <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+           >
+             <Box sx={{ display: "flex"}}>
+                <Typography
+                    fontWeight={600}
+                    mr="0.25rem"
+                    sx={{
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => navigate(`/profile${username === signedInUsername ? '' : '/' + username}`)}
+                >
+                  {username}
+                </Typography>
+                <Typography>
+                      {commentBody}
+                </Typography>
+             </Box>
+
+              <Box
+                sx={{ display: "flex"}}
+              >
+                  <Typography mr={2} color={medium} fontSize="0.75rem">
+                   {formatTime(createdAt)}
+                  </Typography>
+                  <Typography mr={2} color={medium} fontSize="0.75rem">
+                    {fShortenNumber(likeCount) || 0} { likeCount !== 1 ? 'likes' : 'like'}
+                  </Typography>
+
+                  <IconButton>
+                      <MoreVertIcon />
+                  </IconButton>
+              </Box>
+           </Box>
+
+           <Checkbox 
+               size="24"
+           //  {...label} 
+              icon={<FavoriteBorder />} 
+              checkedIcon={<Favorite />} 
+              checked={isLiked}
+              onChange={() => onLikeClick(_id)}
+            />
+
+           
+
          </Box>
+
+         
       </FlexBetween>
   )
 }
