@@ -1,7 +1,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
-import { Typography, Box } from '@material-ui/core';
+import { Typography, Box } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 function FormatLike({ users, isNonMobileScreens, otherLikes }) {
