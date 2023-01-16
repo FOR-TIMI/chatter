@@ -8,6 +8,7 @@ import {
     Checkbox,
     Typography,
     useTheme,
+    useMediaQuery
 } from "@mui/material";
 
 import {
@@ -21,13 +22,15 @@ import UserAvatar from "../CustomStyledComponents/UserAvatar";
 import { useSelector } from "react-redux";
 
 const SingleComment = ({ comment, onLikeClick}) => {
+  
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
 
     const {
         _id,
         createdAt,
         username,
-        likes,
+        likes={},
         userProfilePhoto,
         commentBody
     } = comment
@@ -35,7 +38,7 @@ const SingleComment = ({ comment, onLikeClick}) => {
     const { username:signedInUsername } = useSelector((state) => state.user);
 
 
-    const isLiked = Boolean(likes[username]);
+    const isLiked = Boolean(likes[signedInUsername]);
     const likeCount = Object.keys(likes).length;
 
 
@@ -72,8 +75,8 @@ const SingleComment = ({ comment, onLikeClick}) => {
               flexDirection: 'column'
             }}
            >
-             <Box sx={{ display: "flex"}}>
-                <Typography
+             <Box component={"span"}>
+                <Box component={"span"}
                     fontWeight={600}
                     mr="0.25rem"
                     color={palette.neutral.dark}
@@ -83,10 +86,14 @@ const SingleComment = ({ comment, onLikeClick}) => {
                     onClick={() => navigate(`/profile${username === signedInUsername ? '' : '/' + username}`)}
                 >
                   {username}
-                </Typography>
-                <Typography>
+                </Box>
+                <Box component={"span"} 
+                 sx={{
+                  fontSize: {isNonMobileScreens}
+                 }}
+                >
                       {commentBody}
-                </Typography>
+                </Box>
              </Box>
 
               <Box

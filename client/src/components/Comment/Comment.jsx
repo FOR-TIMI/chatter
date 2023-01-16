@@ -11,8 +11,6 @@ import {
     useTheme,
     Tooltip,
     CircularProgress,
-    Typography,
-    Divider
 } from "@mui/material"
 
 
@@ -30,7 +28,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { setPost } from "../../state"
 
-const CommentBox = ({ postId, commentCount }) => {
+const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
 
  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
  
@@ -63,6 +61,7 @@ const CommentBox = ({ postId, commentCount }) => {
           })
       
           const updatedComment = await response.json();
+
           //update the state of the comment 
           setComments(prevComments => {
             const newComments = [...prevComments];
@@ -151,7 +150,7 @@ const CommentBox = ({ postId, commentCount }) => {
             display: "flex",
             padding: "0.5rem 0.8rem",
             border: `1.5px solid ${palette.neutral.light}`,
-            borderRadius: "2rem"
+            borderRadius: isNonMobileScreens ? "2rem" : "0.3rem"
         }}
     >
             <UserAvatar image={profilePhotoUrl} size="32px"/>

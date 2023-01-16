@@ -16,7 +16,9 @@ import {
 import {
     IconButton,
     Typography,
-    useTheme
+    useTheme,
+    Box,
+    useMediaQuery
 } from "@mui/material";
 
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
@@ -24,7 +26,6 @@ import Following from "../../components/Following";
 import LikeBox from "../../components/LikeBox"
 
 
-import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 import CommentBox from "../../components/Comment/Comment";
 
 
@@ -49,6 +50,9 @@ const SinglePostWidget = ({
   const [isComments, setIsComments] = useState(false)
   const [likeData, setLikeData] = useState(null)
   const [isLongCaption, setIsLongCaption] = useState(false);
+
+  const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
+
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -118,16 +122,27 @@ const SinglePostWidget = ({
 
 
   return (
-    <WidgetWrapper m="0 0 2rem 0">
+    <Box 
+      m="0 0 2rem 0"
+      sx={{
+        backgroundColor: palette.background.alt,
+        borderRadius: "0.75rem",
+        padding: isNonMobileScreens ? "1.5rem 1.5rem 0.75rem 1.5rem" : "1.5rem 0"
+      }}
+    >
 
-     
+     <Box
+      sx={{
+        padding:!isNonMobileScreens ? "0 0.75rem" : ""
+      }}
+     >
         <Following 
-            followingId={postUserId} 
-            name={postAuthorUsername} 
-            subtitle={location} 
-            userProfilePhotoUrl={userProfilePhoto}
-            isAuthor={isAuthor}
-        />
+                followingId={postUserId} 
+                name={postAuthorUsername} 
+                subtitle={location} 
+                userProfilePhotoUrl={userProfilePhoto}
+                isAuthor={isAuthor}
+            /> 
 
         {/* post caption  */}
         <Typography color={main} sx={{ mt: "1rem"}}>
@@ -145,12 +160,16 @@ const SinglePostWidget = ({
         }} color={medium}>
             {isLongCaption ? 'View less' : 'view More'}
         </Typography>
-        ) : null}
+        ) : null}     
+      </Box>     
+
+
+
       
       {postImageUrls.length ? (
         <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
           <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
-            borderRadius: "0.75rem",
+            borderRadius: isNonMobileScreens ? "0.75rem" : "0",
             marginTop: "0.75rem",
             height: '100%',
             width: '100%'
@@ -184,13 +203,15 @@ const SinglePostWidget = ({
               </IconButton>
       </FlexBetween>
 
+      <Box
+      sx={{
+        padding:!isNonMobileScreens ? "0 0.75rem" : ""
+      }}
+     >
       {/* Liked By  */}
         {likeData && (<LikeBox likes={likeData} likeCount={likeCount}/>)}
 
-
-
-        
-      { commentCount ? (
+        { commentCount ? (
                     <Typography 
                     onClick={handleCommentToggle}
                     sx={{
@@ -213,11 +234,18 @@ const SinglePostWidget = ({
         marginBottom="1rem"
       >Posted {fToNow(createdAt)}</Typography>
 
+      </Box>
+
+        
+
+
 
       
-      { isComments && (<CommentBox postId={postId} commentCount={commentCount}/>)}
+      { isComments && (<CommentBox postId={postId} 
+      commentCount={commentCount} 
+      isNonMobileScreens={isNonMobileScreens}/>)}
         
-    </WidgetWrapper>
+    </Box>
   )
 }
 
