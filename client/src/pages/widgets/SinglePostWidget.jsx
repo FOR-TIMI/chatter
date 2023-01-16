@@ -84,25 +84,27 @@ const SinglePostWidget = ({
       body: JSON.stringify({ username  })
     })
 
-    getLikes();
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost}));
+    getLikes();
 
   }
 
   const getLikes = async() => {
 
-    const response = await fetch( serverUrl + `p/${postId}/likes`,{
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-    })
-
-    if(response.ok){
-      const likeData = await response.json()
-      setLikeData(likeData)
+    if(likeCount > 0){
+      const response = await fetch( serverUrl + `p/${postId}/likes`,{
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      })
+  
+      if(response.ok){
+        const likeData = await response.json()
+        setLikeData(likeData)
+      }
     }
 
 
@@ -209,7 +211,7 @@ const SinglePostWidget = ({
       }}
      >
       {/* Liked By  */}
-        {likeData && (<LikeBox likes={likeData} likeCount={likeCount}/>)}
+        {likeData ? (<LikeBox likes={likeData} likeCount={likeCount}/>): null}
 
         { commentCount ? (
                     <Typography 

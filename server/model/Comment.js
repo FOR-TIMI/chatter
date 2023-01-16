@@ -45,13 +45,13 @@ commentSchema.pre("save", async function(next){
 })
 
 
-// commentSchema.pre("findOneAndDelete", async function(next){
-//     const comment = this.getQuery();
-//     this.model("Post").findByIdAndUpdate(comment.postId,
-//         { $inc: { commentCount : -1}},{ new: true}).exec();
+commentSchema.pre("findOneAndDelete", async function(next){
+    const comment = this.getQuery();
+    this.model("Post").findByIdAndUpdate(comment.postId,
+        { $inc: { commentCount : -1}},{ new: true}).exec();
 
-//     next();
-// })
+    next();
+})
 
 const Comment = model('Comment', commentSchema)
 
