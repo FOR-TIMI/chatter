@@ -142,7 +142,6 @@ const CommentBox = ({ postId, commentCount }) => {
   return (
     <Box sx={{ 
         mt:'1rem',
-        p: '0.25rem 0.5rem', 
         width: "100%",
         alignItems:'center'
         }}>
@@ -150,7 +149,7 @@ const CommentBox = ({ postId, commentCount }) => {
     <Box
         sx={{
             display: "flex",
-            padding: "0.5rem",
+            padding: "0.5rem 0.8rem",
             border: `1.5px solid ${palette.neutral.light}`,
             borderRadius: "2rem"
         }}
@@ -168,7 +167,7 @@ const CommentBox = ({ postId, commentCount }) => {
                 onChange={handleChange}
                 value={commentBody}
                 size="sm"
-                placeholder="Add a comment…"
+                placeholder="Leave a comment…"
                 sx={{ flexGrow: 1, mr: 1}}
                 />
 

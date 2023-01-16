@@ -27,7 +27,7 @@ const SingleComment = ({ comment, onLikeClick}) => {
         _id,
         createdAt,
         username,
-        likes={},
+        likes,
         userProfilePhoto,
         commentBody
     } = comment
@@ -41,7 +41,7 @@ const SingleComment = ({ comment, onLikeClick}) => {
 
 
     const { palette } = useTheme();
-    const { main, medium } = palette.neutral;
+    const { medium } = palette.neutral;
 
 
 
@@ -51,19 +51,19 @@ const SingleComment = ({ comment, onLikeClick}) => {
 
   return (
       <FlexBetween sx={{
-        mt: "0.7rem",
+        m: "0.7rem 3% 0 3%",        
+        width: "100%",
       }}>
-         <UserAvatar image={userProfilePhoto} size="30px"/>
+         <UserAvatar image={userProfilePhoto} size="32px"/>
         
          <Box
             sx={{
-                ml: '0.3rem',
                 borderRadius: "1rem",
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flexGrow: 1,
-                padding: "0.3rem 0.3rem 0.5rem 1rem"
+                padding: "0.3rem 1.2rem 0.5rem 1rem"
             }}
          >
            <Box
@@ -76,6 +76,7 @@ const SingleComment = ({ comment, onLikeClick}) => {
                 <Typography
                     fontWeight={600}
                     mr="0.25rem"
+                    color={palette.neutral.dark}
                     sx={{
                       cursor: 'pointer',
                     }}

@@ -28,12 +28,13 @@ export function fToNow(date) {
 
 export function formatTime(date){
   let isDay = false
-  let str = date
+  let dateFormat = date
   ? formatDistanceToNow(new Date(date), {
       addSuffix: true,
     })
   : '';
-    str = str.split(' ')
+    
+    let str = dateFormat.split(' ')
     if(str[0].startsWith("about")){
       str.shift()
       isDay= true
@@ -43,19 +44,17 @@ export function formatTime(date){
 
     if(isDay){
       if(String(str[1].startsWith("h"))){
-      str[1] = "hr"
+      str[1] = Number(str[0]) > 1 ? "hrs" : "hr"
     }else if(String(str[1].startsWith("m"))){
-      str[1] = "min"
-    } else if(String(str[1].startsWith("s"))){
-      str[1] = "secs ago"
-    } 
+      str[1] = Number(str[0]) > 1 ? "mins" : "min"
+    }
+    return str.join(' ')
     } else{
-      str[1] = "d"
+      return dateFormat
     }
 
 
     
 
-  return str.join(' ')
  
 }

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost} from "../../state";
 
+import { fToNow } from "../../utils/formatDate";
+
 import {
   ChatBubbleOutlineOutlined,
     FavoriteBorderOutlined,
@@ -14,8 +16,7 @@ import {
 import {
     IconButton,
     Typography,
-    useTheme,
-    Box
+    useTheme
 } from "@mui/material";
 
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
@@ -29,7 +30,6 @@ import CommentBox from "../../components/Comment/Comment";
 
 
 
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 
@@ -43,6 +43,7 @@ const SinglePostWidget = ({
   postImageUrls,
   userProfilePhoto,
   likes,
+  createdAt,
   commentCount,
 }) => {
   const [isComments, setIsComments] = useState(false)
@@ -79,10 +80,10 @@ const SinglePostWidget = ({
       body: JSON.stringify({ username  })
     })
 
+    getLikes();
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost}));
 
-    getLikes();
   }
 
   const getLikes = async() => {
@@ -196,14 +197,21 @@ const SinglePostWidget = ({
                     cursor: 'pointer',
                     mb:"1rem",
                     "&:hover":{
-                        color: palette.light
+                        color: palette.background.light
                     }
                     }} color={medium}>
                         {!isComments ? `View ${commentCount > 1 ? "all"  + " " + commentCount + " " + "comments" : commentCount + " " + "comment"}` : 'Hide comments'}
                     </Typography>
       ): null}
+
+
           
                 
+    <Typography
+        fontWeight="200"
+        fontSize="0.79rem"
+        marginBottom="1rem"
+      >Posted {fToNow(createdAt)}</Typography>
 
 
       
