@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { setPosts } from "../../state";
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -68,7 +69,7 @@ const PostsWidget = ({ username, isProfile = false}) => {
             commentCount
         }) => (
             <SinglePostWidget
-            key={_id}
+            key={uuidv4()}
             postId={_id}
             postUserId={userId}
             postAuthorUsername={username}

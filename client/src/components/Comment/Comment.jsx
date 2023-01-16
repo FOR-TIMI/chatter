@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { setPost } from "../../state"
 
-const CommentBox = ({ postId }) => {
+const CommentBox = ({ postId, commentCount }) => {
 
  const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
  
@@ -108,25 +108,29 @@ const CommentBox = ({ postId }) => {
  }
 
  const getComments = async() => {
-    setLoading(true);    
-    try{
-        const response = await fetch(
-            serverUrl + `p/${postId}/comments`,{
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        })
-    
-        if(response.ok){
-            const comments = await response.json();
-            setComments(comments);
-        }  
-    } catch(err){
-        console.error(err)
+    if(commentCount > 0){
+        setLoading(true);    
+        try{
+            const response = await fetch(
+                serverUrl + `p/${postId}/comments`,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+        
+            if(response.ok){
+                const comments = await response.json();
+                setComments(comments);
+            }  
+        } catch(err){
+            console.error(err)
+        }
+        setCommentBody("")
+        setLoading(false)
+    } else {
+        return;
     }
-    setCommentBody("")
-    setLoading(false)
  }
 
  useEffect(() => {
@@ -146,7 +150,9 @@ const CommentBox = ({ postId }) => {
     <Box
         sx={{
             display: "flex",
-            paddingBottom: "0.5rem"
+            padding: "0.5rem",
+            border: `1.5px solid ${palette.neutral.light}`,
+            borderRadius: "2rem"
         }}
     >
             <UserAvatar image={profilePhotoUrl} size="32px"/>
@@ -156,7 +162,7 @@ const CommentBox = ({ postId }) => {
                 flexGrow: '1',
                 justifyContent: "center",
                 alignItems: "center",
-                height: '35px'
+                height: '35px',
             }}>
                 <InputBase
                 onChange={handleChange}

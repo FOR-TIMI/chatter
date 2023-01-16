@@ -6,20 +6,15 @@ import { fShortenNumber } from '../../utils/formatNumber';
 import {
     Box,
     Checkbox,
-    Divider,
     Typography,
     useTheme,
-    IconButton
 } from "@mui/material";
 
 import {
  Favorite,
- FavoriteBorder
+ FavoriteBorder,
 } from '@mui/icons-material';
 
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
@@ -30,10 +25,8 @@ const SingleComment = ({ comment, onLikeClick}) => {
 
     const {
         _id,
-        userId,
         createdAt,
         username,
-        postId,
         likes={},
         userProfilePhoto,
         commentBody
@@ -66,7 +59,6 @@ const SingleComment = ({ comment, onLikeClick}) => {
             sx={{
                 ml: '0.3rem',
                 borderRadius: "1rem",
-                // backgroundColor: palette.neutral.light,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -105,16 +97,11 @@ const SingleComment = ({ comment, onLikeClick}) => {
                   <Typography mr={2} color={medium} fontSize="0.75rem">
                     {fShortenNumber(likeCount) || 0} { likeCount !== 1 ? 'likes' : 'like'}
                   </Typography>
-
-                  <IconButton>
-                      <MoreVertIcon />
-                  </IconButton>
               </Box>
            </Box>
 
            <Checkbox 
                size="24"
-           //  {...label} 
               icon={<FavoriteBorder />} 
               checkedIcon={<Favorite />} 
               checked={isLiked}
