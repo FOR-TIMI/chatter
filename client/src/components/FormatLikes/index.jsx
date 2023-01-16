@@ -24,7 +24,7 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
                   key={uuidv4()}
                   to={`/profile/${user}`}
                   onClick={() => handleClick(user)}
-                  sx={{color: palette.neutral.dark}}
+                  style={{color: palette.neutral.dark}}
                 >
                   {user}
                   {index !== 1 ? ', ' : ' '}
@@ -33,7 +33,7 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
           :  <Link
                  to={`/profile/${username}`}
                  onClick={() => handleClick(username)}
-               sx={{color: palette.neutral.dark}}
+                style={{color: palette.neutral.dark}}
 
               >
                  {username + " "}
@@ -42,7 +42,7 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
            <Link
                 to={`/profile/${username}`}
                 onClick={() => handleClick(username)}
-                sx={{color: palette.neutral.dark}}
+                style={{color: palette.neutral.dark}}
 
             >
                {username}
@@ -52,20 +52,19 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
         <Typography color="textSecondary" display="inline">
           and {otherLikes} {otherLikes > 1 ? "others" : "other"} like this
         </Typography>
-      ) : (
-         otherLikes === 0 ? (
-           <Typography color="textSecondary" display="inline">
-             no one likes this
-           </Typography>
-         ):(
-           <Typography color="textSecondary" display="inline">
-              likes this
-           </Typography>
-         )
-      )}
+      ) : (users.length + otherLikes) === 0 ? (
+          <Typography color="textSecondary" display="inline">
+            no one likes this
+          </Typography>
+        ):(
+          <Typography mr={"0.5rem"} color="textSecondary" display="inline">
+             likes this
+          </Typography>
+        )
+        }
     </Box>
-  );
-}
+  
+)}
 
 export default FormatLike;
 
