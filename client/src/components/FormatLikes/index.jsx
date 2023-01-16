@@ -30,9 +30,15 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
           {username + " "}
         </Link>
       )}
+     {otherLikes > 0 ? (
+            <Typography color="textSecondary" display="inline">
+            and {otherLikes} {otherLikes > 1 ? "others" : "other"} like this
+          </Typography>
+     ) :(
       <Typography color="textSecondary" display="inline">
-        and {otherLikes} {otherLikes > 1 ? "others" : "other"} like this
+        likes this
       </Typography>
+     ) }
     </Box>
   );
 }
