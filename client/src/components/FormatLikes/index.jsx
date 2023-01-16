@@ -20,7 +20,7 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
             color : palette.neutral.dark
           }} key={index} to={`/profile/${user}`} onClick={() => handleClick(user)}>
             {user}
-            {index !== 1 ? ', ' : ' '}
+            {index !== 1 && otherLikes > 0 ? ', ' : ' '}
           </Link>
         ))
       ) : (
