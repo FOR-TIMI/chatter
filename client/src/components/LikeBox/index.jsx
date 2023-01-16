@@ -39,7 +39,8 @@ const LikeBox = ({ likes, likeCount }) => {
     <Box component={'span'} sx={{ ml: "0.5rem"}}>
         <FormatLike isNonMobileScreens={isNonMobileScreens} 
           users={usernames}
-          otherLikes={isNonMobileScreens ? likeCount - 2 : likeCount - 1}
+          otherLikes={ likeCount > 0 ? likeCount - (isNonMobileScreens ? 2 : 1) : 0}
+
         />
     </Box>
   </Box>
