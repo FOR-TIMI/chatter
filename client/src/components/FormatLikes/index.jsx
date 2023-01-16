@@ -48,20 +48,21 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
                {username}
             </Link>
       ):(<></>)}
-      {otherLikes > 0 ? (
+        {(users.length + otherLikes) > 2 ? (
         <Typography color="textSecondary" display="inline">
           and {otherLikes} {otherLikes > 1 ? "others" : "other"} like this
         </Typography>
-      ) : (users.length + otherLikes) === 0 ? (
-          <Typography color="textSecondary" display="inline">
-            no one likes this
-          </Typography>
-        ):(
-          <Typography mr={"0.5rem"} color="textSecondary" display="inline">
-             likes this
-          </Typography>
-        )
-        }
+      ) : (
+         (users.length + otherLikes) === 0 ? (
+           <Typography color="textSecondary" display="inline">
+             no one likes this
+           </Typography>
+         ):(
+           <Typography color="textSecondary" display="inline">
+              likes this
+           </Typography>
+         )
+      )}
     </Box>
   
 )}
