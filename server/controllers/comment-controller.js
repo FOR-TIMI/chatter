@@ -13,7 +13,6 @@ module.exports = {
                 userId,
                 userProfilePhoto,
                 commentBody,
-                likes: {},
                 postId
             })
 
