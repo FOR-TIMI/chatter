@@ -14,13 +14,9 @@ module.exports = {
                 return res.status(404).json({ message: "User not found"})
             }
             
-            let fileArr = files.map(obj => ({ url : obj['path'], filename : obj['filename']})) || undefined
-        
-
+            const fileArr = files.map(obj => ({ url : obj['path'], filename : obj['filename']})) || undefined
             
-
-            
-            const newPost = await Post.create({
+            await Post.create({
                 userId: _id,
                 username, 
                 location,
@@ -65,15 +61,16 @@ module.exports = {
             const { id } = params
             const post = await Post.findById(id);
 
-            if(!post.likes.entries){
-                return res.status(404).json({ message: "This post has no likes"})
+            if(!post){
+                return res.status(404).json({ message: "This post has does not exist"})
             }
             
-            const likes = [...post.likes].filter(([k, v]) => k);
+            const likes = [...post.likes.keys()].slice(0,4);
           
-           const users = await Promise.all(
-                likes.map((username) => User.findOne({ username }))
-            )
+           const users = await User.find({
+            username: { $in: likes }
+           }).select('username profilePhotoUrl')
+    
            res.status(200).json(users)
             
         } catch(err){

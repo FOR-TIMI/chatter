@@ -1,9 +1,13 @@
-const {Schema } = require('mongoose');
+const {Schema,model } = require('mongoose');
 
 
 
 const commentSchema  = new Schema({
-    authorId: {
+    postId: {
+        type: String,
+        required: true
+    },
+    userId: {
         type: String,
         required: true
     },
@@ -17,7 +21,11 @@ const commentSchema  = new Schema({
         trim: true,
         required: true
     },
-
+    likes: {
+        type: Map,
+        of: Boolean,
+        default: {}
+    }
 },
 {
     timestamps: true,
@@ -25,7 +33,26 @@ const commentSchema  = new Schema({
         getters: true
     },
     id: false
+});
+
+commentSchema.pre("save", async function(next){
+    if(this.isNew){
+        this.model("Post").findByIdAndUpdate(this.postId,{
+             $inc: { commentCount: 1}}, 
+             { new: true}).exec();
+    }
+    next()
 })
 
 
-module.exports = commentSchema;
+commentSchema.pre("findOneAndDelete", async function(next){
+    const comment = this.getQuery();
+    this.model("Post").findByIdAndUpdate(comment.postId,
+        { $inc: { commentCount : -1}},{ new: true}).exec();
+
+    next();
+})
+
+const Comment = model('Comment', commentSchema)
+
+module.exports = Comment;

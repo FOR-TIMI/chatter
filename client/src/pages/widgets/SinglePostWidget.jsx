@@ -1,28 +1,36 @@
 import { useState } from "react";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setPost} from "../../state"
+import { setPost} from "../../state";
 
 import {
   ChatBubbleOutlineOutlined,
     FavoriteBorderOutlined,
     FavoriteOutlined,
     ShareOutlined
-} from "@mui/icons-material"
+} from "@mui/icons-material";
+
 
 import {
-    Box,
-    Divider,
     IconButton,
     Typography,
-    useTheme
+    useTheme,
+    Box
 } from "@mui/material";
 
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
 import Following from "../../components/Following";
+import LikeBox from "../../components/LikeBox"
 
 
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
+import CommentBox from "../../components/Comment/Comment";
+
+
+
+
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
 
@@ -35,11 +43,15 @@ const SinglePostWidget = ({
   postImageUrls,
   userProfilePhoto,
   likes,
-  comments,
+  commentCount,
 }) => {
   const [isComments, setIsComments] = useState(false)
+  const [likeData, setLikeData] = useState(null)
+  const [isLongCaption, setIsLongCaption] = useState(false);
+
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
+
 
   const { username } = useSelector((state) => state.user)
   
@@ -51,7 +63,8 @@ const SinglePostWidget = ({
   
   const { palette } = useTheme();
   const {  dark } = palette.primary;
-  const { main} = palette.neutral;
+  const { main, medium} = palette.neutral;
+
 
   const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
@@ -68,7 +81,39 @@ const SinglePostWidget = ({
 
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost}));
+
+    getLikes();
   }
+
+  const getLikes = async() => {
+
+    const response = await fetch( serverUrl + `p/${postId}/likes`,{
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+    })
+
+    if(response.ok){
+      const likeData = await response.json()
+      setLikeData(likeData)
+    }
+
+
+  }
+
+  const handleCommentToggle = () =>{
+     setIsComments(!isComments)
+  }
+
+  const handleCaptionToggle = () => {
+     setIsLongCaption(!isLongCaption)
+  }
+
+  useEffect(() => {
+    getLikes();
+  },[])
 
 
   return (
@@ -82,8 +127,25 @@ const SinglePostWidget = ({
             userProfilePhotoUrl={userProfilePhoto}
             isAuthor={isAuthor}
         />
+
+        {/* post caption  */}
+        <Typography color={main} sx={{ mt: "1rem"}}>
+              {caption.length > 100 ? isLongCaption ? caption : `${caption.substring(0, 100)}...` : caption}
+        </Typography>
+
+        { caption.length > 100 ?  (
+        <Typography 
+        onClick={handleCaptionToggle}
+        sx={{
+          cursor: 'pointer',
+          "&:hover":{
+             color: palette.light
+          }
+        }} color={medium}>
+            {isLongCaption ? 'View less' : 'view More'}
+        </Typography>
+        ) : null}
       
-      <Typography color={main} sx={{ mt: "1rem"}}>{caption}</Typography>
       {postImageUrls.length ? (
         <div style={{ display: "flex" , justifyContent: "center", alignItems:"center"}}>
           <img src={postImageUrls[0].url} alt={postImageUrls[0].filename} style={{
@@ -112,7 +174,7 @@ const SinglePostWidget = ({
                   <IconButton onClick={() => setIsComments(!isComments)}>
                     <ChatBubbleOutlineOutlined />
                   </IconButton>
-                  <Typography>{comments.length}</Typography>
+                  <Typography>{commentCount}</Typography>
                 </FlexBetween>
               </FlexBetween>
 
@@ -120,19 +182,33 @@ const SinglePostWidget = ({
                 <ShareOutlined />
               </IconButton>
       </FlexBetween>
-            {isComments && (
-              <Box mt="0.5rem">
-                {comments.map((comment, i) => (
-                  <Box key={`${comment}`}>
-                    <Divider />
-                    <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                      {comment}
+
+      {/* Liked By  */}
+        {likeData && (<LikeBox likes={likeData} likeCount={likeCount}/>)}
+
+
+
+        
+      { commentCount ? (
+                    <Typography 
+                    onClick={handleCommentToggle}
+                    sx={{
+                    cursor: 'pointer',
+                    mb:"1rem",
+                    "&:hover":{
+                        color: palette.light
+                    }
+                    }} color={medium}>
+                        {!isComments ? 'View comments' : 'Hide comments'}
                     </Typography>
-                  </Box>
-                ))}
-                <Divider />
-              </Box>
-            )}
+      ): null}
+          
+                
+
+
+      
+      { isComments && (<CommentBox postId={postId} commentCount={commentCount}/>)}
+        
     </WidgetWrapper>
   )
 }

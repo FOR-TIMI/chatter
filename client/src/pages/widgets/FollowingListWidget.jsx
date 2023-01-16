@@ -1,5 +1,6 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
+import { v4 as uuidv4 } from 'uuid';
 
 import Following from "../../components/Following";
 
@@ -94,7 +95,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
                  profilePhotoUrl,
                 }) => (
                     <Following
-                      key={_id + username}
+                      key={uuidv4()}
                       followingId={_id}
                       name={username}
                       subtitle={occupation}
