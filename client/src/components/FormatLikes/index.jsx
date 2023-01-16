@@ -16,7 +16,7 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
       {isNonMobileScreens
         ? users
             .slice(0, 2)
-            .map((user) => (
+            .map((user,index) => (
               <Link
                 key={uuidv4()}
                 to={`/profile/${user}`}
