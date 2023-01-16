@@ -53,13 +53,9 @@ function FormatLike({ users, isNonMobileScreens, otherLikes }) {
           and {otherLikes} {otherLikes > 1 ? "others" : "other"} like this
         </Typography>
       ) : (
-         (users.length + otherLikes) === 0 ? (
+         (users.length + otherLikes) === 0 ? ' likes this':(
            <Typography color="textSecondary" display="inline">
-             no one likes this
-           </Typography>
-         ):(
-           <Typography color="textSecondary" display="inline">
-              likes this
+              like this
            </Typography>
          )
       )}
