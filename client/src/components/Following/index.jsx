@@ -15,8 +15,8 @@ import io from 'socket.io-client'
 
 const Following = ({
   followingId,
-  name,
-  subtitle,
+  name='',
+  subtitle='',
   isAuthor,
   userProfilePhotoUrl}) => {
     const dispatch = useDispatch();

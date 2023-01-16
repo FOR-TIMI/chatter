@@ -13,6 +13,7 @@ module.exports = {
                 userId,
                 userProfilePhoto,
                 commentBody,
+                likes: {},
                 postId
             })
 
@@ -46,7 +47,7 @@ module.exports = {
     },
 
     /**========GET ALL COMMENTS============== */
-    async getComments({params},res){
+    async getComments({params},res){    
         const { postId } = params;
         try{
             const comments = await Comment.find({ postId });
