@@ -199,7 +199,7 @@ const SinglePostWidget = ({
                         color: palette.light
                     }
                     }} color={medium}>
-                        {!isComments ? 'View comments' : 'Hide comments'}
+                        {!isComments ? `View ${commentCount > 1 ? "all"  + " " + commentCount + " " + "comments" : commentCount + " " + "comment"}` : 'Hide comments'}
                     </Typography>
       ): null}
           
