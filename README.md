@@ -1,4 +1,4 @@
-<h1 align="center">CHATTER[Work in progress]</h1>
+<h1 align="center">CHATTER</h1>
 <div align="center">
 Welcome to Chatter, a social media application that allows users to connect and interact with each other in real-time. 
 
