@@ -45,8 +45,8 @@ If you feel awesome and want to support us in a small way, please consider check
 ## Introduction
   Chatter is a social media application that allows users to interact with one another by posting, commenting, and liking posts. The application was created by Femi-Ladiran Erifeoluwa (also known as Timi) and Oghenebrume Akpadaka (also known as Brume).
   Our goal with Chatter is to provide a platform for users to connect with one another and share their thoughts, ideas, and experiences. The user-friendly interface and sleek design make it easy for users to navigate and engage with the community.
+  
 ## User Story
-
   As a user, I want to be able to share my thoughts, ideas, and experiences with other users in real-time. 
   I want to be able to post, comment, and interact with other users in a safe and secure environment. 
   I also want to have access to a wide range of features and tools that will help me connect and engage with other users more effectively.
