@@ -44,7 +44,7 @@ const postSchema = new Schema(
             required: 'Caption is required',
             trim: true,
             maxLength: 250,
-            minlength: 4,
+            minlength: 1,
             match: [
               /^[a-zA-Z0-9!\(\)\-\.\?\[\]\_\`\~\;\:\!\@\#\$\%\^\&\*\+\= ]+$/,
               'Caption can only contain letters, numbers,spaces and the following special characters: !()-.[]_`~;:!@#$%^&*+='

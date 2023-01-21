@@ -150,7 +150,7 @@ const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
             display: "flex",
             padding: "0.5rem 0.8rem",
             border: `1.5px solid ${palette.neutral.light}`,
-            borderRadius: isNonMobileScreens ? "2rem" : "0.3rem"
+            borderRadius: isNonMobileScreens ? "2rem" : "1.5rem"
         }}
     >
             <UserAvatar image={profilePhotoUrl} size="32px"/>
