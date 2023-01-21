@@ -7,6 +7,7 @@ import {
   Typography,
   useTheme,
   Container,
+  CircularProgress
 } from "@mui/material";
 
 
@@ -35,7 +36,8 @@ const initialValuesLogin = {
 const Form = () => {
   const location = useLocation().pathname.slice(1);
   const [pageType, setPageType] = useState(location) //To turn '/register' to 'register'
-  const [loginError, setLoginErr] = useState(null)
+  const [loginError, setLoginErr] = useState(null);
+  const [loading, setLoading] =  useState(false)
 
 
   const { palette } = useTheme();
@@ -52,6 +54,7 @@ const Form = () => {
   
   const register = async (values, onSubmitProps) => {
         const { username, email, location, occupation, password} = values;
+        setLoading(true)
 
        try{
         const newUserData = await fetch(
@@ -85,9 +88,13 @@ const Form = () => {
        } catch(err){
         console.error(err)
        }
-  };
+       setLoading(false)
+    };
 
   const login = async (values, onSubmitProps) => {
+
+       setLoading(true)
+      
        try{
         const { email, password } = values
 
@@ -121,6 +128,7 @@ const Form = () => {
     } catch(err){
       console.error(err);  
      }  
+     setLoading(false)
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
@@ -245,6 +253,7 @@ const Form = () => {
             <Button
               fullWidth
               type="submit"
+              disabled={loading}
               sx={{
                 m: "2rem 0",
                 p: "0.8rem",
@@ -253,7 +262,7 @@ const Form = () => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              {isLogin ? "LOGIN" : "REGISTER"}
+              {loading ? <CircularProgress size={22}/> : isLogin ? "LOGIN" : "REGISTER"}
             </Button>
             <Typography
               onClick={() => {
