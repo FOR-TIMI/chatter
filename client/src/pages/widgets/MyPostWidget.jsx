@@ -18,7 +18,8 @@ import {
     useTheme,
     Button,
     IconButton,
-    useMediaQuery
+    useMediaQuery,
+    CircularProgress
 } from '@mui/material';
 
 import FlexBetween from '../../components/CustomStyledComponents/FlexBetween';
@@ -40,6 +41,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
     const { palette } = useTheme();
     const { username } = useSelector((state) => state.user)
     const token = useSelector((state) => state.token);
+    const [loading, setLoading] = useState(false);
     
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -75,6 +77,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
           })
         }
 
+        
         const response = await fetch( serverUrl + `p`,{
           method: "POST",
           headers: { Authorization: `Bearer ${token}`},
@@ -82,7 +85,10 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         })
 
         const posts = await response.json();
+
         
+        setLoading(false);  
+
         dispatch(setPosts({ posts }));
         setImage(null);
         setPost("")
@@ -91,6 +97,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
     const handleSubmit = async(e) => {
       e.preventDefault();
       try {
+        setLoading(true)
         await postSchema.validate({ caption: post, images: imageUrls }, { abortEarly: false });
         setErrors({});
         handlePost();
@@ -101,7 +108,6 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         });
         setErrors(validationErrors);
         }
-        
     }
 
     const handleBlur = async() => {
@@ -244,7 +250,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
               )}
 
               <Button
-                disabled={!post}
+                disabled={loading || !post}
                 onClick={handleSubmit}
                 sx={{
                   color: palette.background.alt,
@@ -252,7 +258,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                   borderRadius: "3rem"
                 }}
               >
-                Post
+                {loading ? <CircularProgress size={20}/> : 'Post'}
               </Button>
          </FlexBetween>
 

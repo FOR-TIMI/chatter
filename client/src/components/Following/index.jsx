@@ -3,9 +3,11 @@ import {
     PersonRemoveOutlined
 } from "@mui/icons-material";
 
+import { useState } from 'react';
+
 
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme, CircularProgress  } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { setFollowing } from "../../state";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
@@ -24,6 +26,7 @@ const Following = ({
     const { username, _id:userId } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const followings = useSelector((state) => state.user.followings);
+    const [loading, setLoading] = useState(false)
 
     
     const { palette } = useTheme();
@@ -41,7 +44,13 @@ const Following = ({
 
 
     const updateFollowing = async() => {
-        if(!isAuthor){
+
+          if(isAuthor){
+            return
+          }
+
+          setLoading(true)
+
           try{
             const response = await fetch(
               serverUrl + `u/${username}/following`,
@@ -63,8 +72,9 @@ const Following = ({
           } catch (err) {
             console.error(err.message);
           }
-   
-        }
+          
+          setLoading(false)
+        
     }
 
 
@@ -99,12 +109,12 @@ const Following = ({
          {!isAuthor && (
           <IconButton
           onClick={() => updateFollowing()}
+          disabled={loading}
           sx={{ backgroundColor: light , p: "0.6rem" }}
-        >
-          {isFollowing ? (
-            <PersonRemoveOutlined sx={{ color: dark }} />
-          ) : (
-            <PersonAddOutlined sx={{ color: dark }} />
+        > 
+          {loading ? <CircularProgress size={20}/> : (isFollowing ? 
+              <PersonRemoveOutlined sx={{ color: dark }}/> :
+              <PersonAddOutlined sx={{ color: dark }}/>
           )}
         </IconButton>
         )}
