@@ -179,7 +179,7 @@ const SinglePostWidget = ({
         </div>
       ) : null}
 
-      <FlexBetween mt="0.25rem">
+    <FlexBetween mt="0.25rem"  p={!isNonMobileScreens ? "0 0.75rem 0 0" : ""}>
               <FlexBetween gap="1rem">
                 <FlexBetween gap="0.3rem">
                   <IconButton onClick={addRemoveLike}>
@@ -207,7 +207,6 @@ const SinglePostWidget = ({
 
       <Box
       sx={{
-        padding:!isNonMobileScreens ? "0 0.75rem" : ""
       }}
      >
       {/* Liked By  */}
@@ -233,7 +232,8 @@ const SinglePostWidget = ({
     <Typography
         fontWeight="200"
         fontSize="0.79rem"
-        marginBottom="1rem"
+        m="1rem 0"
+        sx={{ paddingLeft: !isNonMobileScreens ? "0.75rem" : ""}}
       >Posted {fToNow(createdAt)}</Typography>
 
       </Box>

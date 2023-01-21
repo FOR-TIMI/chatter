@@ -20,6 +20,8 @@ module.exports = {
             ,password
             ,location
             ,occupation
+            ,followings: []
+            ,followers: []
             ,viewedProfile: Math.floor(Math.random() * 10000)
             ,impressions: Math.floor(Math.random() * 10000)
          });

@@ -65,7 +65,7 @@ if(process.env.NODE_ENV === "production"){
 
     
 
-app.use(morgan("common"));
+// app.use(morgan("common"));
 
 
 // sanitize-mongo middleware to protect against MongoDB injection attacks

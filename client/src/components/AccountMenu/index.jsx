@@ -37,6 +37,10 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
     setAnchorEl(null);
   };
 
+  const handleLogOut = () => {
+    dispatch(setLogout())
+  }
+
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', width: "3rem" }}>
@@ -124,7 +128,7 @@ export default function AccountMenu({ username, profilePhotoUrl}) {
         </MenuItem>
 
         <Divider />
-        <MenuItem onClick={() => dispatch(setLogout())}>
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

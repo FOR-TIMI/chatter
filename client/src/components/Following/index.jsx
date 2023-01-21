@@ -11,7 +11,8 @@ import { setFollowing } from "../../state";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
 import UserAvatar from '../CustomStyledComponents/UserAvatar';
 
-import io from 'socket.io-client'
+import socket from '../../utils/socket';
+
 
 const Following = ({
   followingId,
@@ -36,7 +37,6 @@ const Following = ({
 
     const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
     
-    const socket = io(serverUrl);
 
 
 

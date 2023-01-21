@@ -2,14 +2,14 @@ import { useState} from 'react';
 import {
   Box,
   IconButton,
-  InputBase,
   Typography,
   useTheme,
   useMediaQuery
 } from "@mui/material";
 
+
+
 import {
-  Search,
   Message,
   LightMode,
   DarkMode,
@@ -25,7 +25,9 @@ import { setMode } from "../../state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
 
+
 import AccountMenu from '../AccountMenu';
+import NotificationMenu from '../NotificationMenu'
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -39,6 +41,7 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+
 
 
   return (
@@ -83,7 +86,9 @@ const Navbar = () => {
             )}
           </IconButton>
           <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
+
+          <NotificationMenu />
+
           <Help sx={{ fontSize: "25px" }} />
           <AccountMenu username={username} profilePhotoUrl={profilePhotoUrl}/>
         
@@ -138,7 +143,10 @@ const Navbar = () => {
               )}
             </IconButton>
             <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
+
+            <NotificationMenu />
+
+    
             <Help sx={{ fontSize: "25px" }} />
             
           </FlexBetween>

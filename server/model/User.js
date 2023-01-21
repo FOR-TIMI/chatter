@@ -78,6 +78,10 @@ const userSchema = new Schema({
             /^[0-9]+$/,
             'impressions can only contain numbers'
         ]
+    },
+    newNotification: {
+        type: Boolean,
+        default: false
     }
 
 },{

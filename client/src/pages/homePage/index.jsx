@@ -6,12 +6,17 @@ import MyPostWidget from '../widgets/MyPostWidget';
 import PostsWidget from '../widgets/PostsWidget';
 import FollowingListWidget from '../widgets/FollowingListWidget';
 import AdWidget from "../widgets/AdWidget";
+import socket from '../../utils/socket'
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
-  const { username, profilePhotoUrl} = useSelector((state) => state.user)
+  const { username, profilePhotoUrl,_id} = useSelector((state) => state.user)
  
+
+
+  socket.emit("USER_ONLINE", {username, userId:_id})
+
 
   return (
     <Box>

@@ -4,10 +4,10 @@ const{ Post, User } = require('../model');
 module.exports = {
 
     /*===============Make a new post====================*/
-    async createPost({body, files},res){
+    async createPost({body, files,io},res){
         try{
             const { username , caption } = body;
-            const { location, profilePhotoUrl: userProfilePhoto, _id } = await User.findOne({ username })
+            const { location, profilePhotoUrl: userProfilePhoto, _id,followers } = await User.findOne({ username })
 
             
             if(!_id){
@@ -16,7 +16,7 @@ module.exports = {
             
             const fileArr = files.map(obj => ({ url : obj['path'], filename : obj['filename']})) || undefined
             
-            await Post.create({
+            const newPost = await Post.create({
                 userId: _id,
                 username, 
                 location,
@@ -29,7 +29,7 @@ module.exports = {
 
 
             const posts = await Post.find().sort({ createdAt: -1});
-            return res.status(201).json(posts)
+            return res.status(201).json({ newPost, posts })
         } catch(err){
             res.status(409).json({message: err.message})
         }
@@ -80,7 +80,7 @@ module.exports = {
 
 
     /*===============lIKE AND UNLIKE A POST====================*/
-    async addRemoveLike({params,body},res){
+    async addRemoveLike({params,body,io},res){
         try{
            
             const { id } = params;
@@ -100,6 +100,19 @@ module.exports = {
                 {likes: post.likes},
                 {new: true}
             )
+
+            // if(!isLiked){
+            //     const event = {
+            //         type: "NEW_POST_LIKE",
+            //         postId: newPost._id,
+            //         postImageUrl: post.postImageUrls[0].url,
+            //         postAuthorId: post.userId, 
+            //         postAuthorUsername:post.username ,
+            //         createdAt: Date.now(),
+            //         senderId: _id
+            //     }
+            //     io.emit('NEW_POST_LIKE', event)
+            // }
 
             res.status(200).json(updatedPost);
         } catch(err){

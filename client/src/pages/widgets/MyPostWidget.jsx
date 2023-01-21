@@ -18,7 +18,8 @@ import {
     useTheme,
     Button,
     IconButton,
-    useMediaQuery
+    useMediaQuery,
+    CircularProgress
 } from '@mui/material';
 
 import FlexBetween from '../../components/CustomStyledComponents/FlexBetween';
@@ -29,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import WidgetWrapper from '../../components/CustomStyledComponents/WidgetWrapper';
 
 import { postSchema } from '../../utils/Schemas';
+import socket from '../../utils/socket'
 
 const MyPostWidget = ({ profilePhotoUrl }) => {
     const dispatch = useDispatch()
@@ -40,6 +42,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
     const { palette } = useTheme();
     const { username } = useSelector((state) => state.user)
     const token = useSelector((state) => state.token);
+    const [loading, setLoading] = useState(false);
     
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -75,14 +78,26 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
           })
         }
 
+        setLoading(true)
         const response = await fetch( serverUrl + `p`,{
           method: "POST",
           headers: { Authorization: `Bearer ${token}`},
           body:formData
         })
 
-        const posts = await response.json();
+        const { newPost, posts } = await response.json();
+
+        const event = {
+          type: "NEW_POST",
+          postId: newPost._id,
+          createdAt: newPost.createdAt,
+          senderId: newPost.userId
+        }
+
+        socket.emit("SEND_NOTIFICATION", {data: event})
         
+        setLoading(false);
+
         dispatch(setPosts({ posts }));
         setImage(null);
         setPost("")
@@ -244,7 +259,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
               )}
 
               <Button
-                disabled={!post}
+                disabled={!post && !loading}
                 onClick={handleSubmit}
                 sx={{
                   color: palette.background.alt,
@@ -252,7 +267,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                   borderRadius: "3rem"
                 }}
               >
-                Post
+                {loading ? <CircularProgress size={20}/> : 'Post'}
               </Button>
          </FlexBetween>
 

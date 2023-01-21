@@ -94,7 +94,7 @@ const UserWidget = ({ username, profilePhotoUrl}) => {
          // Create a socket connection
          const socket = io(serverUrl);
          // Set up a listener for the ADD_REMOVE_FOLLOWER event
-         socket.on('ADD_REMOVE_FOLLOWER', async () => {
+         socket.on("UPDATED_FOLLOWERS", async () => {
            // Retrieve the updated followers list from the server
            const response = await fetch(
              serverUrl + `u/${username}/followers`,
