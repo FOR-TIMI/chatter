@@ -61,7 +61,7 @@ If you feel awesome and want to support us in a small way, please consider check
  Note: The parts in square brackets are optional. The username and password are used for authentication, the host is the domain name of the Atlas cluster, and the database is the name of the database to connect to. The options are additional options to configure the connection.
  7. (optional) To have some seed data, you can run `npm run seed` in the terminal.
  8. To run the application on your local machine, you can run the `npm run develop` command which starts up the server as well as the react scripts.
- 9. finally, open [This Link](http://localhost:3000/) and see the beautiful application.
+ 9. Finally, open [This Link](http://localhost:3000/) and see the beautiful application.
 
 
   
