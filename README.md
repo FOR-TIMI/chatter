@@ -34,6 +34,7 @@ If you feel awesome and want to support us in a small way, please consider check
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Installation](#installation)
 - [User Story](#user-story)
 - [Technologies Used](#technologies-used)
 - [Features](#features)
@@ -45,6 +46,24 @@ If you feel awesome and want to support us in a small way, please consider check
 ## Introduction
   Chatter is a social media application that allows users to interact with one another by posting, commenting, and liking posts. The application was created by Femi-Ladiran Erifeoluwa (also known as Timi) and Oghenebrume Akpadaka (also known as Brume).
   Our goal with Chatter is to provide a platform for users to connect with one another and share their thoughts, ideas, and experiences. The user-friendly interface and sleek design make it easy for users to navigate and engage with the community.
+
+## Installation
+  To setup and use this project on your device, 
+  1. Make sure you have [MongoDB](https://www.mongodb.com/docs/manual/installation/) installed or create an account on [MongoDb Atlas](https://www.mongodb.com/cloud/atlas/register?utm_content=rlsavisitor&utm_source=google&utm_campaign=search_gs_pl_evergreen_atlas_core_retarget-brand_gic-null_amers-us-ca_ps-all_desktop_eng_lead&utm_term=cloud%20mongodb%20atlas&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=14291004479&adgroup=128837427307&cq_cmp=14291004479&gclid=CjwKCAiA2rOeBhAsEiwA2Pl7Q8gWedkZEkE_3UVhWbNLQDxsTq_ybqDnpdLVh2cHMN3tWNTCTomjYBoCHvgQAvD_BwE). 
+   <br>Note: If you're using MongoDb Atlas, create a cluster, set ip address to `0.0.0.0` to allow the database to be accessible from anywhere and then copy the MongoDB URI.
+  2. Clone this repository.
+     - ![image](https://user-images.githubusercontent.com/104241247/213948144-81da9a6f-736e-46be-b561-d508cf4e91d6.png)
+  3. Install dependencies by running the `npm install` command in the command line
+  4. Open your code editor by running the command `code .`
+  5. Create a [cloudinary](https://cloudinary.com/) account. your `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_KEY` & `CLOUDINARY_SECRET` for your .env would be generated there. Then create a folder called `chatter` on the cloudinary website to store all project images from chatter.
+  6. create a `.env` file in the server folder for your environment variables. Follow the [sample](https://github.com/FOR-TIMI/chatter/blob/main/server/.env.sample) file. If you used MongoDB atlas, set `MONGODB_URI` to the url generated from Mongo Atlas that looks like `mongodb+srv://[username:password@]host[/[database][?options]]
+`.
+ Note: The parts in square brackets are optional. The username and password are used for authentication, the host is the domain name of the Atlas cluster, and the database is the name of the database to connect to. The options are additional options to configure the connection.
+ 7. (optional) To have some seed data, you can run `npm run seed` in the terminal.
+ 8. To run the application on your local machine, you can run the `npm run develop` command which starts up the server as well as the react scripts.
+ 9. Finally, open [This Link](http://localhost:3000/) and see the beautiful application.
+
+
   
 ## User Story
   As a user, I want to be able to share my thoughts, ideas, and experiences with other users in real-time. 
