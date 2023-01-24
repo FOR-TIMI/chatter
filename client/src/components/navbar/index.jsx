@@ -2,14 +2,12 @@ import { useState} from 'react';
 import {
   Box,
   IconButton,
-  InputBase,
   Typography,
   useTheme,
   useMediaQuery
 } from "@mui/material";
 
 import {
-  Search,
   Message,
   LightMode,
   DarkMode,
@@ -40,6 +38,13 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuToggled(!isMobileMenuToggled);
+  }
+
+  const handleModeChange = () => {
+      dispatch(setMode());
+  }
 
   return (
     <header style={{ 
@@ -90,7 +95,7 @@ const Navbar = () => {
         </FlexBetween>
       ) : (
         <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+          onClick={handleMobileMenuToggle}
         >
           <Menu />
         </IconButton>
@@ -112,7 +117,7 @@ const Navbar = () => {
           {/* CLOSE ICON */}
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+              onClick={handleMobileMenuToggle}
             >
               <Close />
             </IconButton>
@@ -128,7 +133,7 @@ const Navbar = () => {
           >
             <AccountMenu  username={username} profilePhotoUrl={profilePhotoUrl}/>
             <IconButton
-              onClick={() => dispatch(setMode())}
+              onClick={handleModeChange}
               sx={{ fontSize: "25px" }}
             >
               {theme.palette.mode === "dark" ? (

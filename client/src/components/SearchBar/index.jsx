@@ -1,13 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InputBase, 
          IconButton, 
          useTheme, 
          CircularProgress,
           Box, 
+          MenuItem,
           Typography } from '@mui/material';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+
+import { v4 as uuidv4 } from 'uuid';
 
 
 import FlexBetween from '../CustomStyledComponents/FlexBetween';
@@ -31,7 +33,7 @@ const SearchBar = () => {
   const navigate = useNavigate(); 
  
   const handleBlur = async(e) => {
-      setTimeout(() => setIsListOpen(false),200)
+      setTimeout(() => setIsListOpen(false),500)
   };
 
 
@@ -153,7 +155,7 @@ const SearchBar = () => {
           >
               {
                 suggestions.length ? suggestions.map(({ username, profilePhotoUrl, occupation},i) => (
-                  <ListItem key={i + username}
+                  <MenuItem key={uuidv4()}
                     onClick={(e) => handleClick(username,e)}
                     sx={{
                       cursor: 'pointer',
@@ -178,9 +180,9 @@ const SearchBar = () => {
                       </Typography>
                     </Box>
                   </FlexBetween>   
-                  </ListItem>
+                  </MenuItem>
                 )) : (
-                  <ListItem sx={{
+                  <MenuItem sx={{
                     cursor: 'default',
                     display : "flex",
                     justifyContent: 'center',
@@ -190,7 +192,7 @@ const SearchBar = () => {
                     <Typography variant="body2" color="textSecondary">
                     No Results
                   </Typography>}
-                </ListItem>
+                </MenuItem>
                 )
               }
             </List>
