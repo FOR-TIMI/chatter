@@ -19,7 +19,7 @@ import {
     Button,
     IconButton,
     useMediaQuery,
-    CircularProgress
+    CircularProgress,
 } from '@mui/material';
 
 import FlexBetween from '../../components/CustomStyledComponents/FlexBetween';
@@ -258,7 +258,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
                   borderRadius: "3rem"
                 }}
               >
-                {loading ? <CircularProgress size={20}/> : 'Post'}
+                {loading ? <CircularProgress sx={{ color: palette.neutral.dark}} size={15}/> : 'Post'}
               </Button>
          </FlexBetween>
 
