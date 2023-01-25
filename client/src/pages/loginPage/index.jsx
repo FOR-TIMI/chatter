@@ -262,7 +262,9 @@ const Form = () => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              {loading ? <CircularProgress size={22}/> : isLogin ? "LOGIN" : "REGISTER"}
+              {loading ? <CircularProgress sx={{
+                 color: palette.neutral.dark
+              }} size={22}/> : isLogin ? "LOGIN" : "REGISTER"}
             </Button>
             <Typography
               onClick={() => {
