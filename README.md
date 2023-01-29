@@ -54,10 +54,13 @@ If you feel awesome and want to support us in a small way, please consider check
   2. Clone this repository.
      - ![image](https://user-images.githubusercontent.com/104241247/213948144-81da9a6f-736e-46be-b561-d508cf4e91d6.png)
   3. Install dependencies by running the `npm install` command in the command line
+  
   4. Open your code editor by running the command `code .`
+  
   5. Create a [cloudinary](https://cloudinary.com/) account. your `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_KEY` & `CLOUDINARY_SECRET` for your .env would be generated there. Then create a folder called `chatter` on the cloudinary website to store all project images from chatter.
+  
   6. create a `.env` file in the server folder for your environment variables. Follow the [sample](https://github.com/FOR-TIMI/chatter/blob/main/server/.env.sample) file. If you used MongoDB atlas, set `MONGODB_URI` to the url generated from Mongo Atlas that looks like `mongodb+srv://[username:password@]host[/[database][?options]]
-`.
+`. <br><br>
  Note: The parts in square brackets are optional. The username and password are used for authentication, the host is the domain name of the Atlas cluster, and the database is the name of the database to connect to. The options are additional options to configure the connection.
  7. (optional) To have some seed data, you can run `npm run seed` in the terminal.
  8. To run the application on your local machine, you can run the `npm run develop` command which starts up the server as well as the react scripts.
