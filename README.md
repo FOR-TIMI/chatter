@@ -48,7 +48,7 @@ If you feel awesome and want to support us in a small way, please consider check
   Our goal with Chatter is to provide a platform for users to connect with one another and share their thoughts, ideas, and experiences. The user-friendly interface and sleek design make it easy for users to navigate and engage with the community.
 
 ## Installation
-  To setup and use this project on your device, 
+  To setup and use this project on your device, follow these steps;
   1. Make sure you have [MongoDB](https://www.mongodb.com/docs/manual/installation/) installed or create an account on [MongoDb Atlas](https://www.mongodb.com/cloud/atlas/register?utm_content=rlsavisitor&utm_source=google&utm_campaign=search_gs_pl_evergreen_atlas_core_retarget-brand_gic-null_amers-us-ca_ps-all_desktop_eng_lead&utm_term=cloud%20mongodb%20atlas&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=14291004479&adgroup=128837427307&cq_cmp=14291004479&gclid=CjwKCAiA2rOeBhAsEiwA2Pl7Q8gWedkZEkE_3UVhWbNLQDxsTq_ybqDnpdLVh2cHMN3tWNTCTomjYBoCHvgQAvD_BwE). 
    <br>Note: If you're using MongoDb Atlas, create a cluster, set ip address to `0.0.0.0` to allow the database to be accessible from anywhere and then copy the MongoDB URI.
   2. Clone this repository.
