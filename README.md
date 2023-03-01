@@ -30,7 +30,7 @@ Welcome to Chatter, a social media application in the works that allows users to
 </p>
 
 ## Support the project ⭐
-If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo! This helps us getting known and grow the community. 🙏
+If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo!
 
 ## Table of Contents
 - [Introduction](#introduction)
