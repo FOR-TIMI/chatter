@@ -36,10 +36,35 @@ module.exports = {
     },
 
     /*===============Get ALL posts====================*/
-    async getFeedPosts(req,res){
+    async getFeedPosts({query},res){
         try{
-            const posts = await Post.find().sort({ createdAt: -1});
-            res.status(200).json(posts);
+            const { page = 1, limit = 2 } = query;
+            const skip = (page - 1) * limit;
+      
+            const posts = await Post.find()
+              .sort({ createdAt: -1 })
+              .skip(skip)
+              .limit(limit);
+
+            const updatedPosts = [...posts]
+      
+              for (const post of updatedPosts) {
+                  if(post.likes.keys()){
+                      const likes = [...post.likes.keys()].slice(0, 4);
+                      const users = await User.find({
+                        username: { $in: likes },
+                      }).select("username profilePhotoUrl");
+                      post.likedUsers = users;
+                  }
+              }
+
+                const totalPosts = await Post.countDocuments();
+                const totalPages = Math.ceil(totalPosts / limit);
+
+                res.status(200).json({
+                    posts: updatedPosts,
+                    hasMore: page > 0 && page < totalPages 
+                });
         } catch(err){
             res.status(404).json({message: err.message})
         }
