@@ -90,6 +90,7 @@ const MyPostWidget = ({ profilePhotoUrl }) => {
         setLoading(false);  
 
         dispatch(setPosts({ posts }));
+        setImageUrls([]);
         setImage(null);
         setPost("")
     }

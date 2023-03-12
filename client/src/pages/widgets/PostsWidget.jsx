@@ -52,14 +52,23 @@ const PostsWidget = ({ username, isProfile = false }) => {
     if(page > 1 && hasMore){
       setIsLoadingMore(true);
     }
+    if(!hasMore){
+      setIsLoadingMore(false);
+      return;
+    }
     try{
-      const response = await fetch(serverUrl + `u/${username}/posts`, {
+      const response = await fetch(serverUrl + `u/${username}/posts?page=${page}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
+      setHasMore(data.hasMore);
   
-      dispatch(setPosts({ posts: data }));
+      if (page === 1) {
+        dispatch(setPosts({ posts: data.posts }));
+      } else {
+        dispatch(addPost({ posts: [...data.posts] }));
+      }
     } catch(err){
       console.error(err);
     }finally{
