@@ -64,11 +64,15 @@ export const authSlice = createSlice({
                 });
                 state.posts = updatedPosts;
             },
+            addPost: (state,action) => {
+                 state.posts = [...state.posts, ...action.payload.posts]
+            }
 
         }
 })
 
 export const { 
+   addPost,
     setMode,
     setLogin,
     setLogout,
