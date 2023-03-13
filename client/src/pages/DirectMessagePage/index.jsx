@@ -3,7 +3,7 @@ import {
   Box,
   IconButton,
   Typography,
-  useMediaQuery,
+  // useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
