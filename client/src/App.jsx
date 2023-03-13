@@ -8,6 +8,7 @@ import {
 import HomePage from './pages/homePage'
 import LoginPage from './pages/loginPage'
 import ProfilePage from './pages/profilePage'
+import DirectMessagePage from './pages/DirectMessagePage'
 
 
 
@@ -49,6 +50,10 @@ const App = () => {
                 <Route path="register" element={!isLoggedIn ? <LoginPage/> : <Navigate to="/" />} />
             </Route>
 
+            <Route path="/direct">
+                <Route path="inbox" element={isLoggedIn ? <DirectMessagePage/> : <Navigate to="/login" />}></Route>
+            </Route>
+
             <Route path="/profile">
                 <Route path=":username" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
                 <Route path="" element={isLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
@@ -58,6 +63,7 @@ const App = () => {
                 path="*"
                 element={isLoggedIn ? <HomePage/> : <Navigate to="/login" />}
               />
+
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
