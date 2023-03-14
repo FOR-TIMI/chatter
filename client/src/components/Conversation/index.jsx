@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { formatTime } from "../../utils/formatDate";
+// import { formatTime } from "../../utils/formatDate";
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
@@ -39,7 +39,6 @@ const Conversation = ({ conversation, currentUser }) => {
   }, [currentUser, conversation, serverUrl, token]);
 
   const { palette } = useTheme();
-  const { medium } = palette.neutral;
 
   return (
     <Box
