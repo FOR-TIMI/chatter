@@ -9,7 +9,7 @@ import UserAvatar from "../CustomStyledComponents/UserAvatar";
   const { medium } = palette.neutral;
 
   return (
-    <Box padding="0.1rem 0.5rem" sx={{
+    <Box padding="0.5rem 0.5rem" sx={{
         cursor : 'pointer',
         transition: 'all 0.3s ease-in-out',
         '&:hover' : {
@@ -17,7 +17,7 @@ import UserAvatar from "../CustomStyledComponents/UserAvatar";
         }
     }}>
       <FlexBetween margin="0.75rem">
-        <UserAvatar image={profilePhotoUrl} size="50px" />
+        <UserAvatar image={profilePhotoUrl} size="35px" />
         <Box flexGrow={3.5} margin="0 0.5rem">
         <Typography variant="h5" fontWeight="500">
             {username.length > 28
