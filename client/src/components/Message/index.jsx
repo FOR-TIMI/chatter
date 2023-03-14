@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { formatTime } from "../../utils/formatDate";
+import { fToNow } from "../../utils/formatDate";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
 const Message = ({ message, isLast, isAuthor, isLoading=false, profilePhoto }) => {
@@ -12,9 +12,10 @@ const Message = ({ message, isLast, isAuthor, isLoading=false, profilePhoto }) =
       display="flex"
       flexDirection="column"
       alignItems={isAuthor ? 'flex-end' : 'flex-start'}
-      margin="8px 0"
+      margin={isAuthor ? null : "4px"}
+      width="100%"
     >
-      <Box display="flex" justifyContent={isAuthor ? 'flex-end' : 'flex-start'} alignItems="flex-end" gap={1}>
+      <Box display="flex" justifyContent={isAuthor ? 'flex-end' : 'flex-start'} alignItems="flex-end" gap={0.5}>
 
         { !isAuthor && (
             <UserAvatar
@@ -33,7 +34,7 @@ const Message = ({ message, isLast, isAuthor, isLoading=false, profilePhoto }) =
           }}
           variant="p"
           fontWeight="500"
-          maxWidth="80%"
+          maxWidth="300px"
         >
           {message.content}
         </Typography>
@@ -44,9 +45,11 @@ const Message = ({ message, isLast, isAuthor, isLoading=false, profilePhoto }) =
       </Box>
 
       {isLast && (
-        <Typography sx={{ margin : !isAuthor ? '0.5rem 0 0 2.5rem' : null}} variant="p" fontWeight="500" fontSize="0.75rem">
-          {formatTime(message.createdAt)}
+       <Box paddingRight="1.2rem">
+        <Typography sx={{ margin : !isAuthor ? '0.25rem 1rem 0 2.5rem' : null}} variant="p" fontWeight="500" fontSize="0.75rem">
+          {fToNow(message.createdAt)}
         </Typography>
+       </Box>
       )}
     </Box>
   );

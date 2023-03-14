@@ -8,7 +8,7 @@ import {
   // useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Conversation from "../../components/Conversation";
@@ -37,6 +37,10 @@ const DirectMessagePage = () => {
   const [currentConvo, setCurrentConvo] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+
+  //Refences
+  const scrollRef = useRef();
 
   //Colors
   const { palette } = useTheme();
@@ -110,8 +114,49 @@ const DirectMessagePage = () => {
     setCurrentChat(c);
   };
 
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    //To prevent sending empty messages
+    if (newMessage.trim().length === 0) {
+      return;
+    }
+    try {
+      const response = await fetch(serverUrl + `msg`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sender: userId,
+          content: newMessage.trim(),
+          conversationId: currentChat._id,
+        }),
+      });
+
+      if (response.ok) {
+        const message = await response.json();
+
+        setMessages([...messages, message]);
+        setNewMessage("");
+      } else {
+        console.error("User doesn't exist");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behavior: "smooth"})
+  },[messages])
+
   return (
-    <Box sx={{ backgroundColor: neutralLight }}>
+    <Box m={0} p={0} sx={{ backgroundColor: neutralLight }}>
       <Navbar />
       <Box
         sx={{
@@ -190,7 +235,10 @@ const DirectMessagePage = () => {
                       p: "3px",
                     }}
                   >
-                    <UserAvatar image={currentConvo?.profilePhotoUrl} size={32} />
+                    <UserAvatar
+                      image={currentConvo?.profilePhotoUrl}
+                      size={32}
+                    />
                     <Typography variant="h5" fontWeight="500">
                       {currentConvo?.username}
                     </Typography>
@@ -208,51 +256,58 @@ const DirectMessagePage = () => {
               {/* chatBoxWrapper */}
               <Box sx={{ padding: "10px", height: "100%" }}>
                 {/* chatBoxTop */}
-                <Box sx={{ height: "80%", overflow: "scroll" }}>
+                <Box sx={{ height: "80%", overflow: "scroll", width: "100%" }}>
                   {messages.map((m, i) => (
-                    <Message
-                      key={uuidv4()}
-                      isLast={i === messages.length - 1}
-                      profilePhoto={currentConvo?.profilePhotoUrl}
-                      isAuthor={m.sender === userId}
-                      message={m}
-                    />
+                    <div key={uuidv4()} ref={scrollRef}>
+                      <Message
+                        isLast={i === messages.length - 1}
+                        profilePhoto={currentConvo?.profilePhotoUrl}
+                        isAuthor={m.sender === userId}
+                        message={m}
+                      />
+                    </div>
                   ))}
                 </Box>
 
                 {/* charBoxBottom */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "90%",
-                    margin: "0 auto",
-                    padding: "0.25rem 0.8rem",
-                    border: `1.5px solid ${palette.neutral.light}`,
-                    borderRadius: "1.5rem",
-                  }}
-                >
-                  <FlexBetween
+                <form onSubmit={handleSubmit}>
+                  <Box
                     sx={{
-                      p: "0.25rem 0 0.25rem 0.5rem",
-                      flexGrow: "1",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "35px",
+                      display: "flex",
+                      width: "90%",
+                      margin: "0 auto",
+                      padding: "0.25rem 0.8rem",
+                      border: `1.5px solid ${palette.neutral.light}`,
+                      borderRadius: "1.5rem",
                     }}
                   >
-                    <InputBase
-                      size="sm"
-                      placeholder="Message…"
-                      sx={{ flexGrow: 1, mr: 1 }}
-                    />
-
-                    <IconButton
-                      sx={{ "&:hover": { color: palette.primary.dark } }}
+                    <FlexBetween
+                      sx={{
+                        p: "0.25rem 0 0.25rem 0.5rem",
+                        flexGrow: "1",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "35px",
+                      }}
                     >
-                      <Telegram />
-                    </IconButton>
-                  </FlexBetween>
-                </Box>
+                      <InputBase
+                        size="sm"
+                        placeholder="Message…"
+                        value={newMessage}
+                        onChange={handleInputChange}
+                        sx={{ flexGrow: 1, mr: 1 }}
+                      />
+
+                      <IconButton
+                        sx={{ "&:hover": { color: palette.primary.dark } }}
+                        type="submit"
+                        onClick={handleSubmit}
+                      >
+                        <Telegram />
+                      </IconButton>
+                    </FlexBetween>
+                  </Box>
+                </form>
               </Box>
             </>
           ) : (
