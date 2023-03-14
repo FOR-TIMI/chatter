@@ -17,7 +17,7 @@ const { authMiddleware } = require('../middleware/jwt-config');
 
 /**=========== READ ============== */
     router.get('/', authMiddleware, getUsers)
-    router.get('/:username',authMiddleware, getUser); //get a single user
+    router.get('/:usernameorid',authMiddleware, getUser); //get a single user
     router.get('/:username/posts', authMiddleware, getUserPosts) // get a user's posts
 
     router

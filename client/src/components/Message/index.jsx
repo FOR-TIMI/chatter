@@ -1,9 +1,11 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import { formatTime } from "../../utils/formatDate";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
-const Message = ({ isLast = false, isAuthor = true, isLoading = true }) => {
+const Message = ({ message, isLast, isAuthor, isLoading=false, profilePhoto }) => {
   const { palette } = useTheme();
   const { light } = palette.neutral;
+
 
   return (
     <Box
@@ -16,8 +18,8 @@ const Message = ({ isLast = false, isAuthor = true, isLoading = true }) => {
 
         { !isAuthor && (
             <UserAvatar
-            image="https://res.cloudinary.com/diskudcr3/image/upload/c_thumb,w_200,g_face/v1672524602/chatter/gvvxsfb3v5l76csavwzk.png"
-            size="32px"
+            image={profilePhoto}
+            size="25px"
             />
         ) }
 
@@ -31,10 +33,9 @@ const Message = ({ isLast = false, isAuthor = true, isLoading = true }) => {
           }}
           variant="p"
           fontWeight="500"
-          maxWidth="40%"
+          maxWidth="80%"
         >
-          Hello this is a message
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas ipsum neque modi! Saepe nemo architecto ullam nesciunt, blanditiis fugit alias
+          {message.content}
         </Typography>
 
         {isAuthor && (
@@ -44,7 +45,7 @@ const Message = ({ isLast = false, isAuthor = true, isLoading = true }) => {
 
       {isLast && (
         <Typography sx={{ margin : !isAuthor ? '0.5rem 0 0 2.5rem' : null}} variant="p" fontWeight="500" fontSize="0.75rem">
-          1 hour ago
+          {formatTime(message.createdAt)}
         </Typography>
       )}
     </Box>
