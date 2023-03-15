@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run start-server\" \"npm run start-socket\"",
     "start-server": "node server/server.js",
     "start-socket": "node socket/index.js",
-    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\" \"cd socket && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i && cd ../socket && npm i",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
