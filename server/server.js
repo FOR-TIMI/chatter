@@ -65,7 +65,7 @@ if(process.env.NODE_ENV === "production"){
 
     
 
-app.use(morgan("common"));
+// app.use(morgan("common"));
 
 
 // sanitize-mongo middleware to protect against MongoDB injection attacks
@@ -73,7 +73,7 @@ app.use(sanitizeMongo({replaceWith: '_'}))
 
 
 //Routes
-const { router:routes, server} = require("./routes")(app)
+const routes = require("./routes")
 app.use(routes)
 
 
@@ -90,7 +90,7 @@ if(process.env.NODE_ENV === "production"){
 
 /*================== MONGODB =================*/
 db.once("open", () => {
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
         console.log(`🌍💥 Server running on port ${PORT}`)
     })
 })

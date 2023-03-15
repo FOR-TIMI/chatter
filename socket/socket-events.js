@@ -1,4 +1,4 @@
-const { User } =  require('../model')
+const { User } =  require('../server/model')
 
 const handleAddRemoveFollower = async (io, followerId, followingId) => {
   try {

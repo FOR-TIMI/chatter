@@ -130,11 +130,6 @@ module.exports = {
         }
       );
 
-      // Send real-time update to all connected clients
-      req.io.emit("ADD_REMOVE_FOLLOWER", {
-        followerId: user._id,
-        followingId: body.followingId,
-      });
 
       res.status(200).json(formattedFollowings);
     } catch (err) {

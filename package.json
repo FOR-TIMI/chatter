@@ -4,9 +4,11 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "concurrently \"npm run start-server\" \"npm run start-socket\"",
+    "start-server": "node server/server.js",
+    "start-socket": "node socket/index.js",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
-    "install": "cd server && npm i && cd ../client && npm i",
+    "install": "cd server && npm i && cd ../client && npm i && cd ../socket && npm i",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
     "heroku-postbuild": "cd client && npm install && npm run build && cp -a build/. ../server/public"
@@ -22,6 +24,10 @@
     "url": "https://github.com/FOR-TIMI/chatter/issues"
   },
   "homepage": "https://github.com/FOR-TIMI/chatter#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2"
+  },
   "devDependencies": {
     "concurrently": "^7.6.0"
   }

@@ -1,12 +1,13 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 // import { formatTime } from "../../utils/formatDate";
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
+import StyledBadge from "../CustomStyledComponents/StyledBadge";
+
 const Conversation = ({ conversation, currentUser }) => {
-  //   profilePhotoUrl, username, lastMessage, createdAt
   const serverUrl =
     process.env.REACT_APP_ENV === "Development"
       ? "http://localhost:3001/"
@@ -16,7 +17,9 @@ const Conversation = ({ conversation, currentUser }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const otherUserId = conversation?.members.find((m) => m !== currentUser._id);
+    const otherUserId = conversation?.members.find(
+      (m) => m !== currentUser._id
+    );
 
     const getUser = async () => {
       const response = await fetch(serverUrl + `u/${otherUserId}`, {
@@ -52,7 +55,20 @@ const Conversation = ({ conversation, currentUser }) => {
       }}
     >
       <FlexBetween margin="0.75rem">
-        <UserAvatar image={user?.profilePhotoUrl} size="35px" />
+        {conversation.isOnline ? (
+          <Stack direction="row" spacing={2}>
+            <StyledBadge
+              overlap="circular"
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              variant="dot"
+            >
+              <UserAvatar image={user?.profilePhotoUrl} size="35px" />
+            </StyledBadge>
+          </Stack>
+        ) : (
+          <UserAvatar image={user?.profilePhotoUrl} size="35px" />
+        )}
+
         <Box flexGrow={3.5} margin="0 0.5rem">
           <Typography variant="h5" fontWeight="500">
             {user?.username.length > 28
@@ -60,17 +76,11 @@ const Conversation = ({ conversation, currentUser }) => {
               : user?.username}
           </Typography>
 
-       {/**    <Box sx={{ display: "flex", gap: 1 }}>
-            <Typography color={medium} fontSize="0.75rem">
-              {user?.lastMessage.length > 28
-                ? `${user?.lastMessage.substring(0, 28)}... `
-                : `${user?.lastMessage}`}
-            </Typography>
-
-            <Typography fontSize="0.75rem">
-              {`.${formatTime(user?.createdAt)}`}
-            </Typography>
-              </Box> **/}
+          {conversation.isOnline && (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Typography fontSize="0.75rem">Active now</Typography>
+            </Box>
+          )}
         </Box>
       </FlexBetween>
     </Box>

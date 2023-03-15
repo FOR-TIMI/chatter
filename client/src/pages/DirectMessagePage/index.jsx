@@ -1,9 +1,11 @@
 import { Inbox, Telegram, Info } from "@mui/icons-material";
+import { io } from "socket.io-client";
 import {
   Box,
   Button,
   IconButton,
   InputBase,
+  Stack,
   Typography,
   // useMediaQuery,
   useTheme,
@@ -18,6 +20,7 @@ import Message from "../../components/Message";
 import Navbar from "../../components/navbar";
 import { v4 as uuidv4 } from "uuid";
 import SendIcon from "@mui/icons-material/Send";
+import StyledBadge from "../../components/CustomStyledComponents/StyledBadge";
 
 const DirectMessagePage = () => {
   const navigate = useNavigate();
@@ -27,25 +30,61 @@ const DirectMessagePage = () => {
       ? "http://localhost:3001/"
       : process.env.REACT_APP_SERVER_URL;
 
+  const socketUrl =
+    process.env.REACT_APP_ENV === "Development"
+      ? "ws://localhost:3002/"
+      : process.env.REACT_APP_SERVER_URL;
+
   // global state
   const token = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
   const { username, _id: userId } = user;
 
   //local state
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [currentConvo, setCurrentConvo] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [recievedMessage, setRecievedMessage] = useState(null);
 
-  //Refences
+  //References
+  const socket = useRef(io(socketUrl));
   const scrollRef = useRef();
 
   //Colors
   const { palette } = useTheme();
   const { light: neutralLight, dark, medium } = palette.neutral;
   const bg = palette.background.alt;
+
+  useEffect(() => {
+    socket.current = io(socketUrl);
+    socket.current.on("getMessage", ({ sender, content }) => {
+      setRecievedMessage({
+        sender,
+        content,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    recievedMessage &&
+      currentChat?.members.includes(recievedMessage.sender) &&
+      setMessages((previosMessages) => [...previosMessages, recievedMessage]);
+  }, [recievedMessage, currentChat]);
+
+  //For socket join
+  useEffect(() => {
+    //To add a user to the list of online users
+    socket.current.emit("addUser", userId);
+
+    //To get List of all online users
+    socket.current.on("getUsers", (users) => {
+      setOnlineUsers(users);
+    });
+  }, [userId]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -59,6 +98,14 @@ const DirectMessagePage = () => {
 
         if (response.ok) {
           const data = await response.json();
+
+          data.forEach((d) => {
+            const otherUserId = d.members.find((m) => m !== userId);
+            d.isOnline = onlineUsers.some(
+              (user) => user.userId === otherUserId
+            );
+          });
+
           setConversations(data);
         }
       } catch (err) {
@@ -66,7 +113,7 @@ const DirectMessagePage = () => {
       }
     };
     getConversations();
-  }, [userId, token, serverUrl]);
+  }, [currentChat, token, serverUrl, userId, onlineUsers]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -124,6 +171,15 @@ const DirectMessagePage = () => {
     if (newMessage.trim().length === 0) {
       return;
     }
+
+    const recieverId = currentChat.members.find((m) => m !== userId);
+
+    socket.current.emit("sendMessage", {
+      sender: userId,
+      content: newMessage.trim(),
+      recieverId,
+    });
+
     try {
       const response = await fetch(serverUrl + `msg`, {
         method: "POST",
@@ -152,18 +208,20 @@ const DirectMessagePage = () => {
   };
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior: "smooth"})
-  },[messages])
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
-    <Box m={0} p={0} sx={{ backgroundColor: neutralLight }}>
+    <Box m={0} p={0} sx={{ backgroundColor: neutralLight, overflow: "hidden" }}>
       <Navbar />
       <Box
         sx={{
-          height: "calc(100vh - 70px)",
+          height: "calc(100vh - 60px)",
           width: "80%",
           margin: "0 auto",
+          padding: "2rem 0",
           display: "flex",
+          justifyContent: "flex-end",
         }}
       >
         {/* Chat Menu */}
@@ -205,7 +263,7 @@ const DirectMessagePage = () => {
             </Box>
 
             {/* Conversation list */}
-            <Box>
+            <Box sx={{ overflowY: "scroll" }}>
               {conversations?.map((c) => (
                 <Box key={uuidv4()} onClick={() => handleCurrentChat(c)}>
                   <Conversation currentUser={user} conversation={c} />
@@ -235,13 +293,38 @@ const DirectMessagePage = () => {
                       p: "3px",
                     }}
                   >
-                    <UserAvatar
-                      image={currentConvo?.profilePhotoUrl}
-                      size={32}
-                    />
+                    {currentConvo?.isOnline ? (
+                      <Stack direction="row" spacing={2}>
+                        <StyledBadge
+                          overlap="circular"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                          }}
+                          variant="dot"
+                        >
+                          <UserAvatar
+                            image={currentConvo?.profilePhotoUrl}
+                            size="35px"
+                          />
+                        </StyledBadge>
+                      </Stack>
+                    ) : (
+                      <UserAvatar
+                        image={currentConvo?.profilePhotoUrl}
+                        size="35px"
+                      />
+                    )}
+
                     <Typography variant="h5" fontWeight="500">
                       {currentConvo?.username}
                     </Typography>
+
+                    {currentConvo?.isOnline && (
+                      <Box sx={{ display: "flex", gap: 1 }}>
+                        <Typography fontSize="0.75rem">Active now</Typography>
+                      </Box>
+                    )}
                   </Box>
 
                   <IconButton onClick={() => navigate("/direct/new")}>
@@ -256,7 +339,7 @@ const DirectMessagePage = () => {
               {/* chatBoxWrapper */}
               <Box sx={{ padding: "10px", height: "100%" }}>
                 {/* chatBoxTop */}
-                <Box sx={{ height: "80%", overflow: "scroll", width: "100%" }}>
+                <Box sx={{ height: "80%", overflowY: "scroll", width: "100%" }}>
                   {messages.map((m, i) => (
                     <div key={uuidv4()} ref={scrollRef}>
                       <Message
