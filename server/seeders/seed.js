@@ -45,6 +45,19 @@ db.once('open', async () => {
 
  console.log('\n=============DELETED ALL CURRENT POSTS=================\n')
 
+ const oldMessages = db.collection('messages')
+ await oldMessages.drop()
+
+
+console.log('\n=============DELETED ALL CURRENT MESSAGES=================\n')
+
+const oldConversations = db.collection('conversations')
+await oldConversations.drop()
+
+
+console.log('\n=============DELETED ALL CURRENT CONVERSATIONS=================\n')
+   
+
 
     const createdUsers = []
 

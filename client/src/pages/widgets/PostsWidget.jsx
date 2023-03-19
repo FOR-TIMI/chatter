@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import SinglePostWidget from "./SinglePostWidget";
 
 import SinglePostSkeleton from "../../components/Skeletons/SinglePostSkeleton";
+import { SERVER_URL } from "../../service/config";
 
 const PostsWidget = ({ username, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -16,87 +17,82 @@ const PostsWidget = ({ username, isProfile = false }) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const serverUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
-      : process.env.REACT_APP_SERVER_URL;
-
   const getPosts = async () => {
-    if(page > 1 && hasMore){
+    if (page > 1 && hasMore) {
       setIsLoadingMore(true);
     }
 
-    try{
-      const response = await fetch(`${serverUrl}p?page=${page}`, {
+    try {
+      const response = await fetch(`${SERVER_URL}p?page=${page}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
-  
+
       setHasMore(data.hasMore);
-  
+
       if (page === 1) {
         dispatch(setPosts({ posts: data.posts }));
       } else {
         dispatch(addPost({ posts: [...data.posts] }));
       }
-    } catch(err){
+    } catch (err) {
       console.error(err);
-    } finally{
+    } finally {
       setIsLoading(false);
-      setIsLoadingMore(false); 
+      setIsLoadingMore(false);
     }
   };
 
   const getUserPosts = async () => {
-    if(page > 1 && hasMore){
+    if (page > 1 && hasMore) {
       setIsLoadingMore(true);
     }
-    if(!hasMore){
+    if (!hasMore) {
       setIsLoadingMore(false);
       return;
     }
-    try{
-      const response = await fetch(serverUrl + `u/${username}/posts?page=${page}`, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    try {
+      const response = await fetch(
+        SERVER_URL + `u/${username}/posts?page=${page}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await response.json();
       setHasMore(data.hasMore);
-  
+
       if (page === 1) {
         dispatch(setPosts({ posts: data.posts }));
       } else {
         dispatch(addPost({ posts: [...data.posts] }));
       }
-    } catch(err){
+    } catch (err) {
       console.error(err);
-    }finally{
+    } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
   };
-
 
   /**===========Handle Scroll============ */
   useEffect(() => {
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const currentHeight = window.innerHeight + window.pageYOffset;
-    
+
       if (currentHeight + 1 >= scrollHeight && hasMore) {
         setPage(page + 1);
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
-  
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [page, hasMore]);
-  
-
 
   useEffect(() => {
     if (isProfile) {
@@ -104,8 +100,7 @@ const PostsWidget = ({ username, isProfile = false }) => {
     } else {
       getPosts();
     }
-  },[page]);
-
+  }, [page]);
 
   if (isLoading) {
     return Array.from(new Array(2)).map((el, index) => (
@@ -143,14 +138,13 @@ const PostsWidget = ({ username, isProfile = false }) => {
           />
         )
       )}
-      { isLoadingMore ? (
-        Array.from(new Array(1)).map((el, index) => (
-          <SinglePostSkeleton key={uuidv4()} />
-        ))
-      ) : null}
+      {isLoadingMore
+        ? Array.from(new Array(1)).map((el, index) => (
+            <SinglePostSkeleton key={uuidv4()} />
+          ))
+        : null}
     </>
   );
-  
 };
 
 export default PostsWidget;
