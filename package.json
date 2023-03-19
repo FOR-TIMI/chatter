@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "start": "concurrently \"npm run start-server\" \"npm run start-socket\"",
+    "start": "node server/server.js & node socket/index.js",
     "start-server": "node server/server.js",
     "start-socket": "node socket/index.js",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\" \"cd socket && npm start\"",
@@ -25,8 +25,7 @@
   },
   "homepage": "https://github.com/FOR-TIMI/chatter#readme",
   "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.1.2"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "concurrently": "^7.6.0"
