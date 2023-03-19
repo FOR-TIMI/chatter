@@ -23,8 +23,9 @@ import StyledBadge from "../../components/CustomStyledComponents/StyledBadge";
 
 import { SERVER_URL } from "../../service/config";
 import { socket } from "../../service/socket";
+import NewConversation from "../../components/NewConversation";
 
-const DirectMessagePage = () => {
+const DirectMessagePage = ({ isModal = false }) => {
   const navigate = useNavigate();
 
   // global state
@@ -40,6 +41,7 @@ const DirectMessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [recievedMessage, setRecievedMessage] = useState(null);
+  const [isNewConversation, setIsNewConversation] = useState(isModal);
 
   //References
   const scrollRef = useRef(null);
@@ -201,7 +203,15 @@ const DirectMessagePage = () => {
     }
   };
 
- 
+  const handleNewConversation = () => {
+    navigate("/direct/new");
+    setIsNewConversation(true);
+  };
+
+  const handleConversationClose = () => {
+    navigate("/direct/inbox");
+    setIsNewConversation(false);
+  };
 
   return (
     <Box m={0} p={0} sx={{ backgroundColor: neutralLight, overflow: "hidden" }}>
@@ -216,6 +226,10 @@ const DirectMessagePage = () => {
           justifyContent: "flex-end",
         }}
       >
+        <NewConversation
+          isOpen={isNewConversation}
+          handleClose={handleConversationClose}
+        />
         {/* Chat Menu */}
         <Box
           sx={{
@@ -245,7 +259,7 @@ const DirectMessagePage = () => {
                 {username}
               </Typography>
 
-              <IconButton onClick={() => navigate("/direct/new")}>
+              <IconButton onClick={handleNewConversation}>
                 {palette.mode === "dark" ? (
                   <Inbox sx={{ fontSize: "25px" }} />
                 ) : (
@@ -413,10 +427,7 @@ const DirectMessagePage = () => {
                   </Typography>
                 </Box>
 
-                <Button
-                  variant="contained"
-                  onClick={() => navigate("/direct/new")}
-                >
+                <Button variant="contained" onClick={handleNewConversation}>
                   Send Message
                 </Button>
               </Box>

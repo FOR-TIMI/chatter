@@ -52,6 +52,7 @@ const App = () => {
 
             <Route path="/direct">
                 <Route path="inbox" element={isLoggedIn ? <DirectMessagePage/> : <Navigate to="/login" />}></Route>
+                <Route path="new" element={isLoggedIn ? <DirectMessagePage isModal={true}/> : <Navigate to="/login" />}></Route>
             </Route>
 
             <Route path="/profile">

@@ -20,7 +20,6 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { setPerson } from "../../state";
 
 import { SERVER_URL } from "../../service/config";
 import { socket } from "../../service/socket";
@@ -47,7 +46,6 @@ const UserWidget = ({ username, profilePhotoUrl }) => {
     const userData = await response.json();
 
     setUser(userData);
-    setPerson(userData);
   };
 
   useEffect(() => {
