@@ -1,3 +1,2 @@
-web: npm start --prefix server
-release: heroku config:set REACT_APP_SOCKET_URL=ws://https://nameless-basin-36851.herokuapp.com
+web: concurrently "npm run start-server" "npm run start-socket"
 

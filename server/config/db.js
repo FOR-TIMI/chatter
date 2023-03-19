@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-const DB_URL = process.env.MONGODB_URI  || 'mongodb://127.0.0.1:27017/chatter';
+const DB_URL = process.env.MONGODB_URI;
 
 
 
