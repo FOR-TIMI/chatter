@@ -99,7 +99,7 @@ module.exports = {
 
       const users = await User.find({
         username: { $in: likes },
-      }).select("username profilePhotoUrl");
+      }).select("username profilePhotoUrl").lean();
 
       res.status(200).json(users);
     } catch (err) {

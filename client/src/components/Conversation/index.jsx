@@ -1,28 +1,26 @@
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-// import { formatTime } from "../../utils/formatDate";
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
+
+import { SERVER_URL } from "../../service/config";
 
 import StyledBadge from "../CustomStyledComponents/StyledBadge";
 
 const Conversation = ({ conversation, currentUser }) => {
-  const serverUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
-      : process.env.REACT_APP_SERVER_URL;
   const token = useSelector((state) => state.token);
 
   const [user, setUser] = useState(null);
 
+  // To get the other user in the conversation
   useEffect(() => {
     const otherUserId = conversation?.members.find(
       (m) => m !== currentUser._id
     );
 
     const getUser = async () => {
-      const response = await fetch(serverUrl + `u/${otherUserId}`, {
+      const response = await fetch(SERVER_URL + `u/${otherUserId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -39,7 +37,7 @@ const Conversation = ({ conversation, currentUser }) => {
     };
 
     getUser();
-  }, [currentUser, conversation, serverUrl, token]);
+  }, []);
 
   const { palette } = useTheme();
 

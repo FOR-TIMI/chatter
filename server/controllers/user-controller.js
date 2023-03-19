@@ -1,5 +1,5 @@
 const { User } = require("../model");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 module.exports = {
   // ...
@@ -20,10 +20,6 @@ module.exports = {
         user = await User.findOne({ username: usernameorid });
       }
 
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
       //hide users password from frontend
       user.password = undefined;
 
@@ -36,14 +32,21 @@ module.exports = {
   /**================ GET User Followers ==================== */
   async getUserFollowers({ params }, res) {
     try {
-      const { username } = params;
+      const { userId:usernameorid } = params;
 
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(404).json({ message: "user not found" });
+      const isValidObjectId = mongoose.isValidObjectId(usernameorid);
+
+      let user;
+      if (isValidObjectId) {
+        // Find user by id
+        user = await User.findById(usernameorid);
+      } else {
+        // Find user by username
+        user = await User.findOne({ username: usernameorid });
       }
-
-      const followers = await User.find({ _id: { $in: user.followers } });
+      const followers = await User.find({
+        _id: { $in: user.followers },
+      }).limit(5);
 
       const formattedFollowers = followers.map(
         ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
@@ -67,55 +70,23 @@ module.exports = {
   /**================ GET User Followings ==================== */
   async getUserFollowings({ params }, res) {
     try {
-      const { username } = params;
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(404).json({ message: "user not found" });
-      }
+      const { userId:usernameorid } = params;
+      const isValidObjectId = mongoose.isValidObjectId(usernameorid);
 
-      const followings = await User.find({ _id: { $in: user.followings } });
-
-      const formattedFollowings = followings
-        .slice(-5) // limit to the latest 5 followers
-        .map(
-          ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
-            return {
-              _id,
-              username,
-              email,
-              occupation,
-              location,
-              profilePhotoUrl,
-            };
-          }
-        );
-
-      res.status(200).json(formattedFollowings);
-    } catch (err) {
-      res.status(404).json({ message: err.message });
-    }
-  },
-
-  /**================ to follow and Unfollow ==================== */
-  async addRemoveFollow(req, res) {
-    try {
-      const { params, body } = req;
-      const user = await User.findOne({ username: params.username });
-
-      // Check if the user is currently following this person
-      const followingIndex = user.followings.indexOf(body.followingId);
-      if (followingIndex !== -1) {
-        user.followings.splice(followingIndex, 1);
+      let user;
+      if (isValidObjectId) {
+        // Find user by id
+        user = await User.findById(usernameorid);
       } else {
-        // Add person to followings list
-        user.followings.push(body.followingId);
+        // Find user by username
+        user = await User.findOne({ username: usernameorid });
       }
 
-      // Save new version of the followings
-      await user.save();
+      // To find the latest 5 followers
+      const followings = await User.find({
+        _id: { $in: user.followings },
+      });
 
-      // To return new updated list of followings
-      const followings = await User.find({ _id: { $in: user.followings } });
 
       const formattedFollowings = followings.map(
         ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
@@ -130,12 +101,65 @@ module.exports = {
         }
       );
 
-
       res.status(200).json(formattedFollowings);
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
   },
+
+  /**================ to follow and Unfollow ==================== */
+  async addRemoveFollow(req, res) {
+    try {
+      const { params, body } = req;
+
+      if (params.userId === body.followingId) {
+        return res.status(400).json({ message: "A user cannot follow themselves" });
+      }
+  
+      const user = await User.findById(params.userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: "Couldn't find the user" });
+      }
+  
+      const following = await User.findById(body.followingId);
+  
+      if (!following) {
+        return res
+          .status(404)
+          .json({ message: "Couldn't find the user you're trying to follow" });
+      }
+  
+      const followingIndex = user.followings.indexOf(body.followingId);
+  
+      if (followingIndex !== -1) {
+        user.followings.splice(followingIndex, 1);
+        await User.findByIdAndUpdate(body.followingId, {
+          $pull: { followers: user._id },
+        });
+      } else {
+        user.followings.push(body.followingId);
+        await User.findByIdAndUpdate(body.followingId, {
+          $push: { followers: user._id },
+        });
+      }
+  
+      await user.save();
+  
+      const followings = await User.find({ _id: { $in: user.followings } });
+  
+      const formattedFollowings = followings.map(
+        ({ _id, username, email, occupation, location, profilePhotoUrl }) => {
+          return { _id, username, email, occupation, location, profilePhotoUrl };
+        }
+      );
+  
+      res.json(formattedFollowings);
+    } catch (err) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  ,
 
   /**================ searchUser ==================== */
   async getUsers({ query }, res) {
@@ -148,6 +172,7 @@ module.exports = {
       const users = await User.find({ username: searchRegex })
         .select("username occupation profilePhotoUrl")
         .limit(5)
+        .lean()
         .exec();
 
       if (users.length > 0) {

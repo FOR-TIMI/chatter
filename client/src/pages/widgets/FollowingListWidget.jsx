@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setFollowing, setFollowers, setPersonFollowing, setPersonFollowers } from "../../state";
 
+import { SERVER_URL } from "../../service/config";
+
 const FollowingListWidget = ({ username , isProfile=false }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
@@ -22,15 +24,13 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
     const token = useSelector((state) => state.token);
     const signedInUsername = useSelector((state) => state.user.username)
     const followings = useSelector((state) => state.user.followings);
-    const personFollowings = useSelector((state) => state.person.followings)
 
-    const serverUrl =  process.env.REACT_APP_ENV === "Development" ? "http://localhost:3001/" : process.env.REACT_APP_SERVER_URL 
 
   const isSignedInUserProfile = signedInUsername === username
 
     const getFollowings = async () => {
         const response = await fetch(
-             serverUrl + `u/${username}/following`,
+             SERVER_URL + `u/${username}/followings`,
             {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}`}
@@ -47,7 +47,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
 
     const getFollowers = async () => {
             const response = await fetch(
-              serverUrl + `u/${username}/followers`,
+              SERVER_URL + `u/${username}/followers`,
             {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}`}
@@ -95,6 +95,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
                  profilePhotoUrl,
                 }) => (
                     <Following
+                      isProfile={true}
                       key={uuidv4()}
                       followingId={_id}
                       name={username}
@@ -107,43 +108,7 @@ const FollowingListWidget = ({ username , isProfile=false }) => {
         </WidgetWrapper>
     )
   }
- } else{
-      if(personFollowings.length){
-        return (
-          <WidgetWrapper>
-              <Typography
-                color={palette.neutral.dark}
-                variant="h5"
-                fontWeight="500"
-                sx={{ mb: "1.5rem" }}
-              >
-                  People you follow
-              </Typography>
-
-              <Box display="flex" flexDirection="column" gap="1.5rem">
-                  {followings.map(({ 
-                  _id, 
-                  username,
-                  occupation,
-                  profilePhotoUrl,
-                  }) => (
-                      <Following
-                        key={_id + username}
-                        followingId={_id}
-                        name={username}
-                        subtitle={occupation}
-                        userProfilePhotoUrl={profilePhotoUrl}
-                      />
-                  ))}
-
-              </Box>
-          </WidgetWrapper>
-      )
-      }
  }
-
-
-  return;
     
 }
 

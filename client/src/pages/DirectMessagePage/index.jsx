@@ -1,5 +1,4 @@
 import { Inbox, Telegram, Info } from "@mui/icons-material";
-import { io } from "socket.io-client";
 import {
   Box,
   Button,
@@ -22,18 +21,11 @@ import { v4 as uuidv4 } from "uuid";
 import SendIcon from "@mui/icons-material/Send";
 import StyledBadge from "../../components/CustomStyledComponents/StyledBadge";
 
+import { SERVER_URL } from "../../service/config";
+import { socket } from "../../service/socket";
+
 const DirectMessagePage = () => {
   const navigate = useNavigate();
-
-  const serverUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
-      : process.env.REACT_APP_SERVER_URL;
-
-  const socketUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "ws://localhost:3002/"
-      : process.env.REACT_APP_SERVER_URL;
 
   // global state
   const token = useSelector((state) => state.token);
@@ -50,8 +42,7 @@ const DirectMessagePage = () => {
   const [recievedMessage, setRecievedMessage] = useState(null);
 
   //References
-  const socket = useRef(io(socketUrl));
-  const scrollRef = useRef();
+  const scrollRef = useRef(null);
 
   //Colors
   const { palette } = useTheme();
@@ -59,8 +50,7 @@ const DirectMessagePage = () => {
   const bg = palette.background.alt;
 
   useEffect(() => {
-    socket.current = io(socketUrl);
-    socket.current.on("getMessage", ({ sender, content }) => {
+    socket.on("getMessage", ({ sender, content }) => {
       setRecievedMessage({
         sender,
         content,
@@ -72,24 +62,24 @@ const DirectMessagePage = () => {
   useEffect(() => {
     recievedMessage &&
       currentChat?.members.includes(recievedMessage.sender) &&
-      setMessages((previosMessages) => [...previosMessages, recievedMessage]);
+      setMessages((previousMessages) => [...previousMessages, recievedMessage]);
   }, [recievedMessage, currentChat]);
 
   //For socket join
   useEffect(() => {
     //To add a user to the list of online users
-    socket.current.emit("addUser", userId);
+    socket.emit("addUser", userId);
 
     //To get List of all online users
-    socket.current.on("getUsers", (users) => {
+    socket.on("getUsers", (users) => {
       setOnlineUsers(users);
     });
-  }, [userId]);
+  }, [user]);
 
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const response = await fetch(serverUrl + `cs/${userId}`, {
+        const response = await fetch(SERVER_URL + `cs/${userId}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -113,12 +103,12 @@ const DirectMessagePage = () => {
       }
     };
     getConversations();
-  }, [currentChat, token, serverUrl, userId, onlineUsers]);
+  }, [userId]);
 
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const response = await fetch(serverUrl + `msg/${currentChat?._id}`, {
+        const response = await fetch(SERVER_URL + `msg/${currentChat?._id}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -135,13 +125,17 @@ const DirectMessagePage = () => {
     };
 
     getMessages();
-  }, [currentChat, serverUrl, token]);
+  }, [currentChat]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleCurrentChat = (c) => {
     const otherUserId = c?.members.find((m) => m !== userId);
 
     const getUser = async () => {
-      const response = await fetch(serverUrl + `u/${otherUserId}`, {
+      const response = await fetch(SERVER_URL + `u/${otherUserId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -174,14 +168,14 @@ const DirectMessagePage = () => {
 
     const recieverId = currentChat.members.find((m) => m !== userId);
 
-    socket.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       sender: userId,
       content: newMessage.trim(),
       recieverId,
     });
 
     try {
-      const response = await fetch(serverUrl + `msg`, {
+      const response = await fetch(SERVER_URL + `msg`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -207,9 +201,7 @@ const DirectMessagePage = () => {
     }
   };
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+ 
 
   return (
     <Box m={0} p={0} sx={{ backgroundColor: neutralLight, overflow: "hidden" }}>

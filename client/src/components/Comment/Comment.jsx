@@ -19,14 +19,11 @@ import SingleComment from "./SingleComment";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import { SERVER_URL } from "../../service/config";
+
 import { setPost } from "../../state";
 
 const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
-  const serverUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
-      : process.env.REACT_APP_SERVER_URL;
-
   const [comments, setComments] = useState(null);
   const [commentBody, setCommentBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,7 +43,7 @@ const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
     try {
       //Make API call to update the like state of the comment
       const response = await fetch(
-        serverUrl + `p/${postId}/comments/${commentId}/likes`,
+        SERVER_URL + `p/${postId}/comments/${commentId}/likes`,
         {
           method: "PATCH",
           headers: {
@@ -76,7 +73,7 @@ const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
   const handleClick = async () => {
     setLoading(true);
     try {
-      const response = await fetch(serverUrl + `p/${postId}/comments`, {
+      const response = await fetch(SERVER_URL + `p/${postId}/comments`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +105,7 @@ const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
     if (commentCount > 0) {
       setLoading(true);
       try {
-        const response = await fetch(serverUrl + `p/${postId}/comments`, {
+        const response = await fetch(SERVER_URL + `p/${postId}/comments`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -131,7 +128,7 @@ const CommentBox = ({ postId, commentCount, isNonMobileScreens }) => {
 
   useEffect(() => {
     getComments();
-  },[]);
+  }, []);
 
   return (
     <Box
