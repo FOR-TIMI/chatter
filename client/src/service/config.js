@@ -6,7 +6,7 @@ const config = {
   SOCKET_URL:
     process.env.REACT_APP_ENV === "Development"
       ? "ws://localhost:8900/"
-      : "ws://nameless-basin-36851.herokuapp.com/"
+      : "ws://nameless-basin-36851.herokuapp.com:" + process.env.PORT
 };
 
 export const SERVER_URL = config.SERVER_URL;
