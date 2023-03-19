@@ -23,9 +23,8 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 /**Currently you can only send messages to people that follow you */
 
 const NewConversation = ({ isOpen, handleClose }) => {
-   
   //Navigate
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // global state
   const token = useSelector((state) => state.token);
@@ -46,19 +45,17 @@ const NewConversation = ({ isOpen, handleClose }) => {
     e.preventDefault();
 
     for (let user of users) {
-
-      const body = JSON.stringify({
-        senderId,
-        recieverId: user._id,
-      });
-
       try {
-        await fetch(SERVER_URL + `cs/${senderId}`, {
+        await fetch(SERVER_URL + "cs", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
           },
-          body,
+          body: JSON.stringify({
+            senderId,
+            recieverId: user._id,
+          })
         });
       } catch (err) {
         console.err(err);
@@ -69,9 +66,8 @@ const NewConversation = ({ isOpen, handleClose }) => {
     setusers([]);
 
     //To navigate to the inbox and refresh
-    navigate('/direct/inbox');
+    navigate("/direct/inbox");
     navigate(0);
-
   };
 
   const handleChange = (e, newUsers) => {
