@@ -1,2 +1,2 @@
-web: concurrently "npm run start-server" "npm run start-socket"
+web: concurrently "npm run start-socket"
 

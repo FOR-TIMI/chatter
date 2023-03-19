@@ -1,7 +1,7 @@
 const config = {
   SERVER_URL:
     process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
+      ? "http://localhost:8900/"
       : "https://nameless-basin-36851.herokuapp.com/",
   SOCKET_URL:
     process.env.REACT_APP_ENV === "Development"

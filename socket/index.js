@@ -1,11 +1,23 @@
 const PORT = process.env.PORT || 8900;
 
-const io = require("socket.io")(PORT, {
+const app = require('../server');
+const db = require('../server/config/db');
+
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT} 🚀`);
+})
+
+/*================== MONGODB =================*/
+db.once("open", () => {
+  console.log("🚀 MongoDB database connected 🚀")
+})
+
+const io = require("socket.io")(server, {
   cors: {
     origin:
       process.env.NODE_ENV === "production"
         ? "https://nameless-basin-36851.herokuapp.com"
-        : "http://localhost:3000",
+        : "http://localhost:" + PORT,
   },
   transports: ["websocket", "polling"],
 });
@@ -64,3 +76,5 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 });
+
+
