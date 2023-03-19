@@ -31,7 +31,6 @@ io.on("connection", (socket) => {
 
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
-    console.log(users);
     //To send all the current online users
     io.emit("getUsers", users);
   });

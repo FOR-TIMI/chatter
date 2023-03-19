@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../service/config";
 import {
@@ -9,6 +10,7 @@ import {
   Button,
   Checkbox,
   IconButton,
+  useTheme,
   TextField,
 } from "@mui/material";
 
@@ -17,19 +19,22 @@ import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { useTheme } from "@emotion/react";
 
 /**Currently you can only send messages to people that follow you */
 
 const NewConversation = ({ isOpen, handleClose }) => {
+   
+  //Navigate
+  const navigate = useNavigate()
+
   // global state
   const token = useSelector((state) => state.token);
-  const { _id: userId } = useSelector((state) => state.user);
+  const { _id: senderId } = useSelector((state) => state.user);
   const { palette } = useTheme();
 
   //local state
   const [friendList, setFriendList] = useState(null);
-  const [value, setValue] = useState([]);
+  const [users, setusers] = useState([]);
 
   //Icons
   const icon = <CircleOutlinedIcon fontSize="large" />;
@@ -37,22 +42,45 @@ const NewConversation = ({ isOpen, handleClose }) => {
   const closeIcon = <CloseOutlinedIcon fontSize="large" />;
 
   //handle submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(value);
+    for (let user of users) {
 
-    //To clear all values
-    setValue([]);
+      const body = JSON.stringify({
+        senderId,
+        recieverId: user._id,
+      });
+
+      try {
+        await fetch(SERVER_URL + `cs/${senderId}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body,
+        });
+      } catch (err) {
+        console.err(err);
+      }
+    }
+
+    //To clear all userss
+    setusers([]);
+
+    //To navigate to the inbox and refresh
+    navigate('/direct/inbox');
+    navigate(0);
+
   };
 
-  const handleChange = (e, newValue) => {
-    setValue(newValue);
+  const handleChange = (e, newUsers) => {
+    setusers(newUsers);
   };
 
   useEffect(() => {
     const getFriends = async () => {
-      const response = await fetch(SERVER_URL + `u/${userId}/followers`, {
+      const response = await fetch(SERVER_URL + `u/${senderId}/followers`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -123,7 +151,7 @@ const NewConversation = ({ isOpen, handleClose }) => {
             id="checkboxes-tags-demo"
             options={friendList || []}
             getOptionLabel={(option) => option.username}
-            value={value}
+            value={users}
             onChange={handleChange}
             renderOption={(props, option, { selected }) => (
               <li {...props} style={{ width: "100%" }}>

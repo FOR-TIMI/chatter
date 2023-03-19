@@ -6,7 +6,6 @@ import {
   InputBase,
   Stack,
   Typography,
-  // useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
