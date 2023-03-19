@@ -11,7 +11,7 @@
     "install": "cd server && npm i && cd ../client && npm i && cd ../socket && npm i",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build && cp -a build/. ../server/public && cd ../socket && npm install && npm start"
+    "heroku-postbuild": "cd client && npm install && npm run build && cp -a build/. ../server/public && cd ../socket && npm install"
   },
   "repository": {
     "type": "git",
