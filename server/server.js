@@ -40,12 +40,15 @@ if (process.env.NODE_ENV === "production") {
         ],
         fontSrc: [
           "https://fonts.gstatic.com",
-          "https://nameless-basin-36851.herokuapp.com/*",
+          "https://nameless-basin-36851.herokuapp.com",
+          "'self'"
         ],
         imgSrc: ["'self'", "*", "blob:", "data:"],
+        connectSrc: ["'self'", "wss://nameless-basin-36851.herokuapp.com"]
       },
     })
   );
+  
 
   // Enable CORS for all routes
   app.use(
