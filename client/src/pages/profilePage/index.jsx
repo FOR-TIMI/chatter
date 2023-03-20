@@ -28,7 +28,7 @@ const ProfilePage = () => {
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  const { username: signedInUsername, _id:signedInUserId } = useSelector((state) => state.user);
+  const { username: signedInUsername } = useSelector((state) => state.user);
   const { username } = useParams();
 
   const getUser = async () => {
@@ -43,7 +43,6 @@ const ProfilePage = () => {
 
     if (response.ok) {
       const userData = await response.json();
-      console.log(userData)
       setIsSignedInUserprofile(userData.username === signedInUsername);
       setUser(userData);
     } else {

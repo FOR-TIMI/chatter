@@ -19,7 +19,7 @@ const io = require("socket.io")(server, {
         ? "https://nameless-basin-36851.herokuapp.com"
         : "http://localhost:" + PORT,
   },
-  transports: ["websocket", "polling"],
+  transports: ["websocket","polling"]
 });
 
 let users = [];
