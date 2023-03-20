@@ -40,7 +40,7 @@ module.exports = {
   /*===============Get ALL posts====================*/
   async getFeedPosts({ query }, res) {
     try {
-      const { page = 1, limit = 2 } = query;
+      const { page = 1, limit = 3 } = query;
       const skip = (page - 1) * limit;
 
       const posts = await Post.find()
