@@ -112,6 +112,10 @@ Chatter is currently deployed on Heroku and can be accessed at the deployed link
   - ### ProfilePage
   ![image](https://user-images.githubusercontent.com/104241247/211663684-75459c57-2440-479e-a4fc-9c2886b9f079.png)
   The profile page allows users to see another user's profile. This includes their posts, follower count and many more.
+  
+  - ### MessagePage
+   ![Screenshot 2023-03-19 at 8 38 53 PM](https://user-images.githubusercontent.com/104241247/226221419-631bd302-ebc0-4ca2-b052-d94a4ed967ec.png)
+   The inbox page allows users to communicate with their followers.
 
 
 
