@@ -115,7 +115,7 @@ Chatter is currently deployed on Heroku and can be accessed at the deployed link
   
   - ### MessagePage
    ![Screenshot 2023-03-19 at 8 38 53 PM](https://user-images.githubusercontent.com/104241247/226221419-631bd302-ebc0-4ca2-b052-d94a4ed967ec.png)
-   The inbox page allows users to communicate with their followers.
+   The inbox page allows users to send real-time messages to their followers.
 
 
 
