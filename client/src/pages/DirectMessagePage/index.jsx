@@ -1,4 +1,5 @@
-import { Inbox, Telegram, Info } from "@mui/icons-material";
+import { Inbox, Info, Telegram } from "@mui/icons-material";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
@@ -11,18 +12,17 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import Conversation from "../../components/Conversation";
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
+import StyledBadge from "../../components/CustomStyledComponents/StyledBadge";
 import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
 import Message from "../../components/Message";
 import Navbar from "../../components/navbar";
-import { v4 as uuidv4 } from "uuid";
-import SendIcon from "@mui/icons-material/Send";
-import StyledBadge from "../../components/CustomStyledComponents/StyledBadge";
 
+import NewConversation from "../../components/NewConversation";
 import { SERVER_URL } from "../../service/config";
 import { socket } from "../../service/socket";
-import NewConversation from "../../components/NewConversation";
 
 const DirectMessagePage = ({ isModal = false }) => {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ const DirectMessagePage = ({ isModal = false }) => {
       }
     };
     getConversations();
-  }, [userId]);
+  }, [userId, onlineUsers]);
 
   useEffect(() => {
     const getMessages = async () => {

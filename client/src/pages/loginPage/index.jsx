@@ -1,22 +1,22 @@
-import { useState } from "react";
 import {
   Box,
   Button,
-  TextField,
-  useMediaQuery,
-  Typography,
-  useTheme,
-  Container,
   CircularProgress,
+  Container,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+import { useState } from "react";
 
 import { Formik } from "formik";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { setLogin, setPerson } from "../../state";
 
-import { registerSchema, loginSchema } from "../../utils/Schemas";
 import { SERVER_URL } from "../../service/config";
+import { loginSchema, registerSchema } from "../../utils/Schemas";
 
 const initialValuesRegister = {
   username: "",
