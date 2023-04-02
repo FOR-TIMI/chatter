@@ -172,4 +172,21 @@ const sanitize = (module.exports = {
       return res.status(500).json({ message: err });
     }
   },
+
+  /*===============Get ALL posts====================*/
+  async getPostById({ params }, res) {
+    try {
+      const { id } = params;
+
+      const post = await Post.findById(id);
+
+      if (!post) {
+        return res.status(404).json({ message: "That post does not exist" });
+      }
+
+      return res.status(200).json(post);
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  },
 });

@@ -8,6 +8,7 @@ const {
   addRemoveLike,
   editPost,
   deletePost,
+  getPostById,
 } = require("../controllers/post-controller");
 
 /**================Comment controller=================== */
@@ -38,6 +39,7 @@ router
 
 router
   .route("/:id")
+  .get(authMiddleware, getPostById)
   .put(authMiddleware, isPostAuthor, editPost)
   .delete(authMiddleware, isPostAuthor, deletePost);
 
