@@ -29,7 +29,7 @@ const sanitize = (module.exports = {
         postImageUrls: fileArr,
       });
 
-      const posts = await Post.find().sort({ createdAt: -1 });
+      const posts = await Post.find().limit(3).sort({ createdAt: -1 });
       return res.status(201).json(posts);
     } catch (err) {
       res.status(409).json({ message: err.message });
