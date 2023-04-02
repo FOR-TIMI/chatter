@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "npm run start-socket",
-    "start-server": "node server/server.js",
+    "start-server": "node socket/index.js",
     "start-socket": "node socket/index.js",
     "develop": "concurrently \"cd socket && npm run watch\" \"cd client && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i && cd ../socket && npm i",

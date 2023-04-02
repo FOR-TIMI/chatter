@@ -1,6 +1,5 @@
 const { Post, User } = require("../model");
-
-module.exports = {
+const sanitize = (module.exports = {
   /*===============Make a new post====================*/
   async createPost({ body, files }, res) {
     try {
@@ -61,23 +60,25 @@ module.exports = {
   },
 
   /*===============Get User posts====================*/
-  async getUserPosts({ params,query }, res) {
+  async getUserPosts({ params, query }, res) {
     try {
-        const { page = 1, limit = 2 } = query;
-        const skip = (page - 1) * limit;
-  
-        const posts = await Post.find({username : params.username})
-          .sort({ createdAt: -1 })
-          .skip(skip)
-          .limit(limit);
-  
-        const totalPosts = await Post.countDocuments({ username : params.username});
-        const totalPages = Math.ceil(totalPosts / limit);
-  
-        res.status(200).json({
-          posts,
-          hasMore: page > 0 && page < totalPages,
-        });
+      const { page = 1, limit = 2 } = query;
+      const skip = (page - 1) * limit;
+
+      const posts = await Post.find({ username: params.username })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+      const totalPosts = await Post.countDocuments({
+        username: params.username,
+      });
+      const totalPages = Math.ceil(totalPosts / limit);
+
+      res.status(200).json({
+        posts,
+        hasMore: page > 0 && page < totalPages,
+      });
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
@@ -99,7 +100,9 @@ module.exports = {
 
       const users = await User.find({
         username: { $in: likes },
-      }).select("username profilePhotoUrl").lean();
+      })
+        .select("username profilePhotoUrl")
+        .lean();
 
       res.status(200).json(users);
     } catch (err) {
@@ -133,4 +136,40 @@ module.exports = {
       res.status(404).json({ message: err.message });
     }
   },
-};
+
+  /*=============== Edit a POST====================*/
+  async editPost({ params, body }, res) {
+    try {
+      const { id } = params;
+
+      const post = await Post.findByIdAndUpdate(id, body, { new: true });
+
+      if (!post) {
+        res.status(404).json({ message: "That post does not exist" });
+      }
+
+      res.status(200).json(post);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
+
+  /*=============== Delete a POST====================*/
+  async deletePost({ params }, res) {
+    try {
+      const { id } = params;
+
+      //Find post to delete
+      const post = await Post.findById(id);
+
+      if (!post) {
+        return res.status(404).json({ message: "That post does not exist" });
+      }
+      await post.remove();
+
+      return res.status(200).json({ message: "Post deleted successfully" });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  },
+});

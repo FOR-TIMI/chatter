@@ -9,6 +9,8 @@ const morgan = require("morgan");
 const csp = require("helmet-csp");
 const sanitizeMongo = require("express-mongo-sanitize");
 
+const { sanitizeMiddleware } = require("./middleware/middleware");
+
 const path = require("path");
 
 /*================== Configurations =================*/
@@ -41,14 +43,13 @@ if (process.env.NODE_ENV === "production") {
         fontSrc: [
           "https://fonts.gstatic.com",
           "https://nameless-basin-36851.herokuapp.com",
-          "'self'"
+          "'self'",
         ],
         imgSrc: ["'self'", "*", "blob:", "data:"],
-        connectSrc: ["'self'", "wss://nameless-basin-36851.herokuapp.com"]
+        connectSrc: ["'self'", "wss://nameless-basin-36851.herokuapp.com"],
       },
     })
   );
-  
 
   // Enable CORS for all routes
   app.use(
@@ -61,6 +62,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.use(morgan("common"));
+
+//To ensure that all incoming user input is properly sanitized
+app.use(sanitizeMiddleware);
 
 // sanitize-mongo middleware to protect against MongoDB injection attacks
 app.use(sanitizeMongo({ replaceWith: "_" }));
