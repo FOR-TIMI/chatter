@@ -13,11 +13,11 @@ import {
 } from "@mui/icons-material";
 
 import {
+  Box,
   IconButton,
   Typography,
-  useTheme,
-  Box,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
@@ -29,6 +29,7 @@ import CommentBox from "../../components/Comment/Comment";
 import { SERVER_URL } from "../../service/config";
 
 import { useEffect } from "react";
+import { fShortenNumber } from "../../utils/formatNumber";
 
 const SinglePostWidget = ({
   postId,
@@ -186,14 +187,14 @@ const SinglePostWidget = ({
                 <FavoriteBorderOutlined />
               )}
             </IconButton>
-            <Typography>{likeCount}</Typography>
+            <Typography>{fShortenNumber(likeCount) || 0}</Typography>
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{commentCount}</Typography>
+            <Typography>{fShortenNumber(commentCount) || 0}</Typography>
           </FlexBetween>
         </FlexBetween>
 

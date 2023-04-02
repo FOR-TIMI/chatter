@@ -1,28 +1,28 @@
 import {
-  ManageAccountsOutlined,
   EditOutlined,
-  LocationOnOutlined,
-  WorkOutlineOutlined,
-  Twitter,
   LinkedIn,
+  LocationOnOutlined,
+  ManageAccountsOutlined,
+  Twitter,
+  WorkOutlineOutlined,
 } from "@mui/icons-material";
 
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { Box, Divider, Typography, useTheme } from "@mui/material";
 
 //Custom components
-import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
 import FlexBetween from "../../components/CustomStyledComponents/FlexBetween";
+import UserAvatar from "../../components/CustomStyledComponents/UserAvatar";
 import WidgetWrapper from "../../components/CustomStyledComponents/WidgetWrapper";
 
 import UserWidgetSkeleton from "../../components/Skeletons/UserWidgetSkeleton";
 
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 
 import { SERVER_URL } from "../../service/config";
 import { socket } from "../../service/socket";
+import { fShortenNumber } from "../../utils/formatNumber";
 
 const UserWidget = ({ username, profilePhotoUrl }) => {
   const [user, setUser] = useState(null);
@@ -91,7 +91,7 @@ const UserWidget = ({ username, profilePhotoUrl }) => {
             <FlexBetween paddingTop="0.4rem" width="11rem">
               <FlexBetween>
                 <Typography color={dark} marginRight="0.25rem">
-                  {followerCount}
+                  {fShortenNumber(followerCount) || 0}
                 </Typography>
                 <Typography color={medium}>
                   {followerCount === 1 ? "follower" : "followers"}
@@ -99,7 +99,9 @@ const UserWidget = ({ username, profilePhotoUrl }) => {
               </FlexBetween>
 
               <FlexBetween>
-                <Typography color={dark}>{followingCount}</Typography>
+                <Typography color={dark}>
+                  {fShortenNumber(followingCount) || 0}
+                </Typography>
                 <Typography color={medium} marginLeft="0.25rem">
                   following
                 </Typography>
