@@ -1,22 +1,27 @@
-import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
+import {
+  MoreHoriz,
+  PersonAddOutlined,
+  PersonRemoveOutlined,
+} from "@mui/icons-material";
 
 import { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import {
   Box,
+  CircularProgress,
   IconButton,
   Typography,
   useTheme,
-  CircularProgress,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setFollowing } from "../../state";
 import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
 import { SERVER_URL } from "../../service/config";
 import { socket } from "../../service/socket";
+import PostOptionsModal from "../PostOptionsModal";
 
 const Following = ({
   followingId,
@@ -24,6 +29,7 @@ const Following = ({
   subtitle = "",
   isAuthor,
   userProfilePhotoUrl,
+  postId = "",
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,6 +37,7 @@ const Following = ({
   const token = useSelector((state) => state.token);
   const followings = useSelector((state) => state.user.followings);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { palette } = useTheme();
   const { light, dark } = palette.primary;
@@ -39,15 +46,11 @@ const Following = ({
   const isFollowing = followings.find((person) => person._id === followingId);
 
   const updateFollowing = async () => {
-    if (isAuthor) {
-      return;
-    }
-
     setLoading(true);
 
     socket.emit("addRemoveFollower", {
       userId,
-      followingId
+      followingId,
     });
 
     try {
@@ -73,8 +76,20 @@ const Following = ({
     setLoading(false);
   };
 
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <FlexBetween>
+      {/* Options modal  */}
+      {isModalOpen && (
+        <PostOptionsModal
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          postId={postId}
+        />
+      )}
       <FlexBetween gap="1rem">
         <UserAvatar image={userProfilePhotoUrl} size="55px" />
         <Box
@@ -103,7 +118,7 @@ const Following = ({
           </Typography>
         </Box>
       </FlexBetween>
-      {!isAuthor && (
+      {!isAuthor ? (
         <IconButton
           onClick={() => updateFollowing()}
           disabled={loading}
@@ -116,6 +131,14 @@ const Following = ({
           ) : (
             <PersonAddOutlined sx={{ color: dark }} />
           )}
+        </IconButton>
+      ) : (
+        <IconButton
+          disabled={loading}
+          sx={{ backgroundColor: light, p: "0.6rem" }}
+          onClick={handleModalOpen}
+        >
+          <MoreHoriz sx={{ color: dark }} />
         </IconButton>
       )}
     </FlexBetween>

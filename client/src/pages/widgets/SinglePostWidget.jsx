@@ -7,6 +7,7 @@ import { fToNow } from "../../utils/formatDate";
 
 import {
   ChatBubbleOutlineOutlined,
+  Edit,
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
@@ -128,6 +129,7 @@ const SinglePostWidget = ({
           name={postAuthorUsername}
           subtitle={location}
           userProfilePhotoUrl={userProfilePhoto}
+          postId={postId}
           isAuthor={isAuthor}
         />
 
