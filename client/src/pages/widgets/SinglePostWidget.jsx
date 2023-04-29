@@ -7,7 +7,6 @@ import { fToNow } from "../../utils/formatDate";
 
 import {
   ChatBubbleOutlineOutlined,
-  Edit,
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
@@ -49,6 +48,8 @@ const SinglePostWidget = ({
   const [isLongCaption, setIsLongCaption] = useState(false);
 
   const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
+
+  const imageHeight = isNonMobileScreens ? "450px" : "300px";
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -172,8 +173,9 @@ const SinglePostWidget = ({
             style={{
               borderRadius: isNonMobileScreens ? "0.75rem" : "0",
               marginTop: "0.75rem",
-              height: "100%",
+              height: imageHeight,
               width: "100%",
+              objectFit: "cover",
             }}
           />
         </div>

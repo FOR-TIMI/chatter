@@ -40,7 +40,7 @@ router
 router
   .route("/:id")
   .get(authMiddleware, getPostById)
-  .put(authMiddleware, isPostAuthor, editPost)
+  .put(authMiddleware, isPostAuthor, upload.array("newPostImages", 5), editPost)
   .delete(authMiddleware, isPostAuthor, deletePost);
 
 /**============Likes=============== */

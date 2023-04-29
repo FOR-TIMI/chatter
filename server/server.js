@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors());
 }
 
-app.use(morgan("common"));
+// app.use(morgan("common"));
 
 //To ensure that all incoming user input is properly sanitized
 app.use(sanitizeMiddleware);

@@ -1,5 +1,7 @@
 const { Post, User } = require("../model");
-const sanitize = (module.exports = {
+const { cloudinary } = require("../config/cloudinary");
+
+module.exports = {
   /*===============Make a new post====================*/
   async createPost({ body, files }, res) {
     try {
@@ -138,17 +140,84 @@ const sanitize = (module.exports = {
   },
 
   /*=============== Edit a POST====================*/
-  async editPost({ params, body }, res) {
+  async editPost({ params, body, files }, res) {
     try {
+      const { deletedImages } = body;
       const { id } = params;
 
-      const post = await Post.findByIdAndUpdate(id, body, { new: true });
+      const post = await Post.findById(id);
 
       if (!post) {
         res.status(404).json({ message: "That post does not exist" });
       }
 
-      res.status(200).json(post);
+      let updatedPost;
+
+      const fileArr =
+        files?.map((obj) => ({ url: obj["path"], filename: obj.filename })) ||
+        [];
+
+      //To remove deleted images
+      if (deletedImages) {
+        let imgs = JSON.parse(deletedImages);
+
+        if (typeof imgs === "object") {
+          await cloudinary.uploader.destroy(imgs.filename);
+          updatedPost = await Post.findByIdAndUpdate(
+            id,
+            {
+              ...body,
+              postImageUrls: [
+                ...post.postImageUrls.filter(
+                  (img) => img.filename !== imgs.filename
+                ),
+                ...fileArr,
+              ],
+            },
+            { new: true }
+          );
+        } else if (Array.isArray(imgs)) {
+          for (const img of imgs) {
+            await cloudinary.uploader.destroy(img.filename);
+          }
+
+          updatedPost = await Post.findByIdAndUpdate(
+            id,
+            {
+              ...body,
+              postImageUrls: post.postImageUrls
+                .filter(
+                  (img) =>
+                    !imgs.some(
+                      (deletedImg) => deletedImg.filename === img.filename
+                    )
+                )
+                .concat(fileArr),
+            },
+            { new: true }
+          );
+        }
+
+        res.status(200).json(updatedPost);
+      }
+
+      //To add new images
+      if (fileArr.length) {
+        updatedPost = await Post.findByIdAndUpdate(
+          id,
+          {
+            ...body,
+            postImageUrls: [...post.postImageUrls, ...fileArr],
+          },
+          { new: true }
+        );
+      } else {
+        updatedPost = await Post.findByIdAndUpdate(
+          id,
+          { ...body },
+          { new: true }
+        );
+      }
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -189,4 +258,4 @@ const sanitize = (module.exports = {
       return res.status(500).json({ message: err });
     }
   },
-});
+};
