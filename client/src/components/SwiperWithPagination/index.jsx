@@ -3,7 +3,7 @@ import { useState } from "react";
 // import Swiper core and required modules
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Checkbox, useMediaQuery } from "@mui/material";
 import { Navigation, Pagination } from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,18 +15,9 @@ import "swiper/swiper-bundle.css";
 const SwiperWithPagination = ({ images, addDeletedImage }) => {
   const [checkedItems, setCheckedItems] = useState({}); // state for checkboxes
 
-  // const myImages = [
-  //   {
-  //     url: "https://res.cloudinary.com/diskudcr3/image/upload/v1680414987/chatter/bvctpxlv89b2gwwv9ivx.jpg",
-  //     filename: "chatter/bvctpxlv89b2gwwv9ivx",
-  //     _id: "6429190bcbe107aff306461d",
-  //   },
-  //   {
-  //     url: "https://res.cloudinary.com/diskudcr3/image/upload/v1680414987/chatter/bvctpxlv89b2gwwv9ivx.jpg",
-  //     filename: "chatter/bvctpxlv89b2gwwv9ivx465747",
-  //     _id: "6429190bcbe107aff306461d780",
-  //   },
-  // ];
+  const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
+
+  const imageHeight = isNonMobileScreens ? "450px" : "300px";
 
   const handleCheckboxChange = (e) => {
     const id = e.target.name;
@@ -54,11 +45,10 @@ const SwiperWithPagination = ({ images, addDeletedImage }) => {
                   src={url}
                   alt={filename}
                   style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    width: "450px",
-                    maxHeight: "500px",
+                    height: imageHeight,
+                    width: "100%",
                     marginTop: "0.75rem",
+                    objectFit: "cover",
                   }}
                 />
                 <Checkbox
@@ -76,6 +66,7 @@ const SwiperWithPagination = ({ images, addDeletedImage }) => {
                       fontSize: "2rem",
                       color: "white",
                     },
+                    zIndex: 22,
                   }}
                 />
               </Box>

@@ -20,15 +20,6 @@ import { editPostSchema } from "../../utils/Schemas";
 import UserAvatar from "../CustomStyledComponents/UserAvatar";
 import SwiperWithPagination from "../SwiperWithPagination";
 
-const initialValuesEditpost = {
-  username: "",
-  userId: "",
-  location: "",
-  caption: "",
-  postImageUrls: [],
-  userProfilePhoto: "",
-};
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -52,23 +43,17 @@ const EditPostModal = ({ open = false, setOpen, post }) => {
 
   /** Local state */
   const [deletedImages, setDeletedImages] = useState([]);
-  const [postChanges, setPostChanges] = useState({
-    caption: post.caption,
-    location: post.location,
-  });
 
   const [postImages, setPostImages] = useState(post.postImageUrls);
   const [newImages, setNewImages] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
 
   /**Local variables */
   const { userProfilePhoto, username, _id } = post;
 
   /**Colors */
   const { palette } = useTheme();
-  const { main, medium, light: neutralLight } = palette.neutral;
 
   const addDeletedImage = (id) => {
     const findImage = (img) => img._id === id;
@@ -84,10 +69,10 @@ const EditPostModal = ({ open = false, setOpen, post }) => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async ({ caption, location }) => {
     const formData = new FormData();
-    formData.append("caption", postChanges.caption);
-    formData.append("location", postChanges.location);
+    formData.append("caption", caption);
+    formData.append("location", location);
 
     if (deletedImages.length) {
       deletedImages.forEach((image) => {
@@ -115,42 +100,31 @@ const EditPostModal = ({ open = false, setOpen, post }) => {
 
     setDeletedImages([]);
     setNewImages([]);
-    setPostChanges({
-      caption: "",
-      location: "",
-    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values, actions) => {
     try {
       setLoading(true);
       await editPostSchema.validate(
         {
-          caption: postChanges.caption,
+          caption: values.caption,
           images: newImages,
-          location: postChanges.location,
+          location: values.location,
         },
         { abortEarly: false }
       );
-      setErrors({});
-      handleSave();
-      handleClose();
+
+      handleSave(values);
     } catch (err) {
       console.log(err);
       const validationErrors = {};
       err.inner.forEach((error) => {
         validationErrors[error.path] = error.message;
       });
-      setErrors(validationErrors);
+    } finally {
+      actions.resetForm();
+      handleClose();
     }
-  };
-
-  const handleChange = (e) => {
-    setPostChanges((prevChanges) => ({
-      ...prevChanges,
-      [e.target.name]: e.target.value,
-    }));
   };
 
   const {
@@ -196,147 +170,162 @@ const EditPostModal = ({ open = false, setOpen, post }) => {
       aria-describedby="child-modal-description"
     >
       <Box sx={{ ...style }}>
-        <Formik
-          initialValues={initialValuesEditpost}
-          validationSchema={editPostSchema}
-        >
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              {postImages.length ? (
-                <Box sx={{ width: "50%" }}>
-                  <SwiperWithPagination
-                    images={postImages}
-                    addDeletedImage={addDeletedImage}
-                  />
-                </Box>
-              ) : null}
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                }}
-              >
-                {/** Profile Image and username section */}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          {postImages.length > 0 && (
+            <Box sx={{ width: "50%" }}>
+              <SwiperWithPagination
+                images={postImages}
+                addDeletedImage={addDeletedImage}
+              />
+            </Box>
+          )}
+          <Formik
+            initialValues={{
+              location: post.location,
+              caption: post.caption,
+            }}
+            validationSchema={editPostSchema}
+            onSubmit={handleSubmit}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }) => (
+              <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <Box
                   sx={{
                     display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    margin: "1rem 0 2rem 0",
-                  }}
-                >
-                  <UserAvatar image={userProfilePhoto} size="32px" />
-                  {username}
-                </Box>
-
-                {/** Location section */}
-                <Box
-                  sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  marginBottom="1rem"
-                >
-                  <TextField
-                    label="location"
-                    placeholder="location"
-                    variant="standard"
-                    name="location"
-                    onChange={handleChange}
-                    value={postChanges.location + ""}
-                    sx={{ flexGrow: 5 }}
-                  />
-                  {errors.location && (
-                    <Typography
-                      sx={{ fontSize: "0.69rem" }}
-                      variant="small"
-                      color="error"
-                    >
-                      {errors.location}
-                    </Typography>
-                  )}
-                </Box>
-
-                {/** Caption section */}
-                <Box
-                  sx={{
-                    marginBottom: "1rem",
-                    display: "flex",
-                    gap: 1,
                     flexDirection: "column",
+                    width: "100%",
                   }}
                 >
-                  <TextField
-                    label="caption"
-                    multiline
-                    rows={4}
-                    name="caption"
-                    onChange={handleChange}
-                    value={postChanges.caption + ""}
-                    variant="standard"
-                  />
-                  {errors.caption && (
-                    <Typography
-                      sx={{ fontSize: "0.69rem" }}
-                      variant="small"
-                      color="error"
+                  {/** Profile Image and username section */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      margin: "1rem 0 2rem 0",
+                    }}
+                  >
+                    <UserAvatar image={userProfilePhoto} size="32px" />
+                    {username}
+                  </Box>
+
+                  {/** Location section */}
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                    marginBottom="1rem"
+                  >
+                    <TextField
+                      label="location"
+                      placeholder="location"
+                      variant="standard"
+                      name="location"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.location}
+                      sx={{ flexGrow: 5 }}
+                    />
+                    {errors.location && touched.location && (
+                      <Typography
+                        sx={{ fontSize: "0.69rem" }}
+                        variant="small"
+                        color="error"
+                      >
+                        {errors.location}
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/** Caption section */}
+                  <Box
+                    sx={{
+                      marginBottom: "1rem",
+                      display: "flex",
+                      gap: 1,
+                      flexDirection: "column",
+                    }}
+                  >
+                    <TextField
+                      label="caption"
+                      multiline
+                      rows={4}
+                      name="caption"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.caption}
+                      variant="standard"
+                    />
+                    {errors.caption && touched.caption && (
+                      <Typography
+                        sx={{ fontSize: "0.69rem" }}
+                        variant="small"
+                        color="error"
+                      >
+                        {errors.caption}
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/* Image Section*/}
+                  <Box {...getRootProps({ className: "dropzone" })}>
+                    <input {...getInputProps()} />
+
+                    <Button
+                      variant="raised"
+                      component="span"
+                      onClick={openFileDialog}
+                      sx={{
+                        color: palette.background.alt,
+                        backgroundColor: palette.primary.main,
+                        borderRadius: "3rem",
+                        width: "100%",
+                        margin: "1rem 0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 1,
+                      }}
                     >
-                      {errors.caption}
-                    </Typography>
-                  )}
-                </Box>
+                      <AddAPhotoIcon /> Add Image
+                    </Button>
 
-                {/* Image Section*/}
-                <Box {...getRootProps({ className: "dropzone" })}>
-                  <input {...getInputProps()} />
-
+                    {errors.images && (
+                      <Typography sx={{ fontSize: "0.69rem" }} color="error">
+                        {errors.images}
+                      </Typography>
+                    )}
+                  </Box>
                   <Button
-                    variant="raised"
-                    component="span"
-                    onClick={openFileDialog}
+                    disabled={isSubmitting}
+                    onClick={handleSubmit}
                     sx={{
                       color: palette.background.alt,
                       backgroundColor: palette.primary.main,
                       borderRadius: "3rem",
                       width: "100%",
-                      margin: "1rem 0",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 1,
                     }}
                   >
-                    <AddAPhotoIcon /> Add Image
+                    {loading ? (
+                      <CircularProgress
+                        sx={{ color: palette.neutral.dark }}
+                        size={16}
+                      />
+                    ) : (
+                      "save changes"
+                    )}
                   </Button>
-
-                  {errors.images && (
-                    <Typography sx={{ fontSize: "0.69rem" }} color="error">
-                      {errors.images}
-                    </Typography>
-                  )}
                 </Box>
-                <Button
-                  disabled={loading || !post}
-                  onClick={handleSubmit}
-                  sx={{
-                    color: palette.background.alt,
-                    backgroundColor: palette.primary.main,
-                    borderRadius: "3rem",
-                    width: "100%",
-                  }}
-                >
-                  {loading ? (
-                    <CircularProgress
-                      sx={{ color: palette.neutral.dark }}
-                      size={16}
-                    />
-                  ) : (
-                    "save changes"
-                  )}
-                </Button>
-              </Box>
-            </Box>
-          </form>
-        </Formik>
+              </form>
+            )}
+          </Formik>
+        </Box>
       </Box>
     </Modal>
   );
