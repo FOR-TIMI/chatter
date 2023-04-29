@@ -24,15 +24,17 @@ const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isListOpen, setIsListOpen] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const token = useSelector((state) => state.token);
 
   const navigate = useNavigate();
 
-  const handleBlur = async (e) => {
-    const t = setTimeout(() => setIsListOpen(false), 500);
-
-    clearTimeout(t);
+  const handleClose = async () => {
+    setTimeout(() => {
+      setIsListOpen(false);
+      setIsClosed(true);
+    }, 500);
   };
 
   const handleClick = async (username, e) => {
@@ -64,6 +66,7 @@ const SearchBar = () => {
 
   const handleSearchClick = () => {
     if (searchInput.length) {
+      getSuggestions();
       setIsListOpen(true);
     }
   };
@@ -86,6 +89,12 @@ const SearchBar = () => {
     }
   }, [searchInput]);
 
+  useEffect(() => {
+    if (isListOpen && isClosed) {
+      handleClose();
+    }
+  }, [isClosed]);
+
   const { palette } = useTheme();
   const { main, medium, light: neutralLight } = palette.neutral;
   const bg = palette.background.alt;
@@ -105,7 +114,7 @@ const SearchBar = () => {
         padding="0.1rem 1.5rem"
       >
         <InputBase
-          onBlur={handleBlur}
+          onBlur={handleClose}
           value={searchInput}
           onChange={handleChange}
           placeholder="Search..."
