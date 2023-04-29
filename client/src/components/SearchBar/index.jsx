@@ -1,22 +1,23 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
-  InputBase,
-  IconButton,
-  useTheme,
-  CircularProgress,
   Box,
+  CircularProgress,
+  IconButton,
+  InputBase,
   MenuItem,
   Typography,
+  useTheme,
 } from "@mui/material";
 import List from "@mui/material/List";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../service/config";
 
 import { v4 as uuidv4 } from "uuid";
 
-import FlexBetween from "../CustomStyledComponents/FlexBetween";
 import { Search } from "@mui/icons-material";
-import UserAvatar from "../CustomStyledComponents/UserAvatar";
 import { useSelector } from "react-redux";
+import FlexBetween from "../CustomStyledComponents/FlexBetween";
+import UserAvatar from "../CustomStyledComponents/UserAvatar";
 
 const SearchBar = () => {
   const [loading, setLoading] = useState(true);
@@ -25,11 +26,6 @@ const SearchBar = () => {
   const [isListOpen, setIsListOpen] = useState(false);
 
   const token = useSelector((state) => state.token);
-
-  const serverUrl =
-    process.env.REACT_APP_ENV === "Development"
-      ? "http://localhost:3001/"
-      : process.env.REACT_APP_SERVER_URL;
 
   const navigate = useNavigate();
 
@@ -47,7 +43,7 @@ const SearchBar = () => {
 
   const getSuggestions = async () => {
     const responseData = await fetch(
-      serverUrl + `u?searchInput=${searchInput}`,
+      `${SERVER_URL}u?searchInput=${searchInput}`,
       {
         method: "GET",
         headers: {

@@ -363,7 +363,7 @@ const DirectMessagePage = ({ isModal = false }) => {
                   onSubmit={handleSubmit}
                 >
                   {({ values, handleChange, handleSubmit, isSubmitting }) => (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} autoComplete="off">
                       <Box
                         sx={{
                           display: "flex",
@@ -390,6 +390,7 @@ const DirectMessagePage = ({ isModal = false }) => {
                             value={values.newMessage}
                             onChange={handleChange}
                             sx={{ flexGrow: 1, mr: 1 }}
+                            autoComplete="off"
                           />
 
                           <IconButton
