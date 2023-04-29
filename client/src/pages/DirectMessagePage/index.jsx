@@ -9,6 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { Formik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +39,6 @@ const DirectMessagePage = ({ isModal = false }) => {
   const [currentConvo, setCurrentConvo] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
   const [recievedMessage, setRecievedMessage] = useState(null);
   const [isNewConversation, setIsNewConversation] = useState(isModal);
 
@@ -156,12 +156,11 @@ const DirectMessagePage = ({ isModal = false }) => {
     setCurrentChat(c);
   };
 
-  const handleInputChange = (e) => {
-    setNewMessage(e.target.value);
-  };
+  const handleSubmit = async (values, actions) => {
+    const { newMessage } = values;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    console.log(actions);
+
     //To prevent sending empty messages
     if (newMessage.trim().length === 0) {
       return;
@@ -193,12 +192,13 @@ const DirectMessagePage = ({ isModal = false }) => {
         const message = await response.json();
 
         setMessages([...messages, message]);
-        setNewMessage("");
       } else {
         console.error("User doesn't exist");
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      actions.resetForm();
     }
   };
 
@@ -358,44 +358,54 @@ const DirectMessagePage = ({ isModal = false }) => {
                 </Box>
 
                 {/* charBoxBottom */}
-                <form onSubmit={handleSubmit}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      width: "90%",
-                      margin: "0 auto",
-                      padding: "0.25rem 0.8rem",
-                      border: `1.5px solid ${palette.neutral.light}`,
-                      borderRadius: "1.5rem",
-                    }}
-                  >
-                    <FlexBetween
-                      sx={{
-                        p: "0.25rem 0 0.25rem 0.5rem",
-                        flexGrow: "1",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "35px",
-                      }}
-                    >
-                      <InputBase
-                        size="sm"
-                        placeholder="Message…"
-                        value={newMessage}
-                        onChange={handleInputChange}
-                        sx={{ flexGrow: 1, mr: 1 }}
-                      />
-
-                      <IconButton
-                        sx={{ "&:hover": { color: palette.primary.dark } }}
-                        type="submit"
-                        onClick={handleSubmit}
+                <Formik
+                  initialValues={{ newMessage: "" }}
+                  onSubmit={handleSubmit}
+                >
+                  {({ values, handleChange, handleSubmit, isSubmitting }) => (
+                    <form onSubmit={handleSubmit} autoComplete="off">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          width: "90%",
+                          margin: "0 auto",
+                          padding: "0.25rem 0.8rem",
+                          border: `1.5px solid ${palette.neutral.light}`,
+                          borderRadius: "1.5rem",
+                        }}
                       >
-                        <Telegram />
-                      </IconButton>
-                    </FlexBetween>
-                  </Box>
-                </form>
+                        <FlexBetween
+                          sx={{
+                            p: "0.25rem 0 0.25rem 0.5rem",
+                            flexGrow: "1",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "35px",
+                          }}
+                        >
+                          <InputBase
+                            size="sm"
+                            name="newMessage"
+                            placeholder="Message…"
+                            value={values.newMessage}
+                            onChange={handleChange}
+                            sx={{ flexGrow: 1, mr: 1 }}
+                            autoComplete="off"
+                          />
+
+                          <IconButton
+                            disabled={isSubmitting}
+                            sx={{ "&:hover": { color: palette.primary.dark } }}
+                            type="submit"
+                            onClick={handleSubmit}
+                          >
+                            <Telegram />
+                          </IconButton>
+                        </FlexBetween>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
               </Box>
             </>
           ) : (
