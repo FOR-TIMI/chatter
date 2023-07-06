@@ -1,6 +1,6 @@
 <h1 align="center">CHATTER</h1>
 <div align="center">
-Welcome to Chatter, a social media application that allows users to connect and interact with each other. 
+Welcome to Chatter, a social media application that allows users to connect and interact with each other through messages, posts, likes, comments and much more!. 
 
 </div> <br>
 
