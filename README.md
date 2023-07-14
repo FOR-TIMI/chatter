@@ -30,7 +30,8 @@ Welcome to Chatter, a social media application that allows users to connect and 
 </p>
 
 ## Support the project ⭐
-If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo!
+If you feel generous and appreciate some of my work [Buy me a coffee](https://www.buymeacoffee.com/timiplayskU) <br><br>
+<a href="https://www.buymeacoffee.com/timiplayskU" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="31" width="174"></a>
 
 ## Table of Contents
 - [Introduction](#introduction)
