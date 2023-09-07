@@ -1,16 +1,16 @@
 const PORT = process.env.PORT || 8900;
 
-const app = require('../server');
-const db = require('../server/config/db');
+const app = require("../server/app");
+const db = require("../server/config/db");
 
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} 🚀`);
-})
+});
 
 /*================== MONGODB =================*/
 db.once("open", () => {
-  console.log("🚀 MongoDB database connected 🚀")
-})
+  console.log("🚀 MongoDB database connected 🚀");
+});
 
 const io = require("socket.io")(server, {
   cors: {
@@ -19,7 +19,7 @@ const io = require("socket.io")(server, {
         ? "https://nameless-basin-36851.herokuapp.com"
         : "http://localhost:" + PORT,
   },
-  transports: ["websocket","polling"]
+  transports: ["websocket", "polling"],
 });
 
 let users = [];
@@ -76,5 +76,3 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 });
-
-

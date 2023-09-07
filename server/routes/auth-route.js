@@ -1,19 +1,12 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const { 
-    register
-    ,login
-} = require('../controllers/auth-controller')
+const { register, login } = require("../controllers/auth-controller");
 
-const multer = require('multer');
-const { storage } = require('../config/cloudinary');
-const upload = multer({ storage });
+/** Middlewares */
+const { emailExists, userNameExists } = require("../middleware/middleware");
 
+router.post("/login", login);
 
-router.post('/login', login)
-router.post('/register', register)
-    
+router.post("/register", userNameExists, emailExists, register);
 
-
-module.exports = router
-
+module.exports = router;
