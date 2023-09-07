@@ -5,7 +5,7 @@ const app = express();
 const dotenv = require("dotenv");
 
 const cors = require("cors");
-const morgan = require("morgan");
+// const morgan = require("morgan");
 const csp = require("helmet-csp");
 const sanitizeMongo = require("express-mongo-sanitize");
 

@@ -21,7 +21,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { SERVER_URL } from "../../service/config";
-import { socket } from "../../service/socket";
 import { fShortenNumber } from "../../utils/formatNumber";
 
 const UserWidget = ({ username, profilePhotoUrl }) => {
@@ -31,6 +30,8 @@ const UserWidget = ({ username, profilePhotoUrl }) => {
 
   //state
   const token = useSelector((state) => state.token);
+  const followings = useSelector((state) => state.user.followings);
+  const followers = useSelector((state) => state.user.followers);
 
   //colors
   const { dark, medium, main } = palette.neutral;
@@ -49,11 +50,8 @@ const UserWidget = ({ username, profilePhotoUrl }) => {
   };
 
   useEffect(() => {
-    // Set up a listener for the ADD_REMOVE_FOLLOWER event
-    socket.on("updateFollowers", getUser);
-
     getUser();
-  }, [user]);
+  }, [followings, followers]);
 
   if (!user) {
     return <UserWidgetSkeleton />;

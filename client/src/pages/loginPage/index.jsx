@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setLogin, setPerson } from "../../state";
 
+import ErrorAlert from "../../components/ErrorAlert";
 import { SERVER_URL } from "../../service/config";
 import { loginSchema, registerSchema } from "../../utils/Schemas";
 
@@ -34,7 +35,7 @@ const initialValuesLogin = {
 const Form = () => {
   const location = useLocation().pathname.slice(1);
   const [pageType, setPageType] = useState(location); //To turn '/register' to 'register'
-  const [loginError, setLoginErr] = useState(null);
+  const [globalError, setGlobalError] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { palette } = useTheme();
@@ -49,7 +50,7 @@ const Form = () => {
     setLoading(true);
 
     try {
-      const newUserData = await fetch(SERVER_URL + "register", {
+      const res = await fetch(SERVER_URL + "register", {
         method: "POST",
         body: JSON.stringify({
           username,
@@ -61,20 +62,22 @@ const Form = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const isRegistered = await newUserData.json();
+      const data = await res.json();
 
-      if (isRegistered) {
+      if (res.ok) {
         dispatch(
           setLogin({
-            user: isRegistered.newUser,
-            token: isRegistered.token,
+            user: data.newUser,
+            token: data.token,
           })
         );
-        dispatch(setPerson({ person: isRegistered.newUser }));
+        dispatch(setPerson({ person: data.newUser }));
+        onSubmitProps.resetForm();
+        navigate("/");
+      } else {
+        onSubmitProps.setFieldError(data.field, data.errorMsg);
+        setGlobalError((prevErrors) => [...prevErrors, data.errorMsg]);
       }
-
-      onSubmitProps.resetForm();
-      navigate("/");
     } catch (err) {
       console.error(err);
     }
@@ -107,7 +110,7 @@ const Form = () => {
 
         navigate("/");
       } else {
-        setLoginErr("Incorret Credentials");
+        setGlobalError((prevErrors) => [...prevErrors, "Incorret Credentials"]);
       }
 
       onSubmitProps.resetForm();
@@ -141,16 +144,9 @@ const Form = () => {
         Chatter
       </Typography>
 
-      {loginError && (
-        <Typography
-          fontWeight="bold"
-          sx={{
-            color: "red",
-          }}
-        >
-          {loginError}
-        </Typography>
-      )}
+      {globalError.length ? (
+        <ErrorAlert errors={globalError}></ErrorAlert>
+      ) : null}
 
       <Formik
         initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
@@ -181,7 +177,10 @@ const Form = () => {
                   <TextField
                     label="Username"
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setGlobalError([]);
+                      handleChange(e);
+                    }}
                     value={values.username}
                     name="username"
                     error={
@@ -220,7 +219,10 @@ const Form = () => {
               <TextField
                 label="Email"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  setGlobalError([]);
+                  handleChange(e);
+                }}
                 value={values.email}
                 name="email"
                 error={Boolean(touched.email) && Boolean(errors.email)}
@@ -269,6 +271,7 @@ const Form = () => {
               </Button>
               <Typography
                 onClick={() => {
+                  setGlobalError([]);
                   setPageType(isLogin ? "register" : "login");
                   navigate(isLogin ? "/register" : "/login");
                   resetForm();
